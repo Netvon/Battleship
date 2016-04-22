@@ -1,0 +1,14 @@
+# ignore for phpstorm
+.idea/
+
+# ignore for sublime
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+
+# npm
+node_modules
+
+# project specific
+public/js/app.js
