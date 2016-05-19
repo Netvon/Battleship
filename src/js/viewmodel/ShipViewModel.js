@@ -1,25 +1,38 @@
-function ShipViewModel(ship) {
-    this.ship = ship;
+import Ship from './../model/Ship';
 
-    this.location = {
-        x: 0,
-        y: 0,
-        orientation: 'vertical'
-    };
+export default class ShipViewModel extends Ship {
+    constructor(id, name, length, location, orientation, sprite) {
+        super(id, name, length);
 
-    this.sprite = 'img/placeholder.gif';
-}
+        this.location = location;
 
-ShipViewModel.prototype = {
-    jsonEncode: function () {
+        switch (location) {
+            case 'vertical':
+            case 'horizontal':
+                this.orientation = orientation;
+                break;
+            default:
+                throw new Error('The "orientation" property of ShipViewModel must be "vertical" or "horizontal"');
+                break
+        }
+
+        if (sprite === undefined)
+            this.sprite = 'img/placeholder.gif';
+        else
+            this.sprite = sprite;
+    }
+
+    jsonEncode() {
         return {
-            _id: this.ship.id,
-            length: this.ship.length,
+            _id: this.id,
+            length: this.length,
             startCell: {},
             isVertical: false,
             __v: 0
         }
     }
-};
 
-module.exports = ShipViewModel;
+    static fromShip(ship, location, orientation, sprite) {
+        return new ShipViewModel(ship.id, ship.name, ship.length, location, orientation, sprite);
+    }
+}

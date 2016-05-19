@@ -1,10 +1,13 @@
 # Battleship
 
 ### Install
-To get the project to run you first need to install [Node](https://nodejs.org/en/). The project requires `browserify` and `watchify` to work in development.
+To get the project to run you first need to install [Node](https://nodejs.org/en/). The project uses a number of node modules.
+    * Gulp
+    * Sass
+    * Browserify
+    * Babel
 
-After installing Node run `npm install` in the project root folder to install those dependencies. 
-Alternatively you can also install `browserify` and `watchify` globally.
+After installing Node run `npm install` in the project root folder to install those dependencies.
 
 ### Build
-To create the compiled version of all the project's Javascript run `npm run build-js` in the root. It also possible to continuously compile the Javascript by running `npm run watch-js`. 
+To create the compiled version of all the project's Javascript and Sass run `gulp` in the root. This will continuously compile both JavaScript and Sass.

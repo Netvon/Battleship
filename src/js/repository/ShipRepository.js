@@ -1,23 +1,23 @@
-const BattleshipApi = require('./../util/BattleshipApi.js');
-var Ship = require('./../model/Ship.js');
+import BattleshipApi from './../util/BattleshipApi.js';
+import Ship from './../model/Ship.js';
 
-function ShipRepository(api) {
-    if (api instanceof BattleshipApi)
-        this.api = api;
-    else
-        throw new Error('ShipRepository needs BattleshipApi to work');
-}
+export default class ShipRepository {
+    constructor(api) {
+        if (api instanceof BattleshipApi)
+            this.api = api;
+        else
+            throw new Error('ShipRepository needs BattleshipApi to work');
+    }
 
-ShipRepository.prototype = {
-    loadShips: function (callback) {
+    loadShips(callback) {
         if (this.api === undefined || this.api === null)
             return;
 
-        this.api.get({route: this.api.routes.allShips}, function (data) {
-            var ships = [];
+        this.api.apiGet({route: this.api.routes.allShips}, function (data) {
+            let ships = [];
 
-            data.forEach(function (jsonShip) {
-                var ship = new Ship(jsonShip._id, jsonShip.name, jsonShip.length);
+            data.forEach(jsonShip => {
+                let ship = new Ship(jsonShip._id, jsonShip.name, jsonShip.length);
 
                 ships.push(ship);
             });
@@ -25,6 +25,4 @@ ShipRepository.prototype = {
             callback(ships);
         });
     }
-};
-
-module.exports = ShipRepository;
+}

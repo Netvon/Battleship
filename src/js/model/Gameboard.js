@@ -1,3 +1,5 @@
-/**
- * Created by Tom on 21-4-2016.
- */
+export default class Gameboard {
+    constructor() {
+        
+    }
+}

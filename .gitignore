@@ -11,4 +11,5 @@
 node_modules
 
 # project specific
-public/js/app.js
+public/js/main.js
+public/css/main.css

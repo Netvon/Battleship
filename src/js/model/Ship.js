@@ -1,16 +1,13 @@
-function Ship(id, name, length) {
-    this.name = name;
-    this.id = id;
-    this.length = length;
-}
+export default class Ship {
+    constructor(id, name, length) {
+        this.name = name;
+        this.id = id;
+        this.length = length;
+    }
 
-Ship.prototype = {
-    jsonDecode: function(jsonObject)
-    {
+    jsonDecode(jsonObject) {
         this.id = jsonObject._id;
         this.name = jsonObject.name;
         this.length = jsonObject.length;
     }
-};
-
-module.exports = Ship;
+}
