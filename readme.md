@@ -2,10 +2,10 @@
 
 ### Install
 To get the project to run you first need to install [Node](https://nodejs.org/en/). The project uses a number of node modules.
-    * Gulp
-    * Sass
-    * Browserify
-    * Babel
+* Gulp
+* Sass
+* Browserify
+* Babel
 
 After installing Node run `npm install` in the project root folder to install those dependencies.
 
