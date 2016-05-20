@@ -6,14 +6,14 @@ export default class ShipViewModel extends Ship {
 
         this.location = location;
 
-        switch (location) {
+        switch (orientation) {
             case 'vertical':
             case 'horizontal':
                 this.orientation = orientation;
                 break;
             default:
                 throw new Error('The "orientation" property of ShipViewModel must be "vertical" or "horizontal"');
-                break
+                break;
         }
 
         if (sprite === undefined)

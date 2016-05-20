@@ -13,3 +13,4 @@ node_modules
 # project specific
 public/js/main.js
 public/css/main.css
+public/css/vendor/

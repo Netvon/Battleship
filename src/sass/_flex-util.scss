@@ -1,0 +1,14 @@
+@mixin flex {
+  display: flex;
+}
+
+@mixin fill-viewport-h {
+  height: 100vh;
+}
+
+@mixin flex-align($align-items, $justify-content) {
+  @include flex;
+  align-items: $align-items;
+  justify-content: $justify-content;
+  flex-direction: column;
+}
