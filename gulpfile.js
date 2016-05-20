@@ -32,7 +32,12 @@ gulp.task('normalize', () => {
        .pipe(gulp.dest('public/css/vendor'));
 });
 
-gulp.task('default', ['es6', 'sass', 'normalize'], () => {
+gulp.task('enjoy', () => {
+    gulp.src('src/css/enjoy.css')
+        .pipe(gulp.dest('public/css/vendor'));
+});
+
+gulp.task('default', ['es6', 'sass', 'normalize', 'enjoy'], () => {
     gulp.watch('src/js/**/*.js', ['es6']);
     gulp.watch('src/sass/**/*.scss', ['sass']);
     gulp.watch('node_modules/normalize.css/**/*.*', ['normalize']);
