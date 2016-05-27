@@ -1,6 +1,13 @@
 import BattleshipRoute from './BattleshipRoute';
 
+/**
+ * @property url The Base url of the Api
+ */
 export default class BattleshipApi {
+    /**
+     * Constructs a new instance of the BattleShipApi class
+     * @param token {string}
+     */
     constructor(token) {
         if (window.jQuery === undefined)
             throw new Error('BattleshipApi needs jQuery to work');
@@ -13,40 +20,142 @@ export default class BattleshipApi {
         this.url = 'https://zeeslagavans.herokuapp.com/';
         this.tokenPrefix = 'token=';
         this.routes = {
-            currentUserGames: new BattleshipRoute('users/me/games'),
-            allGames: new BattleshipRoute('games'),
-            createGameWithAi: new BattleshipRoute('games/AI'),
-            allShips: new BattleshipRoute('ships'),
-            gameById: new BattleshipRoute('games/{id}'),
-            gameSetupById: new BattleshipRoute('games/{id}/gameboards'),
-            gameShotById: new BattleshipRoute('games/{id}/shots'),
-            testRoute: new BattleshipRoute('games/{id}')
+            // (urlFormat, methods, needsParam = false)
+            currentUser: new BattleshipRoute('users/me/info', 'get', false),
+            currentUserGames: new BattleshipRoute('users/me/games', 'get|delete', false),
+            createGame: new BattleshipRoute('games', 'get', false),
+            createGameWithAi: new BattleshipRoute('games/AI', 'get', false),
+            allShips: new BattleshipRoute('ships', 'get', false),
+            gameById: new BattleshipRoute('games/{id}', 'get', true),
+            gameSetupById: new BattleshipRoute('games/{id}/gameboards', 'post', true),
+            gameShotById: new BattleshipRoute('games/{id}/shots', 'post', true)
         };
     }
 
+    /**
+     *
+     * @param formattedRoute {string}
+     * @returns {string}
+     */
     withApiTokenSuffix(formattedRoute) {
+        if (formattedRoute === undefined || formattedRoute === null)
+            throw new Error('BattleshipApi needs jQuery to work');
+
+        if (typeof(formattedRoute) !== 'string')
+            throw new Error("The 'formattedRoute' parameter on BattleshipApi.withApiTokenSuffix must be a string");
+
         return `${this.url}${formattedRoute}?${this.tokenPrefix }${this.token}`;
     };
 
-    apiGet(options, callback) {
-        if (options === null || options === undefined)
-            throw new Error('The option on the get function of BattleshipApi cannot be empty');
-        else if (options.route === null || options.route === undefined)
-            throw new Error('The route option on the get function of BattleshipApi cannot be empty');
+    /**
+     * Sends a Get request to the BattleShip Api
+     *  The options are:
+     *  - route BattleshipRoute
+     *  - parameter {string}
+     *
+     * @param route BattleshipRoute
+     * @param parameter {string}
+     * @param callback {function}
+     */
+    apiGet({route, parameter}, callback) {
+        if (route === null || route === undefined)
+            throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
 
-        $.getJSON(this.withApiTokenSuffix(options.route.format(options.parameter)), callback);
+        route.checkMethod('get');
+
+        let url = this.withApiTokenSuffix(route.format(parameter));
+
+        $.get(url, data => {
+            if(data.error)
+                throw new Error(data.error.replace('Error: ', ''));
+
+            callback(data);
+
+        }).fail(() => {
+            throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+        });
     }
 
-    apiPost(route, parameter, object, callback) {
+    /**
+     * Sends a Post request to the BattleShip Api.
+     *  The options are:
+     *  - route BattleshipRoute
+     *  - parameter {string}
+     *
+     * @param route BattleshipRoute
+     * @param parameter {string}
+     * @param callback {function}
+     */
+    apiPost({route, parameter}, callback) {
+        if (route === null || route === undefined)
+            throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
 
+        route.checkMethod('post');
+
+        let url = this.withApiTokenSuffix(route.format(parameter));
+
+        $.post(url, data => {
+            if(data.error)
+                throw new Error(data.error.replace('Error: ', ''));
+
+            callback(data);
+
+        }).fail(() => {
+            throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+        });
     }
 
-    openSocket(callback) {
+    /**
+     *
+     * @param route BattleshipRoute
+     * @param parameter {string}
+     * @param callback {function}
+     */
+    apiDelete({route, parameter}, callback) {
+        if (route === null || route === undefined)
+            throw new Error('The route option on the apiDelete function of BattleshipApi cannot be empty');
+
+        route.checkMethod('delete');
+
+        $.ajax({
+            url: this.withApiTokenSuffix(route.format(parameter)),
+            type: 'DELETE',
+            success: data => {
+                if(data.error)
+                    throw new Error(data.error.replace('Error: ', ''));
+
+                callback(data);
+            },
+            error: () => {
+                throw new Error('The Battleship Api failed to process the request');
+            }
+        })
+    }
+
+    /**
+     * Listen to a notification on a Socket.IO room
+     *
+     * @param room {string}
+     * @param callback {function}
+     */
+    on(room, callback) {
         var socket = io.connect(this.url, {
             query: this.tokenPrefix + this.token
         });
 
-        socket.on('update', callback);
+        socket.on(room, callback);
+    }
+
+    onUpdate(callback) {
+        on('update', callback);
+    }
+
+    onShot(callback) {
+        on('shot', callback);
+    }
+
+    onTurn(callback) {
+        on('turn', callback);
     }
 
 }

@@ -1,27 +1,36 @@
-export default class ActiveGame {
-    constructor(id, status, enemyId, enemyName) {
-        this.id = id;
+import BaseGame from './BaseGame';
 
-        switch (status) {
-            case 'queue':
-            case 'setup':
-            case 'started':
-            case 'done':
-                this.status = status;
-                break;
-        }
+export default class ActiveGame extends BaseGame {
+    /**
+     * Created a new instance of the ActiveGame class
+     *
+     * @param id {number}
+     * @param state {string}
+     * @param enemyId {string}
+     * @param enemyName {string}
+     * @param isPlayerTurn {boolean}
+     * @param playerGameBoard
+     * @param enemyGameBoard
+     */
+    constructor(id, state, enemyId, enemyName, isPlayerTurn, playerGameBoard, enemyGameBoard) {
+        super(id, state);
 
         this.enemyId = enemyId;
         this.enemyName = enemyName;
+        this.isPlayerTurn = isPlayerTurn;
+        this.playerGameBoard = playerGameBoard;
+        this.enemyGameBoard = enemyGameBoard;
     }
 
-    jsonDecode(jsonObject) {
-        this.id = jsonObject._id;
-        this.status = jsonObject.status;
-        this.enemyId = jsonObject.enemyId;
-        this.enemyName = jsonObject.enemyName;
+    /**
+     *
+     * @param api BattleshipApi
+     * @param id {number}
+     * @param callback {function}
+     */
+    static get(api, id, callback) {
+        api.apiGet({route: api.routes.gameById, parameter: id}, data => {
 
-        if (jsonObject.winner !== undefined)
-            this.winner = jsonObject.winner;
+        });
     }
 }
