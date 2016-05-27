@@ -3,7 +3,7 @@ import ShipRepository from './repository/ShipRepository';
 import ShipViewModel from './viewmodel/ShipViewModel';
 import Hu from './util/Hu';
 import User from './model/User';
-import Game from './model/SetupGame';
+import Game from './model/games/SetupGame';
 
 var battleshipApi = new BattleshipApi('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI');
 var sRepo = new ShipRepository(battleshipApi);

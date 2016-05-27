@@ -1,5 +1,5 @@
 export default class Gameboard {
-    constructor() {
-        
+    constructor(ships) {
+        this.ships = ships;
     }
 }

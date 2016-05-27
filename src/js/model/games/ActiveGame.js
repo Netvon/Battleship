@@ -30,7 +30,7 @@ export default class ActiveGame extends BaseGame {
      */
     static get(api, id, callback) {
         api.apiGet({route: api.routes.gameById, parameter: id}, data => {
-
+            
         });
     }
 }
