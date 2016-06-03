@@ -1,5 +1,18 @@
+/**
+ *
+ * @property urlFormat {string}
+ * @property methods {array}
+ * @property needsParam {boolean}
+ */
 export default class BattleshipRoute {
-    constructor(urlFormat, canPost, canGet) {
+    /**
+     * Constructs a new instance of the BattleshipRoute class
+     *
+     * @param urlFormat {string}
+     * @param methods {string}
+     * @param needsParam {boolean}
+     */
+    constructor(urlFormat, methods, needsParam = false) {
         if (urlFormat === undefined || urlFormat === null)
             throw new Error('Cannot define an empty BattleshipRoute. Please define urlFormat.');
         if (typeof urlFormat !== 'string')
@@ -7,23 +20,37 @@ export default class BattleshipRoute {
 
         this.urlFormat = urlFormat;
 
-        if (canPost === undefined || canPost === null || typeof canPost !== 'boolean')
-            this.canPost = false;
-        else
-            this.canPost = canPost;
+        if (typeof methods === 'string')
+            this.methods = methods.split('|');
 
-        if (canGet === undefined || canGet === null || typeof canGet !== 'boolean')
-            this.canGet = true;
-        else
-            this.canGet = canGet;
+        if (typeof needsParam === 'boolean')
+            this.needsParam = needsParam;
     }
 
+    /**
+     * Return a formatted string of this route
+     *
+     * @param parameter {number}
+     * @returns {string|*}
+     */
     format(parameter) {
         var url = this.urlFormat;
 
-        if (parameter !== undefined && ((typeof parameter === 'number') && (parameter % 1 === 0)))
-            url = url.replace('{id}', parameter);
+        if ((parameter !== undefined || parameter !== null) && this.needsParam)
+            url = url.replace('{id}', `${parameter}`);
+        else if ((parameter === undefined || parameter === null) && this.needsParam)
+            throw new Error(`Route '${this.urlFormat}' needs a parameter`);
 
         return url;
+    }
+
+    /**
+     *
+     * @param method {string}
+     * @returns {boolean}
+     */
+    checkMethod(method) {
+        if(this.methods.indexOf(method) === -1)
+            throw new Error(`The selected route ('${this.urlFormat}') does not support the '${method}' method`);
     }
 }
