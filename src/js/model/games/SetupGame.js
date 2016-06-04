@@ -22,7 +22,7 @@ export default class SetupGame extends BaseGame {
      *
      * @param api {BattleshipApi}
      * @param isAi {boolean}
-     * @param callback {function}
+     * @param callback {function|null}
      */
     static create(api, callback, isAi = false) {
         let route = api.routes.createGame;

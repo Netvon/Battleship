@@ -1,35 +1,22 @@
-import Ship from '../model/ships/Ship';
+import GameboardShip from '../model/ships/GameboardShip';
 
-export default class ShipViewModel extends Ship {
-    constructor(id, name, length, location, orientation, sprite) {
-        super(id, name, length);
-
-        this.location = location;
-
-        switch (orientation) {
-            case 'vertical':
-            case 'horizontal':
-                this.orientation = orientation;
-                break;
-            default:
-                throw new Error('The "orientation" property of ShipViewModel must be "vertical" or "horizontal"');
-                break;
-        }
-
+export default class ShipViewModel extends GameboardShip {
+    /**
+     *
+     * @param id {id|string}
+     * @param name {string}
+     * @param length {number}
+     * @param startCell {Cell}
+     * @param orientation {string}
+     * @param sprite
+     */
+    constructor(id, name, length, startCell, orientation, sprite) {
+        super(id, name, length, startCell, orientation, null);
+        
         if (sprite === undefined)
             this.sprite = 'img/placeholder.gif';
         else
             this.sprite = sprite;
-    }
-
-    jsonEncode() {
-        return {
-            _id: this.id,
-            length: this.length,
-            startCell: {},
-            isVertical: false,
-            __v: 0
-        }
     }
 
     static fromShip(ship, location, orientation, sprite) {

@@ -18,7 +18,7 @@ export default class BaseGame extends JsonBase {
      * Delete all the games for the current User
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
+     * @param callback {function|null}
      */
     static deleteAll(api, callback) {
         api.apiDelete({route: api.routes.currentUserGames}, callback);

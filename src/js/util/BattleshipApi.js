@@ -98,7 +98,7 @@ export default class BattleshipApi {
             if (data.error)
                 throw new Error(data.error.replace('Error: ', ''));
 
-            if (callback !== undefined && callback !== null)
+            if (typeof callback === 'function')
                 callback(data);
 
         }).fail(() => {
@@ -129,7 +129,7 @@ export default class BattleshipApi {
                 if (data.error)
                     throw new Error(data.error.replace('Error: ', ''));
 
-                if (callback !== undefined && callback !== null)
+                if (typeof callback === 'function')
                     callback(data);
             },
             error: () => {

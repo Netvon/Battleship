@@ -9,7 +9,7 @@ export default class EnemyGameboard extends JsonBase {
      */
     constructor(id, ...shots) {
         super();
-
+        
         this.id = id;
         this.shots = [...shots];
     }

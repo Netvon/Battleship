@@ -15,6 +15,11 @@ export default class GameboardShip extends Ship {
     constructor(id, name, length, startCell, orientation, hits = null) {
         super(id, name, length);
 
+        if(typeof startCell !== Cell || length < 0 )
+            throw new Error('The startCell of a GameboardShip must be of type Cell');
+        if(typeof orientation !== 'string')
+            throw new Error('The orientation of a GameboardShip must be a string');
+
         this.startCell = startCell;
 
         if (!GameboardShip.isValidOrientation(orientation))

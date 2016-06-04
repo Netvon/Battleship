@@ -60,7 +60,6 @@ export default class User extends JsonBase {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
-     * @returns {*}
      */
     static deleteAllGames(api, callback) {
         if (api === undefined || api === null)
@@ -69,7 +68,7 @@ export default class User extends JsonBase {
         if (callback === undefined || callback === null || typeof callback !== 'function')
             throw new Error("The 'callback' parameter on User.deleteAllGames has to be a function");
 
-        return UserGame.deleteAll(api, callback);
+        UserGame.deleteAll(api, callback);
     }
 
     /**

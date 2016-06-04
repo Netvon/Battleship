@@ -36,7 +36,7 @@ export default class StartedGame extends UserGame {
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on StartedGame.doShot cannot be null");
 
-        if (callback === undefined || callback === null || typeof callback !== 'function')
+        if (typeof callback !== 'function')
             throw new Error("The 'callback' parameter on StartedGame.doShot has to be a function");
 
         api.apiPost({route: api.routes.gameShotById, parameter: this.id}, cell.toJson(), data => {
@@ -55,7 +55,7 @@ export default class StartedGame extends UserGame {
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on StartedGame.get cannot be null");
 
-        if (callback === undefined || callback === null || typeof callback !== 'function')
+        if (typeof callback !== 'function')
             throw new Error("The 'callback' parameter on StartedGame.get has to be a function");
 
         api.apiGet({route: api.routes.gameById, parameter: id}, data => {

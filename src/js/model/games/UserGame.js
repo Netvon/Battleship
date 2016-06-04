@@ -28,7 +28,7 @@ export default class UserGame extends BaseGame {
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on UserGame.getForUser cannot be null");
 
-        if (callback === undefined || callback === null || typeof callback !== 'function')
+        if (typeof callback !== 'function')
             throw new Error("The 'callback' parameter on UserGame.getForUser has to be a function");
 
         api.apiGet({route: api.routes.currentUserGames}, data => {

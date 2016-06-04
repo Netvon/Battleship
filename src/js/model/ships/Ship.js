@@ -10,7 +10,14 @@ export default class Ship extends JsonBase {
      */
     constructor(id, name, length) {
         super();
-        
+
+        if(typeof id !== 'number' || id < 0)
+            throw new Error('The ID of a Ship cannot be negative and must be a number');
+        if(typeof name !== 'string')
+            throw new Error('The name of a Ship must be a string');
+        if(typeof length !== 'number' || length < 0 )
+            throw new Error('The length of a Ship cannot be negative and must be a number');
+
         this.name = name;
         this.id = id;
         this.length = length;
@@ -26,7 +33,7 @@ export default class Ship extends JsonBase {
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on Ship.getAll cannot be null");
 
-        if (callback === undefined || callback === null || typeof callback !== 'function')
+        if (typeof callback !== 'function')
             throw new Error("The 'callback' parameter on Ship.getAll has to be a function");
 
         api.apiGet({route: api.routes.allShips}, function (data) {
