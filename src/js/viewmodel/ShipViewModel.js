@@ -1,4 +1,4 @@
-import Ship from './../model/Ship';
+import Ship from '../model/ships/Ship';
 
 export default class ShipViewModel extends Ship {
     constructor(id, name, length, location, orientation, sprite) {

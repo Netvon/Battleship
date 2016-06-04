@@ -7,12 +7,11 @@ let source = require('vinyl-source-stream');
 let buffer = require('vinyl-buffer');
 let sass = require('gulp-sass');
 let uglify = require('gulp-uglify');
+let ghPages = require('gulp-gh-pages');
 
 gulp.task('es6', () => {
     browserify('src/js/main.js')
-        .transform('babelify', {
-            presets: ['es2015']
-        })
+        .transform('babelify')
         .bundle()
         .pipe(source('main.js'))
         .pipe(buffer())
@@ -35,6 +34,11 @@ gulp.task('normalize', () => {
 gulp.task('enjoy', () => {
     gulp.src('src/css/enjoy.css')
         .pipe(gulp.dest('public/css/vendor'));
+});
+
+gulp.task('deploy', () => {
+   gulp.src('public/**/*')
+       .pipe(ghPages());
 });
 
 gulp.task('default', ['es6', 'sass', 'normalize', 'enjoy'], () => {

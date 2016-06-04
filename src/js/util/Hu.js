@@ -11,4 +11,9 @@ export default class Hu {
         el.innerHTML = `${el.innerHTML}${html}`;
     }
 
+    static querySet(query, html) {
+        let el = document.querySelector(query);
+        el.innerHTML = `${html}`;
+    }
+
 }
