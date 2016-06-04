@@ -3,7 +3,7 @@ import StartedGame from './StartedGame';
 
 export default class SetupGame extends BaseGame {
     /**
-     * Created a new instance of the SetupGame class
+     * Constructs a new instance of the SetupGame class
      *
      * @param id {number}
      * @param player1 {string}
@@ -36,6 +36,7 @@ export default class SetupGame extends BaseGame {
     }
 
     /**
+     * Submit a Gameboard to the API.
      *
      * @param api {BattleshipApi}
      * @param gameboard {Gameboard}
@@ -47,12 +48,21 @@ export default class SetupGame extends BaseGame {
             if (data.msg !== undefined && data.msg === 'success') {
                 this.state = data.status;
 
-                StartedGame.get(api, this.id, callback);
+                if(this.state = 'started')
+                    StartedGame.get(api, this.id, callback);
+                else
+                    callback(this);
             }
 
         });
     }
 
+    /**
+     * Converts a Json Object to a new instance of the SetupGame class
+     *
+     * @param jsonObject
+     * @returns {SetupGame}
+     */
     static fromJson(jsonObject) {
         return new SetupGame(jsonObject._id, jsonObject.player1, jsonObject.status, jsonObject.isAI);
     }

@@ -54,6 +54,7 @@ export default class Cell extends JsonBase {
 
     /**
      * Converts this object to JSON
+     *
      * @returns {{x: (string|*), y: (number|*)}}
      */
     toJson() {
@@ -65,6 +66,7 @@ export default class Cell extends JsonBase {
 
     /**
      * Converts a JSON object to a Cell
+     *
      * @param jsonObject {{x: (string|*), y: (number|*)}}
      * @returns {Cell}
      */

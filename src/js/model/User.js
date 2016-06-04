@@ -45,22 +45,18 @@ export default class User extends JsonBase {
     }
 
     /**
+     * Returns an Array of all Games the current user is participating in.
      *
      * @param api {BattleshipApi}
      * @param callback {function}
      * @returns {*}
      */
     static getGames(api, callback) {
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on User.getGames cannot be null");
-
-        if (callback === undefined || callback === null || typeof callback !== 'function')
-            throw new Error("The 'callback' parameter on User.getGames has to be a function");
-
         return UserGame.getForCurrentUser(api, callback);
     }
 
     /**
+     * Removes all Games the current user is participating in.
      *
      * @param api {BattleshipApi}
      * @param callback {function}
@@ -78,6 +74,7 @@ export default class User extends JsonBase {
 
     /**
      * Converts a JSON object to a User
+     *
      * @param jsonObject {{_id: (string|*), name: (string|*)}}
      * @returns {User}
      */

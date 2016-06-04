@@ -2,6 +2,7 @@ import BaseGame from './BaseGame';
 
 export default class UserGame extends BaseGame {
     /**
+     * Constructs a new instance of the UserGame class.
      *
      * @param id {string}
      * @param state {string}
@@ -18,6 +19,7 @@ export default class UserGame extends BaseGame {
     }
 
     /**
+     * Returns an Array of all Games this user is participating in.
      *
      * @param api {BattleshipApi}
      * @param callback {function}
@@ -40,6 +42,12 @@ export default class UserGame extends BaseGame {
         });
     }
 
+    /**
+     * Converts a Json Object to a new instance of the UserGame class
+     * 
+     * @param jsonObject
+     * @returns {UserGame}
+     */
     static fromJson(jsonObject) {
         return new UserGame(jsonObject._id,
             jsonObject.status,

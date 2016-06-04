@@ -3,6 +3,7 @@ import Cell from './../Cell';
 
 export default class GameboardShip extends Ship {
     /**
+     * Constructs a new instance of the GameboardShip class
      *
      * @param id {id|string}
      * @param name {string}
@@ -24,6 +25,7 @@ export default class GameboardShip extends Ship {
     }
 
     /**
+     * Checks if the orientation of this Ship is vertical
      *
      * @returns {boolean}
      */
@@ -31,15 +33,26 @@ export default class GameboardShip extends Ship {
         return this.orientation === 'vertical';
     }
 
+    /**
+     * Returns the X coordinate in number form
+     *
+     * @returns {number}
+     */
     get x() {
         return this.startCell.x;
     }
 
+    /**
+     * Returns the Y coordinate in number form
+     *
+     * @returns {number}
+     */
     get y() {
         return this.startCell.y;
     }
 
     /**
+     * Constructs a new instance of the GameboardShip class user a Ship
      *
      * @param ship {Ship}
      * @param startCell {Cell}
@@ -52,6 +65,10 @@ export default class GameboardShip extends Ship {
     }
 
     /**
+     * Checks if a orientation string is valid.
+     * Valid values are:
+     *  - vertical
+     *  - horizontal
      *
      * @param orientation {string}
      * @returns {boolean}
@@ -81,26 +98,28 @@ export default class GameboardShip extends Ship {
         }
     }
 
+    /**
+     * Converts a Json Object to a new instance of the GameboardShip class
+     * 
+     * @param jsonObject
+     * @returns {GameboardShip}
+     */
     static fromJson(jsonObject) {
         let hits = [];
         jsonObject.hits.forEach(hit => {
            hits.push(Cell.fromJson(hit));
         });
 
+        let orientation = 'horizontal';
+        if(jsonObject.isVertical)
+            orientation =  'vertical';
+
         return new GameboardShip(jsonObject._id,
             jsonObject.name,
             jsonObject.length,
             Cell.fromJson(jsonObject.startCell),
-            GameboardShip.orientationFromJson(jsonObject),
+            orientation,
             hits
         );
-    }
-
-    static orientationFromJson(jsonObject)
-    {
-        if(jsonObject.isVertical)
-            return 'vertical';
-
-        return 'horizontal';
     }
 }

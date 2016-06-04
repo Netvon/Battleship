@@ -36,6 +36,12 @@ export default class Persistence {
         localStorage.removeItem(key);
     }
 
+    /**
+     * Checks if a given key exists in the Local Storage
+     * 
+     * @param key {string}
+     * @returns {boolean}
+     */
     static hasKey(key) {
         if (typeof(Storage) === "undefined")
             throw new Error("Local storage is not supported.");

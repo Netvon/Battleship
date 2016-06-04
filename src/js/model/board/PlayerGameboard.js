@@ -3,6 +3,7 @@ import GameboardShip from './../ships/GameboardShip';
 
 export default class PlayerGameboard extends Gameboard {
     /**
+     * Constructs a new instance of the PlayerGameboard class
      *
      * @param id {number}
      * @param ships

@@ -17,6 +17,7 @@ export default class Ship extends JsonBase {
     }
 
     /**
+     * Returns an Array of all Ship available to the User
      *
      * @param api {BattleshipApi}
      * @param callback {function}

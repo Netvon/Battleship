@@ -3,6 +3,7 @@ import GameboardShip from './../ships/GameboardShip';
 
 export default class Gameboard extends JsonBase {
     /**
+     * Constructs a new instance of the Gameboard class
      *
      * @param ships {GameboardShip}
      */
@@ -51,6 +52,7 @@ export default class Gameboard extends JsonBase {
     }
 
     /**
+     * Place a ship on the board.
      *
      * @param ship {Ship}
      * @param cell {Cell}
@@ -62,11 +64,10 @@ export default class Gameboard extends JsonBase {
             this.ships.push(GameboardShip.fromShip(ship, cell, orientation));
         else
             throw new Error(`The ship '${ship.name}' cannot be placed on {x:${cell.x}, y:${cell.y}}`);
-
     }
 
     /**
-     *
+     * Checks if a Cell can contain a given Ship
      *
      * @param ship {Ship}
      * @param cell {Cell}

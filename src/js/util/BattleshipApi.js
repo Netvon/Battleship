@@ -1,8 +1,5 @@
 import BattleshipRoute from './BattleshipRoute';
 
-/**
- * @property url The Base url of the Api
- */
 export default class BattleshipApi {
     /**
      * Constructs a new instance of the BattleShipApi class
@@ -33,6 +30,7 @@ export default class BattleshipApi {
     }
 
     /**
+     * Returns a formatted version of a route URI with the API base url and API token
      *
      * @param formattedRoute {string}
      * @returns {string}
@@ -109,6 +107,10 @@ export default class BattleshipApi {
     }
 
     /**
+     * Sends a Delete request to the BattleShip Api.
+     *  The options are:
+     *  - route BattleshipRoute
+     *  - parameter {string}
      *
      * @param route {BattleshipRoute}
      * @param parameter {string}

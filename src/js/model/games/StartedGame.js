@@ -4,7 +4,7 @@ import EnemyGameboard from "../board/EnemyGameboard";
 
 export default class StartedGame extends UserGame {
     /**
-     * Created a new instance of the StartedGame class
+     * Constructs a new instance of the StartedGame class
      *
      * @param id {number}
      * @param state {string}
@@ -22,7 +22,17 @@ export default class StartedGame extends UserGame {
         this.enemyGameBoard = enemyGameBoard;
     }
 
+    /**
+     * Fires a shot on a given Cell at the opponent's board
+     *
+     * @param api {BattleshipApi}
+     * @param cell {Cell}
+     * @param callback {function}
+     */
     doShot(api, cell, callback) {
+        if(!this.isPlayerTurn)
+            throw new Error(`You cannot fire a shot in Game#${this.id} because it is not your turn`);
+
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on StartedGame.doShot cannot be null");
 
@@ -35,6 +45,7 @@ export default class StartedGame extends UserGame {
     }
 
     /**
+     * Returns a new instance of the StaredGame class by ID
      *
      * @param api {BattleshipApi}
      * @param id {number}
@@ -55,6 +66,12 @@ export default class StartedGame extends UserGame {
         });
     }
 
+    /**
+     * Converts a Json Object to a new instance of the StartedGame class
+     *
+     * @param jsonObject
+     * @returns {StartedGame}
+     */
     static fromJson(jsonObject) {
 
         console.log(jsonObject);

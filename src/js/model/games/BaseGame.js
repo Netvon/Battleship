@@ -2,7 +2,7 @@ import JsonBase from './../../util/JsonBase'
 
 export default class BaseGame extends JsonBase {
     /**
-     * Created a new instance of the BaseGame class
+     * Constructs a new instance of the BaseGame class
      *
      * @param id {string}
      * @param state {string}
@@ -24,14 +24,30 @@ export default class BaseGame extends JsonBase {
         api.apiDelete({route: api.routes.currentUserGames}, callback);
     }
 
+    /**
+     * Converts a Json Object to a new instance of the BaseGame class.
+     *
+     * @param jsonObject
+     * @returns {BaseGame}
+     */
     static fromJson(jsonObject) {
         return new BaseGame(jsonObject._id, jsonObject.status);
     }
 
+    /**
+     * Returns the current state of the game.
+     *
+     * @returns {*}
+     */
     get state() {
         return this._state;
     }
 
+    /**
+     * Set the state of the game
+     *
+     * @param value
+     */
     set state(value) {
         if(!BaseGame.isValidState(value))
             throw new Error(`The state: '${value}' is not a valid game state`);
@@ -39,6 +55,11 @@ export default class BaseGame extends JsonBase {
         this._state = value;
     }
 
+    /**
+     * Converts this BaseGame to a Json Object
+     *
+     * @returns {{_id: (string|*), status: *}}
+     */
     toJson() {
         return {
             "_id": this.id,
@@ -47,7 +68,13 @@ export default class BaseGame extends JsonBase {
     }
 
     /**
-     *
+     * Checks if a state string is valid.
+     * Valid values include;
+     *  - queue
+     *  - setup
+     *  - started
+     *  - done
+     *  
      * @param state {string}
      * @returns {boolean}
      */

@@ -45,6 +45,7 @@ export default class BattleshipRoute {
     }
 
     /**
+     * Checks if this route can perform a given http method
      *
      * @param method {string}
      * @returns {boolean}
