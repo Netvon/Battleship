@@ -1,5 +1,6 @@
 import JsonBase from './../util/JsonBase';
 import UserGame from './../model/games/UserGame';
+import Persistence from './../util/Persistence';
 
 export default class User extends JsonBase {
     /**
@@ -10,7 +11,7 @@ export default class User extends JsonBase {
      */
     constructor(email, name) {
         super();
-        
+
         if (email === undefined || email == null)
             throw new Error("You cannot create a User without specifying an email address");
         if (name === undefined || name == null)
@@ -33,6 +34,11 @@ export default class User extends JsonBase {
      * @param callback {function}
      */
     static getCurrent(api, callback) {
+
+        if (Persistence.hasKey('bs-user')) {
+            callback(User.fromJson(JSON.parse(Persistence.get('bs-user'))));
+        }
+
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on User.getCurrent cannot be null");
 
@@ -40,6 +46,7 @@ export default class User extends JsonBase {
             throw new Error("The 'callback' parameter on User.getCurrent has to be a function");
 
         api.apiGet({route: api.routes.currentUser}, data => {
+            Persistence.set('bs-user', JSON.stringify(data));
             callback(User.fromJson(data));
         });
     }

@@ -1,4 +1,5 @@
 import BattleshipRoute from './BattleshipRoute';
+import Persistence from './Persistence';
 
 export default class BattleshipApi {
     /**
@@ -12,7 +13,7 @@ export default class BattleshipApi {
         if (window.io === undefined)
             throw new Error('BattleshipApi need Socket.IO to work');
 
-        this.token = token;
+        this._token = token;
 
         this.url = 'https://zeeslagavans.herokuapp.com/';
         this.tokenPrefix = 'token=';
@@ -136,6 +137,19 @@ export default class BattleshipApi {
                 throw new Error('The Battleship Api failed to process the request');
             }
         })
+    }
+
+    get token() {
+        return this._token;
+    }
+
+    set token(value) {
+        if(this.token !== value) {
+            this._token = value;
+
+            Persistence.set('token', value);
+            Persistence.remove('bs-user');
+        }
     }
 
     /**

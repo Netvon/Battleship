@@ -74,7 +74,7 @@ export default class StartedGame extends UserGame {
      */
     static fromJson(jsonObject) {
 
-        console.log(jsonObject);
+        // console.log(jsonObject);
 
         return new StartedGame(jsonObject._id,
             jsonObject.status,

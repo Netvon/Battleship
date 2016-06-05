@@ -1,4 +1,5 @@
 import JsonBase from '../../util/JsonBase'
+import Persistence from '../../util/Persistence';
 
 export default class Ship extends JsonBase {
     /**
@@ -11,12 +12,12 @@ export default class Ship extends JsonBase {
     constructor(id, name, length) {
         super();
 
-        if(typeof id !== 'number' || id < 0)
-            throw new Error('The ID of a Ship cannot be negative and must be a number');
-        if(typeof name !== 'string')
-            throw new Error('The name of a Ship must be a string');
-        if(typeof length !== 'number' || length < 0 )
-            throw new Error('The length of a Ship cannot be negative and must be a number');
+        if (typeof id !== 'number' && typeof id !== 'string')
+            throw new Error(`The ID of a Ship must be a number or a string: ID ${id}`);
+        if (typeof name !== 'string')
+            throw new Error(`The name of a Ship must be a string: name ${name}`);
+        if (typeof length !== 'number' || length < 0)
+            throw new Error(`The length of a Ship cannot be negative and must be a number: length ${length}`);
 
         this.name = name;
         this.id = id;
@@ -30,13 +31,10 @@ export default class Ship extends JsonBase {
      * @param callback {function}
      */
     static getAll(api, callback) {
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on Ship.getAll cannot be null");
 
-        if (typeof callback !== 'function')
-            throw new Error("The 'callback' parameter on Ship.getAll has to be a function");
+        let processShips = data => {
+            Persistence.set('bs-ships', JSON.stringify(data));
 
-        api.apiGet({route: api.routes.allShips}, function (data) {
             let ships = [];
 
             data.forEach(jsonShip => {
@@ -44,7 +42,24 @@ export default class Ship extends JsonBase {
             });
 
             callback(ships);
-        });
+        };
+
+        if (Persistence.hasKey('bs-ships')) {
+            // console.log('Loading Ships from storage');
+            let json = Persistence.get('bs-ships');
+            processShips(JSON.parse(json));
+        }
+        else {
+            if (api === undefined || api === null)
+                throw new Error("The 'api' parameter on Ship.getAll cannot be null");
+
+            if (typeof callback !== 'function')
+                throw new Error("The 'callback' parameter on Ship.getAll has to be a function");
+
+            api.apiGet({route: api.routes.allShips}, data => {
+                processShips(data);
+            });
+        }
     }
 
     /**
@@ -62,7 +77,7 @@ export default class Ship extends JsonBase {
 
     /**
      * Converts a JSON object to a Ship
-     * 
+     *
      * @param jsonObject {{_id: (number|*), name: (string|*), length: (number|*)}}
      * @returns {Ship}
      */
