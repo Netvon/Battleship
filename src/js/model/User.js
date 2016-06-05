@@ -2,6 +2,7 @@ import JsonBase from './../util/JsonBase';
 import UserGame from './../model/games/UserGame';
 import Persistence from './../util/Persistence';
 import * as bs from '../util/BattleshipConst';
+import BattleshipApi from '../util/BattleshipApi';
 
 export default class User extends JsonBase {
     /**

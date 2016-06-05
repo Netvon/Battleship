@@ -1,6 +1,7 @@
 import UserGame from './UserGame';
 import PlayerGameboard from "../board/PlayerGameboard";
 import EnemyGameboard from "../board/EnemyGameboard";
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class StartedGame extends UserGame {
     /**

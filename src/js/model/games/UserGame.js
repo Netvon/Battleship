@@ -1,4 +1,5 @@
 import BaseGame from './BaseGame';
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class UserGame extends BaseGame {
     /**

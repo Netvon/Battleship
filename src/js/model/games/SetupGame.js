@@ -1,6 +1,7 @@
 import BaseGame from './BaseGame';
 import StartedGame from './StartedGame';
 import {STATE} from '../../util/BattleshipConst';
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class SetupGame extends BaseGame {
     /**

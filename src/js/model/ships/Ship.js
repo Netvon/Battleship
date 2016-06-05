@@ -1,6 +1,7 @@
 import JsonBase from '../../util/JsonBase'
 import Persistence from '../../util/Persistence';
 import * as bs from '../../util/BattleshipConst';
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class Ship extends JsonBase {
     /**

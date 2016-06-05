@@ -22,7 +22,7 @@ export default class BattleshipApi {
      * @returns {string}
      */
     static get tokenPrefix() {
-        return 'token='
+        return 'token=';
     }
 
     /**
@@ -65,7 +65,7 @@ export default class BattleshipApi {
         if (typeof(formattedRoute) !== 'string')
             throw new Error("The 'formattedRoute' parameter on BattleshipApi.withApiTokenSuffix must be a string");
 
-        return `${this.url}${formattedRoute}?${this.tokenPrefix }${this.token}`;
+        return `${BattleshipApi.url}${formattedRoute}?${BattleshipApi.tokenPrefix }${this.token}`;
     };
 
     /**

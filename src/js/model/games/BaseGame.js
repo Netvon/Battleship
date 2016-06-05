@@ -1,5 +1,6 @@
 import JsonBase from './../../util/JsonBase'
 import {STATE} from '../../util/BattleshipConst';
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class BaseGame extends JsonBase {
     /**
