@@ -1,0 +1,75 @@
+@import url("vendor/normalize.css");
+@import url("vendor/enjoy.css");
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
+@import url("https://fonts.googleapis.com/css?family=Patua+One");
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css");
+.bs-fill-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; }
+
+.bs-hero {
+  background-size: cover;
+  background-image: url("../img/background.png");
+  background-attachment: fixed;
+  background-position: bottom; }
+  .bs-hero > .bs-hero-title {
+    margin: 0;
+    font-size: 6em;
+    color: white;
+    text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 0.05em rgba(0, 0, 0, 0.38);
+    font-family: 'Patua One', sans-serif; }
+    @media screen and (max-width: 425px) {
+      .bs-hero > .bs-hero-title {
+        font-size: 3em; } }
+  .bs-hero > .bs-hero-credit {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0.8em 0;
+    color: #9bccd8;
+    font-weight: 900;
+    font-family: monospace; }
+
+.bs-tst-cards {
+  display: flex;
+  text-decoration: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap; }
+
+.bs-tst-card {
+  min-width: 3em;
+  min-height: 3em;
+  margin: 1em;
+  padding: 2em;
+  border-radius: 6px;
+  font-family: monospace;
+  background-color: rgba(49, 27, 136, 0.06);
+  color: rgba(0, 0, 0, 0.5);
+  line-height: 1.6em; }
+  .bs-tst-card > ul {
+    text-decoration: none;
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+
+input[type=text] {
+  background: #d3deef;
+  border: none;
+  padding: 1em;
+  border-radius: 6px;
+  color: #345877;
+  transition: background-color .3s ease; }
+  input[type=text].bs-mono-input {
+    font-family: monospace; }
+  input[type=text]:hover, input[type=text]:active {
+    background: #bdcdef;
+    color: #345877; }
+  input[type=text]:focus {
+    outline: none; }
