@@ -15,11 +15,11 @@ export default class Ship extends JsonBase {
         super();
 
         if (typeof id !== 'number' && typeof id !== 'string')
-            throw new Error(`The ID of a Ship must be a number or a string: ID ${id}`);
+            throw new TypeError(`The ID of a Ship must be a number or a string: ID ${id}`);
         if (typeof name !== 'string')
-            throw new Error(`The name of a Ship must be a string: name ${name}`);
+            throw new TypeError(`The name of a Ship must be a string: name ${name}`);
         if (typeof length !== 'number' || length < 0)
-            throw new Error(`The length of a Ship cannot be negative and must be a number: length ${length}`);
+            throw new RangeError(`The length of a Ship cannot be negative and must be a number: length ${length}`);
 
         this.name = name;
         this.id = id;
@@ -56,7 +56,7 @@ export default class Ship extends JsonBase {
                 throw new Error("The 'api' parameter on Ship.getAll cannot be null");
 
             if (typeof callback !== 'function')
-                throw new Error("The 'callback' parameter on Ship.getAll has to be a function");
+                throw new TypeError("The 'callback' parameter on Ship.getAll has to be a function");
 
             api.apiGet({route: BattleshipApi.routes.allShips}, data => {
                 processShips(data);

@@ -26,11 +26,11 @@ export default class UserGame extends BaseGame {
      * @param callback {function}
      */
     static getForCurrentUser(api, callback) {
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on UserGame.getForUser cannot be null");
+        if (!(api instanceof BattleshipApi))
+            throw new TypeError("The 'api' parameter on UserGame.getForUser cannot be null");
 
         if (typeof callback !== 'function')
-            throw new Error("The 'callback' parameter on UserGame.getForUser has to be a function");
+            throw new TypeError("The 'callback' parameter on UserGame.getForUser has to be a function");
 
         api.apiGet({route: BattleshipApi.routes.currentUserGames}, data => {
             let userGames = [];

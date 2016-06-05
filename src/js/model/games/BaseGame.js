@@ -23,6 +23,9 @@ export default class BaseGame extends JsonBase {
      * @param callback {function|null}
      */
     static deleteAll(api, callback) {
+        if (!(api instanceof BattleshipApi))
+            throw new Error("The 'api' parameter on User.deleteAllGames cannot be null");
+
         api.apiDelete({route: BattleshipApi.routes.currentUserGames}, callback);
     }
 

@@ -8,6 +8,7 @@ import Gameboard from './model/board/Gameboard';
 import Cell from './model/Cell';
 
 (function () {
+
     let allShips = [];
 
     if (!Persistence.hasKey('token'))

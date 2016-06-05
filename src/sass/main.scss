@@ -16,23 +16,40 @@
 
 .#{$selector-prefix}hero {
   background-size: cover;
-  background-blend-mode: multiply;
   background-image: url('../img/background.png');
+  background-attachment: fixed;
+  background-position: bottom;
 
   & > &-title {
     margin: 0;
     font-size: 6em;
     color: white;
-    text-shadow: 0 .05em rgba(0, 0, 0, 0.38);
+    text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 .05em rgba(0, 0, 0, 0.38);
     font-family: 'Patua One', sans-serif;
 
-    &:after {
-      content: 'alpha';
-      margin-left: 0.1em;
-      font-size: 0.5em;
-      text-shadow: none;
-      color: black;
+    //&:after {
+    //  content: 'alpha';
+    //  margin-left: 0.1em;
+    //  font-size: 0.5em;
+    //  text-shadow: none;
+    //  color: black;
+    //}
+
+    @media screen and (max-width: $mobile-l) {
+      font-size: 3em;
     }
+  }
+
+  & > &-credit {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 0.8em 0;
+    color: #9bccd8;
+    font-weight: 900;
+    font-family: monospace;
   }
 }
 
