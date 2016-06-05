@@ -1,4 +1,5 @@
 import JsonBase from './../../util/JsonBase'
+import {STATE} from '../../util/BattleshipConst';
 
 export default class BaseGame extends JsonBase {
     /**
@@ -80,10 +81,10 @@ export default class BaseGame extends JsonBase {
      */
     static isValidState(state) {
         switch (state.toLowerCase()) {
-            case 'queue':
-            case 'setup':
-            case 'started':
-            case 'done':
+            case STATE.QUEUE:
+            case STATE.SETUP:
+            case STATE.STARTED:
+            case STATE.DONE:
                 return true;
         }
 

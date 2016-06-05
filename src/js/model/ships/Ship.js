@@ -1,5 +1,6 @@
 import JsonBase from '../../util/JsonBase'
 import Persistence from '../../util/Persistence';
+import * as bs from '../../util/BattleshipConst';
 
 export default class Ship extends JsonBase {
     /**
@@ -33,7 +34,7 @@ export default class Ship extends JsonBase {
     static getAll(api, callback) {
 
         let processShips = data => {
-            Persistence.set('bs-ships', JSON.stringify(data));
+            Persistence.set(bs.PER_SHIPSKEY, JSON.stringify(data));
 
             let ships = [];
 
@@ -44,9 +45,9 @@ export default class Ship extends JsonBase {
             callback(ships);
         };
 
-        if (Persistence.hasKey('bs-ships')) {
+        if (Persistence.hasKey(bs.PER_SHIPSKEY)) {
             // console.log('Loading Ships from storage');
-            let json = Persistence.get('bs-ships');
+            let json = Persistence.get(bs.PER_SHIPSKEY);
             processShips(JSON.parse(json));
         }
         else {
@@ -72,12 +73,12 @@ export default class Ship extends JsonBase {
     bounds(cell, orientation) {
         let xmin, ymin, xmax, ymax;
 
-        if (orientation === 'vertical') {
+        if (orientation === bs.VERTICAL) {
             xmin = xmax = cell.x;
             ymin = cell.y;
             ymax = (ymin + this.length) - 1;
 
-        } else if (orientation === 'horizontal') {
+        } else if (orientation === bs.HORIZONTAL) {
             xmin = cell.x;
             xmax = (xmin + this.length) - 1;
 

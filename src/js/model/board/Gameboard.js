@@ -1,5 +1,6 @@
 import JsonBase from './../../util/JsonBase';
 import GameboardShip from './../ships/GameboardShip';
+import * as bs from '../../util/BattleshipConst';
 
 export default class Gameboard extends JsonBase {
     /**
@@ -11,9 +12,9 @@ export default class Gameboard extends JsonBase {
         super();
 
         this.ships = [...ships];
-
-        if (this.ships.length > 5)
-            throw new Error("A Gameboard must contain 5 ships");
+        
+        if (this.ships.length > bs.SHIPMAX)
+            throw new Error(`A Gameboard must contain ${bs.SHIPMAX} ships`);
     }
 
     /**
@@ -39,7 +40,7 @@ export default class Gameboard extends JsonBase {
      * @returns {boolean}
      */
     get isValid() {
-        let max = 10;
+        let max = bs.CELLMAX;
 
         for (let ship of this.ships) {
             let x = ship.x;
@@ -76,12 +77,12 @@ export default class Gameboard extends JsonBase {
      */
     canPlaceShip(ship, cell, orientation) {
 
-        if (this.ships.length >= 5)
+        if (this.ships.length >= bs.SHIPMAX)
             return false;
 
         let shipBounds = ship.bounds(cell, orientation);
 
-        if (shipBounds.xmax > 10 || shipBounds.ymax > 10)
+        if (shipBounds.xmax > bs.CELLMAX || shipBounds.ymax > bs.CELLMAX)
             return false;
 
         // console.log(this.ships);

@@ -1,5 +1,6 @@
 import BaseGame from './BaseGame';
 import StartedGame from './StartedGame';
+import {STATE} from '../../util/BattleshipConst';
 
 export default class SetupGame extends BaseGame {
     /**
@@ -48,7 +49,7 @@ export default class SetupGame extends BaseGame {
             if (data.msg !== undefined && data.msg === 'success') {
                 this.state = data.status;
 
-                if(this.state = 'started')
+                if(this.state === STATE.STARTED)
                     StartedGame.get(api, this.id, callback);
                 else
                     callback(this);

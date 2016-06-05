@@ -1,5 +1,6 @@
 import BattleshipRoute from './BattleshipRoute';
 import Persistence from './Persistence';
+import * as bs from './BattleshipConst';
 
 export default class BattleshipApi {
     /**
@@ -147,8 +148,8 @@ export default class BattleshipApi {
         if(this.token !== value) {
             this._token = value;
 
-            Persistence.set('token', value);
-            Persistence.remove('bs-user');
+            Persistence.set(bs.PER_TOKENKEY, value);
+            Persistence.remove(bs.PER_USERKEY);
         }
     }
 

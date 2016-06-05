@@ -1,6 +1,7 @@
 import JsonBase from './../util/JsonBase';
 import UserGame from './../model/games/UserGame';
 import Persistence from './../util/Persistence';
+import * as bs from '../util/BattleshipConst';
 
 export default class User extends JsonBase {
     /**
@@ -35,8 +36,8 @@ export default class User extends JsonBase {
      */
     static getCurrent(api, callback) {
 
-        if (Persistence.hasKey('bs-user')) {
-            callback(User.fromJson(JSON.parse(Persistence.get('bs-user'))));
+        if (Persistence.hasKey(bs.PER_USERKEY)) {
+            callback(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
         }
 
         if (api === undefined || api === null)
@@ -46,7 +47,7 @@ export default class User extends JsonBase {
             throw new Error("The 'callback' parameter on User.getCurrent has to be a function");
 
         api.apiGet({route: api.routes.currentUser}, data => {
-            Persistence.set('bs-user', JSON.stringify(data));
+            Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
             callback(User.fromJson(data));
         });
     }

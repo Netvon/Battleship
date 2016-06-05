@@ -1,4 +1,5 @@
 import JsonBase from './../util/JsonBase';
+import * as bs from '../util/BattleshipConst';
 
 export default class Cell extends JsonBase {
     /**
@@ -11,18 +12,18 @@ export default class Cell extends JsonBase {
         super();
 
         if (typeof(x) === 'number')
-            x = String.fromCharCode((x - 1) + 'a'.charCodeAt(0));
+            x = String.fromCharCode((x - 1) + bs.CHARSTART);
 
         this._x = x.toLowerCase();
         this._y = y;
 
         // console.log(`{x: ${this.x}, y: ${this.y}}`);
 
-        if (this.x < 1 || this.x > 10)
-            throw new Error("The X coordinate on a Cell must be between 1 and 10");
+        if (this.x < bs.CELLMIN || this.x > bs.CELLMAX)
+            throw new Error(`The X coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX}`);
 
-        if (this.y < 1 || this.y > 10)
-            throw new Error("The Y coordinate on a Cell must be between 1 and 10");
+        if (this.y < bs.CELLMIN || this.y > bs.CELLMAX)
+            throw new Error(`The Y coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX}`);
     }
 
     /**
@@ -31,7 +32,7 @@ export default class Cell extends JsonBase {
      * @returns {number}
      */
     get x() {
-        return (this._x.charCodeAt(0) - 'a'.charCodeAt(0) ) + 1;
+        return (this._x.charCodeAt(0) - bs.CHARSTART ) + 1;
     }
 
     /**

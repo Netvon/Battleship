@@ -1,5 +1,6 @@
 import Ship from './Ship';
 import Cell from './../Cell';
+import * as bs from '../../util/BattleshipConst';
 
 export default class GameboardShip extends Ship {
     /**
@@ -15,9 +16,9 @@ export default class GameboardShip extends Ship {
     constructor(id, name, length, startCell, orientation, hits = null) {
         super(id, name, length);
 
-        if(!(startCell instanceof Cell))
+        if (!(startCell instanceof Cell))
             throw new Error('The startCell of a GameboardShip must be of type Cell');
-        if(typeof orientation !== 'string')
+        if (typeof orientation !== 'string')
             throw new Error('The orientation of a GameboardShip must be a string');
 
         this.startCell = startCell;
@@ -35,7 +36,7 @@ export default class GameboardShip extends Ship {
      * @returns {boolean}
      */
     get isVertical() {
-        return this.orientation === 'vertical';
+        return this.orientation === bs.VERTICAL;
     }
 
     /**
@@ -80,8 +81,8 @@ export default class GameboardShip extends Ship {
      */
     static isValidOrientation(orientation) {
         switch (orientation.toLowerCase()) {
-            case 'vertical':
-            case 'horizontal':
+            case bs.VERTICAL:
+            case bs.HORIZONTAL:
                 return true;
         }
 
@@ -116,19 +117,19 @@ export default class GameboardShip extends Ship {
 
     /**
      * Converts a Json Object to a new instance of the GameboardShip class
-     * 
+     *
      * @param jsonObject
      * @returns {GameboardShip}
      */
     static fromJson(jsonObject) {
         let hits = [];
         jsonObject.hits.forEach(hit => {
-           hits.push(Cell.fromJson(hit));
+            hits.push(Cell.fromJson(hit));
         });
 
-        let orientation = 'horizontal';
-        if(jsonObject.isVertical)
-            orientation =  'vertical';
+        let orientation = bs.HORIZONTAL;
+        if (jsonObject.isVertical)
+            orientation = bs.VERTICAL;
 
         return new GameboardShip(jsonObject._id,
             jsonObject.name,
