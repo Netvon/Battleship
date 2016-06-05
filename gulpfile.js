@@ -15,29 +15,28 @@ gulp.task('es6', () => {
         .bundle()
         .pipe(source('main.js'))
         .pipe(buffer())
-        //.pipe(uglify())
-        .pipe(gulp.dest('public/js/'));
+        .pipe(gulp.dest('dist/js/'));
 });
 
 gulp.task('sass', () => {
     gulp.src('src/sass/main.scss')
         .pipe(sass().on('error', sass.logError))
         //.pipe(uglify())
-        .pipe(gulp.dest('public/css/'));
+        .pipe(gulp.dest('dist/css/'));
 });
 
 gulp.task('normalize', () => {
    gulp.src('node_modules/normalize.css/normalize.css')
-       .pipe(gulp.dest('public/css/vendor'));
+       .pipe(gulp.dest('dist/css/vendor'));
 });
 
 gulp.task('enjoy', () => {
     gulp.src('src/css/enjoy.css')
-        .pipe(gulp.dest('public/css/vendor'));
+        .pipe(gulp.dest('dist/css/vendor'));
 });
 
 gulp.task('deploy', () => {
-   gulp.src('public/**/*')
+   gulp.src('dist/**/*')
        .pipe(ghPages());
 });
 
