@@ -18,3 +18,4 @@ dist/js/
 dist/css/
 dist/css/
 npm-debug.log
+.publish/
