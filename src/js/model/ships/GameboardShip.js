@@ -89,6 +89,17 @@ export default class GameboardShip extends Ship {
     }
 
     /**
+     * Get the bounds of this GameboardShip
+     *
+     * @param cell {Cell}
+     * @param orientation {string}
+     * @returns {{xmin, ymin, xmax, ymax}|{xmin: number, ymin: number, xmax: number, ymax: number}}
+     */
+    bounds(cell = this.startCell, orientation = this.orientation) {
+        return super.bounds(cell, orientation);
+    }
+
+    /**
      * Converts this object to JSON
      *
      * @returns {{_id: (*|number|string), length: (*|number), name: (*|string), startCell: ({x, y}|{x: (string|*), y: (number|*)}), isVertical: boolean}}

@@ -63,6 +63,33 @@ export default class Ship extends JsonBase {
     }
 
     /**
+     * Get the bounds of this Ship
+     * 
+     * @param cell {Cell}
+     * @param orientation {string}
+     * @returns {{xmin: number, ymin: number, xmax: number, ymax: number}}
+     */
+    bounds(cell, orientation) {
+        let xmin, ymin, xmax, ymax;
+
+        if (orientation === 'vertical') {
+            xmin = xmax = cell.x;
+            ymin = cell.y;
+            ymax = (ymin + this.length) - 1;
+
+        } else if (orientation === 'horizontal') {
+            xmin = cell.x;
+            xmax = (xmin + this.length) - 1;
+
+            ymin = ymax = cell.y;
+        }
+
+        // console.log(`length: ${this.length} - xmin:${xmin}|xmax:${xmax}|ymin:${ymin}|ymax:${ymax}`);
+
+        return {xmin, ymin, xmax, ymax};
+    }
+
+    /**
      * Converts this object to JSON
      *
      * @returns {{_id: (number|string|*), name: (string|*), length: (number|*)}}

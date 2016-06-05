@@ -60,7 +60,7 @@ export default class Gameboard extends JsonBase {
      */
     placeShip(ship, cell, orientation) {
 
-        if(this.canPlaceShip(ship, cell, orientation))
+        if (this.canPlaceShip(ship, cell, orientation))
             this.ships.push(GameboardShip.fromShip(ship, cell, orientation));
         else
             throw new Error(`The ship '${ship.name}' cannot be placed on {x:${cell.x}, y:${cell.y}}`);
@@ -76,29 +76,24 @@ export default class Gameboard extends JsonBase {
      */
     canPlaceShip(ship, cell, orientation) {
 
-        if(this.ships.length >= 5)
+        if (this.ships.length >= 5)
             return false;
 
-        let xmin, ymin, xmax, ymax;
+        let shipBounds = ship.bounds(cell, orientation);
 
-        if (orientation === 'vertical') {
-            xmin = xmax = cell.x;
-            ymin = cell.y;
-            ymax = ymin + ship.length;
-
-        } else if (orientation === 'horizontal') {
-            xmin = cell.x;
-            xmax = xmin + ship.length;
-
-            ymin = ymax = cell.y;
-        }
+        if (shipBounds.xmax > 10 || shipBounds.ymax > 10)
+            return false;
 
         // console.log(this.ships);
-        // console.log(`${xmin}|${xmax}|${ymin}|${ymax}`);
 
         for (let placedShip of this.ships) {
-            if((placedShip.x >= xmin && placedShip.x <= xmax) &&
-               (placedShip.y >= ymin && placedShip.y <= ymax))
+
+            let pShipBounds = placedShip.bounds();
+
+            if (!(pShipBounds.xmin > shipBounds.xmax ||
+                pShipBounds.xmax < shipBounds.xmin ||
+                pShipBounds.ymin > shipBounds.ymax ||
+                pShipBounds.ymax < shipBounds.ymin))
                 return false;
         }
 
