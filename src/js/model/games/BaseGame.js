@@ -22,7 +22,7 @@ export default class BaseGame extends JsonBase {
      * @param callback {function|null}
      */
     static deleteAll(api, callback) {
-        api.apiDelete({route: api.routes.currentUserGames}, callback);
+        api.apiDelete({route: BattleshipApi.routes.currentUserGames}, callback);
     }
 
     /**

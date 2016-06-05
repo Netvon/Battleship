@@ -26,9 +26,9 @@ export default class SetupGame extends BaseGame {
      * @param callback {function|null}
      */
     static create(api, callback, isAi = false) {
-        let route = api.routes.createGame;
+        let route = BattleshipApi.routes.createGame;
         if (isAi)
-            route = api.routes.createGameWithAi;
+            route = BattleshipApi.routes.createGameWithAi;
 
         api.apiGet({route}, data => {
             if (callback !== null)
@@ -44,7 +44,7 @@ export default class SetupGame extends BaseGame {
      * @param callback {function}
      */
     submitGameboard(api, gameboard, callback) {
-        api.apiPost({route: api.routes.gameSetupById, parameter: this.id}, gameboard.toJson(), data => {
+        api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson(), data => {
 
             if (data.msg !== undefined && data.msg === 'success') {
                 this.state = data.status;

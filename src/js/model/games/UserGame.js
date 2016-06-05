@@ -31,7 +31,7 @@ export default class UserGame extends BaseGame {
         if (typeof callback !== 'function')
             throw new Error("The 'callback' parameter on UserGame.getForUser has to be a function");
 
-        api.apiGet({route: api.routes.currentUserGames}, data => {
+        api.apiGet({route: BattleshipApi.routes.currentUserGames}, data => {
             let userGames = [];
 
             data.forEach(item => {

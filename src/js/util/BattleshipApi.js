@@ -15,10 +15,31 @@ export default class BattleshipApi {
             throw new Error('BattleshipApi need Socket.IO to work');
 
         this._token = token;
+    }
 
-        this.url = 'https://zeeslagavans.herokuapp.com/';
-        this.tokenPrefix = 'token=';
-        this.routes = {
+    /**
+     *
+     * @returns {string}
+     */
+    static get tokenPrefix() {
+        return 'token='
+    }
+
+    /**
+     * The online URL of the Battleship API
+     *
+     * @returns {string}
+     */
+    static get url() {
+        return 'https://zeeslagavans.herokuapp.com/';
+    }
+    /**
+     * All routes available for the Battleship API
+     *
+     * @returns {{currentUser: BattleshipRoute, currentUserGames: BattleshipRoute, createGame: BattleshipRoute, createGameWithAi: BattleshipRoute, allShips: BattleshipRoute, gameById: BattleshipRoute, gameSetupById: BattleshipRoute, gameShotById: BattleshipRoute}}
+     */
+    static get routes() {
+        return {
             // (urlFormat, methods, needsParam = false)
             currentUser: new BattleshipRoute('users/me/info', 'get', false),
             currentUserGames: new BattleshipRoute('users/me/games', 'get|delete', false),
@@ -28,7 +49,7 @@ export default class BattleshipApi {
             gameById: new BattleshipRoute('games/{id}', 'get', true),
             gameSetupById: new BattleshipRoute('games/{id}/gameboards', 'post', true),
             gameShotById: new BattleshipRoute('games/{id}/shots', 'post', true)
-        };
+        }
     }
 
     /**

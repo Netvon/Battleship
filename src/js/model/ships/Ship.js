@@ -57,7 +57,7 @@ export default class Ship extends JsonBase {
             if (typeof callback !== 'function')
                 throw new Error("The 'callback' parameter on Ship.getAll has to be a function");
 
-            api.apiGet({route: api.routes.allShips}, data => {
+            api.apiGet({route: BattleshipApi.routes.allShips}, data => {
                 processShips(data);
             });
         }

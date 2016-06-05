@@ -46,7 +46,7 @@ export default class User extends JsonBase {
         if (callback === undefined || callback === null || typeof callback !== 'function')
             throw new Error("The 'callback' parameter on User.getCurrent has to be a function");
 
-        api.apiGet({route: api.routes.currentUser}, data => {
+        api.apiGet({route: BattleshipApi.routes.currentUser}, data => {
             Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
             callback(User.fromJson(data));
         });
