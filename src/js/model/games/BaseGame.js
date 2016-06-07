@@ -84,7 +84,6 @@ export default class BaseGame extends JsonBase {
      * @returns {boolean}
      */
     static isValidState(state) {
-
         switch (state.toLowerCase()) {
             case STATE.QUEUE:
             case STATE.SETUP:

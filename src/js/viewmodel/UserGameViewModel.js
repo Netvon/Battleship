@@ -18,20 +18,18 @@ export default class UserGameViewModel extends UserGame {
     
     static getForCurrentUser(api, callback) {
         super.getForCurrentUser(api, userGames => {
-            console.log(userGames);
-
             let userGameViewModels = [];
-            for (let game in userGames) {
+            for (let game of userGames) {
                 let userGameViewModel = new UserGameViewModel(game.id, game.state, game.enemyId, game.enemyName, game.winner);
                 userGameViewModels.push(userGameViewModel);
             }
-            console.log(userGameViewModels);
+
             callback(userGameViewModels);
         });
     }
     
     showGames() {
-        console.log(this);
+        // console.log(this);
         
         // $('.menu-hero').on('click', '#resume-game', function () {
         //     $('.menu-hero').hide();
