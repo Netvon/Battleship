@@ -79,6 +79,8 @@ export default class BaseGame extends JsonBase {
      * @returns {boolean}
      */
     static isValidState(state) {
+        console.log(typeof state);
+        console.log(typeof this.id);
         switch (state.toLowerCase()) {
             case 'queue':
             case 'setup':
