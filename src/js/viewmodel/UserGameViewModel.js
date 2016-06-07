@@ -8,6 +8,7 @@ import Hu from "../util/Hu";
 export default class UserGameViewModel extends UserGame {
     constructor(id, state, enemyId, enemyName, winner = null) {
         super(id, state, enemyId, enemyName, winner = null);
+        console.log('constructor state: ' + this.state);
     }
 
     get gameRowHTML() {
@@ -16,9 +17,16 @@ export default class UserGameViewModel extends UserGame {
     }
     
     static getForCurrentUser(api, callback) {
-        super.getForCurrentUser(api, userGame => {
-            let userGameViewModel = new UserGameViewModel(userGame.id, userGame.state, userGame.enemyId, userGame.enemyName, userGame.winner);
-            callback(userGameViewModel);
+        super.getForCurrentUser(api, userGames => {
+            console.log(userGames);
+
+            let userGameViewModels = [];
+            for (let game in userGames) {
+                let userGameViewModel = new UserGameViewModel(game.id, game.state, game.enemyId, game.enemyName, game.winner);
+                userGameViewModels.push(userGameViewModel);
+            }
+            console.log(userGameViewModels);
+            callback(userGameViewModels);
         });
     }
     
