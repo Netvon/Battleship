@@ -9,6 +9,7 @@ import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/UserGameViewModel";
 
 (function () {
+
     let allShips = [];
 
     if (!Persistence.hasKey('token'))

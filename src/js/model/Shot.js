@@ -13,7 +13,7 @@ export default class Shot extends Cell {
         super(x, y);
 
         if(typeof id !== 'number' || id < 0)
-            throw new Error('The ID of a shot cannot be negative and must be a number');
+            throw new TypeError('The ID of a shot cannot be negative and must be a number');
         
         this.id = id;
 

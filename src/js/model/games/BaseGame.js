@@ -1,4 +1,6 @@
 import JsonBase from './../../util/JsonBase'
+import {STATE} from '../../util/BattleshipConst';
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class BaseGame extends JsonBase {
     /**
@@ -21,7 +23,10 @@ export default class BaseGame extends JsonBase {
      * @param callback {function|null}
      */
     static deleteAll(api, callback) {
-        api.apiDelete({route: api.routes.currentUserGames}, callback);
+        if (!(api instanceof BattleshipApi))
+            throw new Error("The 'api' parameter on User.deleteAllGames cannot be null");
+
+        api.apiDelete({route: BattleshipApi.routes.currentUserGames}, callback);
     }
 
     /**
@@ -82,10 +87,10 @@ export default class BaseGame extends JsonBase {
         console.log(typeof state);
         console.log(typeof this.id);
         switch (state.toLowerCase()) {
-            case 'queue':
-            case 'setup':
-            case 'started':
-            case 'done':
+            case STATE.QUEUE:
+            case STATE.SETUP:
+            case STATE.STARTED:
+            case STATE.DONE:
                 return true;
         }
 

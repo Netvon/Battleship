@@ -1,5 +1,7 @@
 import BaseGame from './BaseGame';
 import StartedGame from './StartedGame';
+import {STATE} from '../../util/BattleshipConst';
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class SetupGame extends BaseGame {
     /**
@@ -25,9 +27,12 @@ export default class SetupGame extends BaseGame {
      * @param callback {function|null}
      */
     static create(api, callback, isAi = false) {
-        let route = api.routes.createGame;
+        if (!(api instanceof BattleshipApi))
+            throw new TypeError("The 'api' parameter on SetupGame.create cannot be null");
+
+        let route = BattleshipApi.routes.createGame;
         if (isAi)
-            route = api.routes.createGameWithAi;
+            route = BattleshipApi.routes.createGameWithAi;
 
         api.apiGet({route}, data => {
             if (callback !== null)
@@ -43,12 +48,22 @@ export default class SetupGame extends BaseGame {
      * @param callback {function}
      */
     submitGameboard(api, gameboard, callback) {
-        api.apiPost({route: api.routes.gameSetupById, parameter: this.id}, gameboard.toJson(), data => {
+
+        if(this.state !== STATE.SETUP)
+            throw new Error(`You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`);
+
+        if (!(api instanceof BattleshipApi))
+            throw new TypeError("The 'api' parameter on SetupGame.submitGameboard cannot be null");
+
+        if (typeof callback !== 'function')
+            throw new TypeError("The 'callback' parameter on SetupGame.submitGameboard has to be a function");
+
+        api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson(), data => {
 
             if (data.msg !== undefined && data.msg === 'success') {
                 this.state = data.status;
 
-                if(this.state = 'started')
+                if(this.state === STATE.STARTED)
                     StartedGame.get(api, this.id, callback);
                 else
                     callback(this);

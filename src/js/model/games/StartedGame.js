@@ -1,6 +1,7 @@
 import UserGame from './UserGame';
 import PlayerGameboard from "../board/PlayerGameboard";
 import EnemyGameboard from "../board/EnemyGameboard";
+import BattleshipApi from '../../util/BattleshipApi';
 
 export default class StartedGame extends UserGame {
     /**
@@ -33,13 +34,13 @@ export default class StartedGame extends UserGame {
         if(!this.isPlayerTurn)
             throw new Error(`You cannot fire a shot in Game#${this.id} because it is not your turn`);
 
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on StartedGame.doShot cannot be null");
+        if (!(api instanceof BattleshipApi))
+            throw new TypeError("The 'api' parameter on StartedGame.doShot cannot be null");
 
         if (typeof callback !== 'function')
-            throw new Error("The 'callback' parameter on StartedGame.doShot has to be a function");
+            throw new TypeError("The 'callback' parameter on StartedGame.doShot has to be a function");
 
-        api.apiPost({route: api.routes.gameShotById, parameter: this.id}, cell.toJson(), data => {
+        api.apiPost({route: BattleshipApi.routes.gameShotById, parameter: this.id}, cell.toJson(), data => {
             callback(data);
         });
     }
@@ -58,7 +59,7 @@ export default class StartedGame extends UserGame {
         if (typeof callback !== 'function')
             throw new Error("The 'callback' parameter on StartedGame.get has to be a function");
 
-        api.apiGet({route: api.routes.gameById, parameter: id}, data => {
+        api.apiGet({route: BattleshipApi.routes.gameById, parameter: id}, data => {
             if (data.error !== undefined)
                 throw new Error(data.error);
 

@@ -1,5 +1,6 @@
 import JsonBase from './../../util/JsonBase';
 import GameboardShip from './../ships/GameboardShip';
+import * as bs from '../../util/BattleshipConst';
 
 export default class Gameboard extends JsonBase {
     /**
@@ -11,9 +12,9 @@ export default class Gameboard extends JsonBase {
         super();
 
         this.ships = [...ships];
-
-        if (this.ships.length > 5)
-            throw new Error("A Gameboard must contain 5 ships");
+        
+        if (this.ships.length > bs.SHIPMAX)
+            throw new Error(`A Gameboard must contain ${bs.SHIPMAX} ships`);
     }
 
     /**
@@ -39,7 +40,7 @@ export default class Gameboard extends JsonBase {
      * @returns {boolean}
      */
     get isValid() {
-        let max = 10;
+        let max = bs.CELLMAX;
 
         for (let ship of this.ships) {
             let x = ship.x;
@@ -60,7 +61,7 @@ export default class Gameboard extends JsonBase {
      */
     placeShip(ship, cell, orientation) {
 
-        if(this.canPlaceShip(ship, cell, orientation))
+        if (this.canPlaceShip(ship, cell, orientation))
             this.ships.push(GameboardShip.fromShip(ship, cell, orientation));
         else
             throw new Error(`The ship '${ship.name}' cannot be placed on {x:${cell.x}, y:${cell.y}}`);
@@ -76,29 +77,24 @@ export default class Gameboard extends JsonBase {
      */
     canPlaceShip(ship, cell, orientation) {
 
-        if(this.ships.length >= 5)
+        if (this.ships.length >= bs.SHIPMAX)
             return false;
 
-        let xmin, ymin, xmax, ymax;
+        let shipBounds = ship.bounds(cell, orientation);
 
-        if (orientation === 'vertical') {
-            xmin = xmax = cell.x;
-            ymin = cell.y;
-            ymax = ymin + ship.length;
-
-        } else if (orientation === 'horizontal') {
-            xmin = cell.x;
-            xmax = xmin + ship.length;
-
-            ymin = ymax = cell.y;
-        }
+        if (shipBounds.xmax > bs.CELLMAX || shipBounds.ymax > bs.CELLMAX)
+            return false;
 
         // console.log(this.ships);
-        // console.log(`${xmin}|${xmax}|${ymin}|${ymax}`);
 
         for (let placedShip of this.ships) {
-            if((placedShip.x >= xmin && placedShip.x <= xmax) &&
-               (placedShip.y >= ymin && placedShip.y <= ymax))
+
+            let pShipBounds = placedShip.bounds();
+
+            if (!(pShipBounds.xmin > shipBounds.xmax ||
+                pShipBounds.xmax < shipBounds.xmin ||
+                pShipBounds.ymin > shipBounds.ymax ||
+                pShipBounds.ymax < shipBounds.ymin))
                 return false;
         }
 
