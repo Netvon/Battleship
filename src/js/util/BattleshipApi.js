@@ -161,10 +161,22 @@ export default class BattleshipApi {
         })
     }
 
+    /**
+     * Returns the Token used for the API connection. The Token represents the user currently playing the game
+     *
+     * @returns {string}
+     */
     get token() {
         return this._token;
     }
 
+    /**
+     * Sets the Token used for the API connection. This changes the user that is playing the game.
+     * Please note that after chancing the Token any Socket connections need to re-established to reflect the
+     * new Token.
+     *
+     * @param value {string}
+     */
     set token(value) {
         if(this.token !== value) {
             this._token = value;
@@ -188,16 +200,31 @@ export default class BattleshipApi {
         socket.on(room, callback);
     }
 
+    /**
+     * Listen to a notification on a the Socket.IO room named 'update'
+     *
+     * @param callback {function}
+     */
     onUpdate(callback) {
-        on('update', callback);
+        this.on('update', callback);
     }
 
+    /**
+     * Listen to a notification on a the Socket.IO room named 'shot'
+     *
+     * @param callback {function}
+     */
     onShot(callback) {
-        on('shot', callback);
+        this.on('shot', callback);
     }
 
+    /**
+     * Listen to a notification on a the Socket.IO room named 'turn'
+     *
+     * @param callback {function}
+     */
     onTurn(callback) {
-        on('turn', callback);
+        this.on('turn', callback);
     }
 
 }
