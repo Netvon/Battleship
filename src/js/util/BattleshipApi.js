@@ -193,7 +193,7 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     on(room, callback) {
-        var socket = io.connect(this.url, {
+        var socket = io.connect(BattleshipApi.url, {
             query: BattleshipApi.tokenPrefix + this.token
         });
 
