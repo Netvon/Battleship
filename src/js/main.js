@@ -5,6 +5,7 @@ import UserViewModel from './viewmodel/UserViewModel';
 import SetupGame from './model/games/SetupGame';
 import Persistence from './util/Persistence';
 import Gameboard from './model/board/Gameboard';
+import StartedGame from './model/games/StartedGame';
 import Cell from './model/Cell';
 import SoundFXViewModel from './viewmodel/SoundFXViewModel';
 
@@ -37,6 +38,8 @@ import SoundFXViewModel from './viewmodel/SoundFXViewModel';
     battleshipApi.onShot(shot => {
         console.log('Socket IO: shot');
         console.log(shot);
+
+        StartedGame.get(battleshipApi, shot.gameId, data => console.log(data));
     });
 
     UserViewModel.getCurrent(battleshipApi, user => user.displayOn('#user-info'));

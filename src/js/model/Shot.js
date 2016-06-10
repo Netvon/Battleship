@@ -6,14 +6,14 @@ export default class Shot extends Cell {
      *
      * @param x {string|number}
      * @param y {number}
-     * @param id {number}
+     * @param id {string}
      * @param isHit {boolean|null}
      */
     constructor(x, y, id, isHit = null) {
         super(x, y);
 
-        if(typeof id !== 'number' || id < 0)
-            throw new TypeError('The ID of a shot cannot be negative and must be a number');
+        if(typeof id !== 'string')
+            throw new TypeError(`The ID of a shot must be a string. was: ${id}`);
         
         this.id = id;
 

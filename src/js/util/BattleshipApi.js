@@ -1,5 +1,8 @@
 import BattleshipRoute from './BattleshipRoute';
 import Persistence from './Persistence';
+import ShotEventArguments from '../model/events/ShotEventArguments';
+import UpdateEventArguments from '../model/events/UpdateEventArguments';
+import TurnEventArguments from '../model/events/TurnEventArguments';
 import * as bs from './BattleshipConst';
 
 export default class BattleshipApi {
@@ -206,7 +209,9 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     onUpdate(callback) {
-        this.on('update', callback);
+        this.on('update', data => {
+            callback(UpdateEventArguments.fromJson(data));
+        });
     }
 
     /**
@@ -215,7 +220,9 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     onShot(callback) {
-        this.on('shot', callback);
+        this.on('shot', data => {
+            callback(ShotEventArguments.fromJson(data));
+        });
     }
 
     /**
@@ -224,7 +231,9 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     onTurn(callback) {
-        this.on('turn', callback);
+        this.on('turn', data => {
+            callback(TurnEventArguments.fromJson(data));
+        });
     }
 
 }
