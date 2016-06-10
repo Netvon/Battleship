@@ -21,7 +21,7 @@ import UserGameViewModel from "./viewmodel/UserGameViewModel";
 // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI
     var battleshipApi = new BattleshipApi(token);
     
-    UserGameViewModel.getForCurrentUser(battleshipApi, e => console.log(e));
+    UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
 
     // userGameViewModel.showGames();
 
