@@ -77,7 +77,9 @@ export default class Gameboard extends JsonBase {
      */
     canPlaceShip(ship, cell, orientation) {
 
-        if (this.ships.length >= bs.SHIPMAX)
+        var find = this.ships.find(ps => ps.id === ship.id);
+
+        if (this.ships.length >= bs.SHIPMAX || find !== undefined)
             return false;
 
         let shipBounds = ship.bounds(cell, orientation);
