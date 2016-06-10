@@ -3,24 +3,42 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
 @import url("https://fonts.googleapis.com/css?family=Patua+One");
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css");
+@keyframes scaleIn {
+  0% {
+    transform: scale(10);
+    opacity: 0; }
+  100% {
+    transform: scale(1);
+    opacity: 1; } }
+
+@keyframes fadeIn {
+  0% {
+    background-color: white; }
+  100% {
+    background-color: transparent; } }
+
 .bs-fill-page {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column; }
+  flex-direction: column;
+  overflow: hidden; }
 
 .bs-hero {
   background-size: cover;
   background-image: url("../img/background.png");
   background-attachment: fixed;
-  background-position: bottom; }
+  background-position: bottom;
+  background-blend-mode: overlay;
+  animation: fadeIn 2s ease-in; }
   .bs-hero > .bs-hero-title {
     margin: 0;
     font-size: 6em;
     color: white;
     text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 0.05em rgba(0, 0, 0, 0.38);
-    font-family: 'Patua One', sans-serif; }
+    font-family: 'Patua One', sans-serif;
+    animation: scaleIn .5s ease-out; }
     @media screen and (max-width: 425px) {
       .bs-hero > .bs-hero-title {
         font-size: 3em; } }

@@ -33,9 +33,16 @@ var _Cell = require('./model/Cell');
 
 var _Cell2 = _interopRequireDefault(_Cell);
 
+var _SoundFXViewModel = require('./viewmodel/SoundFXViewModel');
+
+var _SoundFXViewModel2 = _interopRequireDefault(_SoundFXViewModel);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
+
+    let fx = new _SoundFXViewModel2.default('audio/test.mp3');
+    fx.play();
 
     let allShips = [];
 
@@ -83,7 +90,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     });
 })();
 
-},{"./model/Cell":2,"./model/board/Gameboard":6,"./model/games/SetupGame":9,"./model/ships/Ship":13,"./util/BattleshipApi":14,"./util/Hu":17,"./util/Persistence":19,"./viewmodel/UserViewModel":20}],2:[function(require,module,exports){
+},{"./model/Cell":2,"./model/board/Gameboard":6,"./model/games/SetupGame":9,"./model/ships/Ship":13,"./util/BattleshipApi":14,"./util/Hu":17,"./util/Persistence":19,"./viewmodel/SoundFXViewModel":20,"./viewmodel/UserViewModel":21}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -469,7 +476,9 @@ class Gameboard extends _JsonBase2.default {
      */
     canPlaceShip(ship, cell, orientation) {
 
-        if (this.ships.length >= bs.SHIPMAX) return false;
+        var find = this.ships.find(ps => ps.id === ship.id);
+
+        if (this.ships.length >= bs.SHIPMAX || find !== undefined) return false;
 
         let shipBounds = ship.bounds(cell, orientation);
 
@@ -1365,10 +1374,22 @@ class BattleshipApi {
         });
     }
 
+    /**
+     * Returns the Token used for the API connection. The Token represents the user currently playing the game
+     *
+     * @returns {string}
+     */
     get token() {
         return this._token;
     }
 
+    /**
+     * Sets the Token used for the API connection. This changes the user that is playing the game.
+     * Please note that after chancing the Token any Socket connections need to re-established to reflect the
+     * new Token.
+     *
+     * @param value {string}
+     */
     set token(value) {
         if (this.token !== value) {
             this._token = value;
@@ -1392,16 +1413,31 @@ class BattleshipApi {
         socket.on(room, callback);
     }
 
+    /**
+     * Listen to a notification on a the Socket.IO room named 'update'
+     *
+     * @param callback {function}
+     */
     onUpdate(callback) {
-        on('update', callback);
+        this.on('update', callback);
     }
 
+    /**
+     * Listen to a notification on a the Socket.IO room named 'shot'
+     *
+     * @param callback {function}
+     */
     onShot(callback) {
-        on('shot', callback);
+        this.on('shot', callback);
     }
 
+    /**
+     * Listen to a notification on a the Socket.IO room named 'turn'
+     *
+     * @param callback {function}
+     */
     onTurn(callback) {
-        on('turn', callback);
+        this.on('turn', callback);
     }
 
 }
@@ -1603,6 +1639,50 @@ class Persistence {
 exports.default = Persistence;
 
 },{}],20:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+class SoundFXViewModel {
+    /**
+     *
+     * @param source {string}
+     * @param loop {boolean}
+     */
+    constructor(source, loop = false) {
+        this.source = source;
+        this.loop = loop;
+
+        this._element = document.createElement('audio');
+        this._element.src = this.source;
+        this._element.loop = this.loop;
+    }
+
+    play() {
+        this._element.play();
+    }
+
+    pause() {
+        this._element.pause();
+    }
+
+    stop() {
+        this._element.currentTime = 0;
+        this._element.pause();
+    }
+
+    /**
+     *
+     * @param callback {function}
+     */
+    onEnded(callback) {
+        this._element.addEventListener('ended', callback);
+    }
+}
+exports.default = SoundFXViewModel;
+
+},{}],21:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
