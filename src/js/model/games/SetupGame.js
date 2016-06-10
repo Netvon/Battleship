@@ -9,13 +9,15 @@ export default class SetupGame extends BaseGame {
      *
      * @param id {number}
      * @param player1 {string}
+     * @param player2 {string}
      * @param state {string}
      * @param isAi {boolean}
      */
-    constructor(id, player1, state, isAi) {
+    constructor(id, player1, player2, state, isAi) {
         super(id, state);
 
         this.player1 = player1;
+        this.player2 = player2;
         this.isAi = isAi;
     }
 
@@ -79,6 +81,6 @@ export default class SetupGame extends BaseGame {
      * @returns {SetupGame}
      */
     static fromJson(jsonObject) {
-        return new SetupGame(jsonObject._id, jsonObject.player1, jsonObject.status, jsonObject.isAI);
+        return new SetupGame(jsonObject._id, jsonObject.player1, jsonObject.player2, jsonObject.status, jsonObject.isAI);
     }
 }
