@@ -7,8 +7,12 @@ import Persistence from './util/Persistence';
 import Gameboard from './model/board/Gameboard';
 import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/UserGameViewModel";
+import SoundFXViewModel from './viewmodel/SoundFXViewModel';
 
 (function () {
+
+    let fx = new SoundFXViewModel('audio/test.mp3');
+    fx.play();
 
     let allShips = [];
 
@@ -26,7 +30,8 @@ import UserGameViewModel from "./viewmodel/UserGameViewModel";
     // userGameViewModel.showGames();
 
     // UserViewModel.getCurrent(battleshipApi, user => user.displayOn('#user-info'));
-    //
+
+    
     // SetupGame.deleteAll(battleshipApi, e => {
     //
     //     Ship.getAll(battleshipApi, ships => {
