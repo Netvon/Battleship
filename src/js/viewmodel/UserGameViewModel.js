@@ -32,7 +32,7 @@ export default class UserGameViewModel extends UserGame {
         // console.log(this);
         
         // $('.menu-hero').on('click', '#resume-game', function () {
-        //     $('.menu-hero').hide();
+        //     $('.bs-hero-menu').hide();
         //
         //     Hu.queryAppend('header',
         //         `<table class="games-table">

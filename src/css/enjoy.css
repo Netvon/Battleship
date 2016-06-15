@@ -71,8 +71,8 @@
     animation: float 5s infinite;
 }
 
-th {
-    color: #000000;;
+.games-table th {
+    color: #000000;
     background: #03A9F4;
     border-bottom:6px solid #9ea7af;
     border-right: 1px solid #343a45;
@@ -84,16 +84,16 @@ th {
     vertical-align:middle;
 }
 
-th:first-child {
+.games-table th:first-child {
     border-top-left-radius:3px;
 }
 
-th:last-child {
+.games-table th:last-child {
     border-top-right-radius:3px;
     border-right:none;
 }
 
-tr {
+.games-table tr {
     border-top: 1px solid #C1C3D1;
     border-bottom-: 1px solid #C1C3D1;
     color:#666B85;
@@ -102,15 +102,15 @@ tr {
     text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
 }
 
-tr:hover td {
+.games-table tr:hover td {
     background: #eaeaea;
 }
 
-tr:first-child {
+.games-table tr:first-child {
     border-top:none;
 }
 
-tr:last-child {
+.games-table tr:last-child {
     border-bottom:none;
 }
 
@@ -122,15 +122,15 @@ tr:last-child {
     /*background:#98bbc6;*/
 /*}*/
 
-tr:last-child td:first-child {
+.games-table tr:last-child td:first-child {
     border-bottom-left-radius:3px;
 }
 
-tr:last-child td:last-child {
+.games-table tr:last-child td:last-child {
     border-bottom-right-radius:3px;
 }
 
-td {
+.games-table td {
     background:#FFFFFF;
     padding:20px;
     text-align:left;
@@ -141,30 +141,30 @@ td {
     border-right: 1px solid #C1C3D1;
 }
 
-td:last-child {
+.games-table td:last-child {
     border-right: 0px;
 }
 
-th.text-left {
+.games-table th.text-left {
     text-align: left;
 }
 
-th.text-center {
+.games-table th.text-center {
     text-align: center;
 }
 
-th.text-right {
+.games-table th.text-right {
     text-align: right;
 }
 
-td.text-left {
+.games-table td.text-left {
     text-align: left;
 }
 
-td.text-center {
+.games-table td.text-center {
     text-align: center;
 }
 
-td.text-right {
+.games-table td.text-right {
     text-align: right;
 }

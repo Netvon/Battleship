@@ -27,10 +27,12 @@ import SoundFXViewModel from './viewmodel/SoundFXViewModel';
     
     UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
 
+    var gameboard = new Gameboard();
+    gameboard.drawGameboard();
+    
     // userGameViewModel.showGames();
 
     // UserViewModel.getCurrent(battleshipApi, user => user.displayOn('#user-info'));
-
     
     // SetupGame.deleteAll(battleshipApi, e => {
     //
