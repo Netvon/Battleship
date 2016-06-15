@@ -1,5 +1,7 @@
 @import url("vendor/normalize.css");
 @import url("vendor/enjoy.css");
+@import url("vendor/font-awesome.min.css");
+@import url("vendor/sweetalert.css");
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
 @import url("https://fonts.googleapis.com/css?family=Patua+One");
 @import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css");
@@ -16,6 +18,14 @@
     background-color: white; }
   100% {
     background-color: transparent; } }
+
+@keyframes pulse {
+  0% {
+    opacity: 1; }
+  50% {
+    opacity: .5; }
+  100% {
+    opacity: 1; } }
 
 .bs-fill-page {
   height: 100vh;
@@ -66,16 +76,61 @@
   min-height: 3em;
   margin: 1em;
   padding: 2em;
-  border-radius: 6px;
+  border-radius: 1em;
   font-family: monospace;
-  background-color: rgba(49, 27, 136, 0.06);
+  background-color: rgba(123, 220, 155, 0.57);
   color: rgba(0, 0, 0, 0.5);
-  line-height: 1.6em; }
-  .bs-tst-card > ul {
+  line-height: 1.6em;
+  flex-grow: 1;
+  transition: background-color .3s ease;
+  box-shadow: 0 0.7em 0 #85c39a, 0 0.7em 1em rgba(0, 0, 0, 0.12); }
+  .bs-tst-card ul {
     text-decoration: none;
     list-style: none;
     margin: 0;
     padding: 0; }
+  .bs-tst-card:hover {
+    background-color: rgba(123, 220, 155, 0.7); }
+  .bs-tst-card-loading {
+    animation: pulse .8s infinite; }
+    .bs-tst-card-loading:before {
+      content: 'loading...';
+      font-weight: 600;
+      font-size: 1.1em; }
+  .bs-tst-card > h1, .bs-tst-card > h2, .bs-tst-card > h3, .bs-tst-card > h4, .bs-tst-card > h5, .bs-tst-card > h6 {
+    margin: 0; }
+
+.bs-tst-game {
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: space-between; }
+  .bs-tst-game > li {
+    padding: 0.5em; }
+    .bs-tst-game > li:first-child {
+      padding-left: 0; }
+    .bs-tst-game > li:last-child {
+      padding-right: 0; }
+
+.bs-bsod {
+  background-color: #3b4eaf;
+  color: white;
+  padding: 1em; }
+  .bs-bsod > h2, .bs-bsod > p {
+    margin: 0;
+    text-align: center; }
+  .bs-bsod > h2 {
+    font-size: 3em; }
+    @media screen and (max-width: 425px) {
+      .bs-bsod > h2 {
+        font-size: 2em; } }
+  .bs-bsod > p {
+    font-size: 2em; }
+    @media screen and (max-width: 425px) {
+      .bs-bsod > p {
+        font-size: 1.3em; } }
+  .bs-bsod-html {
+    max-height: 100vh;
+    overflow: hidden; }
 
 input[type=text] {
   background: #d3deef;

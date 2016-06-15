@@ -5,92 +5,31 @@ var _BattleshipApi = require('./util/BattleshipApi');
 
 var _BattleshipApi2 = _interopRequireDefault(_BattleshipApi);
 
-var _Ship = require('./model/ships/Ship');
-
-var _Ship2 = _interopRequireDefault(_Ship);
-
-var _Hu = require('./util/Hu');
-
-var _Hu2 = _interopRequireDefault(_Hu);
-
-var _UserViewModel = require('./viewmodel/UserViewModel');
-
-var _UserViewModel2 = _interopRequireDefault(_UserViewModel);
-
-var _SetupGame = require('./model/games/SetupGame');
-
-var _SetupGame2 = _interopRequireDefault(_SetupGame);
-
 var _Persistence = require('./util/Persistence');
 
 var _Persistence2 = _interopRequireDefault(_Persistence);
 
-var _Gameboard = require('./model/board/Gameboard');
+var _BSTestViewModel = require('./viewmodel/BSTestViewModel');
 
-var _Gameboard2 = _interopRequireDefault(_Gameboard);
-
-var _Cell = require('./model/Cell');
-
-var _Cell2 = _interopRequireDefault(_Cell);
-
-var _SoundFXViewModel = require('./viewmodel/SoundFXViewModel');
-
-var _SoundFXViewModel2 = _interopRequireDefault(_SoundFXViewModel);
+var _BSTestViewModel2 = _interopRequireDefault(_BSTestViewModel);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function () {
 
-    let fx = new _SoundFXViewModel2.default('audio/test.mp3');
-    fx.play();
-
-    let allShips = [];
+    // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InNlZS5ncmFuZGlhQHN0dWRlbnQuYXZhbnMubmwi.DtPnllHeZKqv_lM7evo72TyJWpSOELFunRs4myKHMHA
+    // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI
 
     if (!_Persistence2.default.hasKey('token')) _Persistence2.default.set('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI');
 
     let token = _Persistence2.default.get('token');
-    // console.log(token);
+    let battleshipApi = new _BattleshipApi2.default(token);
 
-    // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI
-    var battleshipApi = new _BattleshipApi2.default(token);
-
-    _UserViewModel2.default.getCurrent(battleshipApi, user => user.displayOn('#user-info'));
-
-    _SetupGame2.default.deleteAll(battleshipApi, e => {
-
-        _Ship2.default.getAll(battleshipApi, ships => {
-
-            allShips = ships;
-
-            ships.forEach(ship => _Hu2.default.queryAppend('ul#ship-list', `<li>${ ship.name }</li>`));
-
-            _SetupGame2.default.create(battleshipApi, game => {
-                console.log(`Created new game: ${ game.id }`);
-                _UserViewModel2.default.getGames(battleshipApi, games => {
-                    games.forEach(g => _Hu2.default.queryAppend('#all-games > ul', `<li id="g-${ g.id }">${ g.id } - ${ g.state }</li>`));
-                });
-
-                let gameboard = new _Gameboard2.default();
-                gameboard.placeShip(allShips[0], new _Cell2.default(1, 1), 'vertical');
-                gameboard.placeShip(allShips[1], new _Cell2.default(2, 1), 'vertical');
-                gameboard.placeShip(allShips[2], new _Cell2.default(3, 1), 'vertical');
-                gameboard.placeShip(allShips[3], new _Cell2.default(4, 1), 'vertical');
-                gameboard.placeShip(allShips[4], new _Cell2.default(5, 1), 'vertical');
-
-                game.submitGameboard(battleshipApi, gameboard, data => {
-                    console.log("Submitted Gameboard");
-                    console.log(data);
-
-                    _Hu2.default.querySet(`#g-${ game.id }`, `${ game.id } - ${ game.state }`);
-
-                    data.doShot(battleshipApi, new _Cell2.default(1, 1), data => console.log(`Shot output: ${ data }`));
-                });
-            }, true);
-        });
-    });
+    let tstView = new _BSTestViewModel2.default(battleshipApi);
+    tstView.addTo('body');
 })();
 
-},{"./model/Cell":2,"./model/board/Gameboard":6,"./model/games/SetupGame":9,"./model/ships/Ship":13,"./util/BattleshipApi":14,"./util/Hu":17,"./util/Persistence":19,"./viewmodel/SoundFXViewModel":20,"./viewmodel/UserViewModel":21}],2:[function(require,module,exports){
+},{"./util/BattleshipApi":16,"./util/Persistence":21,"./viewmodel/BSTestViewModel":23}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -182,7 +121,7 @@ class Cell extends _JsonBase2.default {
 }
 exports.default = Cell;
 
-},{"../util/BattleshipConst":15,"./../util/JsonBase":18}],3:[function(require,module,exports){
+},{"../util/BattleshipConst":17,"./../util/JsonBase":20}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -201,13 +140,14 @@ class Shot extends _Cell2.default {
      *
      * @param x {string|number}
      * @param y {number}
-     * @param id {number}
+     * @param id {string}
      * @param isHit {boolean|null}
      */
     constructor(x, y, id, isHit = null) {
         super(x, y);
 
-        if (typeof id !== 'number' || id < 0) throw new TypeError('The ID of a shot cannot be negative and must be a number');
+        // if(typeof id !== 'string')
+        //     throw new TypeError(`The ID of a shot must be a string. was: ${id}`);
 
         this.id = id;
 
@@ -283,8 +223,9 @@ class User extends _JsonBase2.default {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static getCurrent(api, callback) {
+    static getCurrent(api, callback, fail = null) {
 
         if (_Persistence2.default.hasKey(bs.PER_USERKEY)) {
             callback(User.fromJson(JSON.parse(_Persistence2.default.get(bs.PER_USERKEY))));
@@ -297,7 +238,7 @@ class User extends _JsonBase2.default {
         api.apiGet({ route: _BattleshipApi2.default.routes.currentUser }, data => {
             _Persistence2.default.set(bs.PER_USERKEY, JSON.stringify(data));
             callback(User.fromJson(data));
-        });
+        }, fail);
     }
 
     /**
@@ -305,10 +246,11 @@ class User extends _JsonBase2.default {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      * @returns {*}
      */
-    static getGames(api, callback) {
-        return _UserGame2.default.getForCurrentUser(api, callback);
+    static getGames(api, callback, fail = null) {
+        return _UserGame2.default.getForCurrentUser(api, callback, fail);
     }
 
     /**
@@ -316,9 +258,10 @@ class User extends _JsonBase2.default {
      *
      * @param api {BattleshipApi}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    static deleteAllGames(api, callback) {
-        _UserGame2.default.deleteAll(api, callback);
+    static deleteAllGames(api, callback, fail = null) {
+        _UserGame2.default.deleteAll(api, callback, fail);
     }
 
     /**
@@ -333,7 +276,7 @@ class User extends _JsonBase2.default {
 }
 exports.default = User;
 
-},{"../util/BattleshipApi":14,"../util/BattleshipConst":15,"./../model/games/UserGame":11,"./../util/JsonBase":18,"./../util/Persistence":19}],5:[function(require,module,exports){
+},{"../util/BattleshipApi":16,"../util/BattleshipConst":17,"./../model/games/UserGame":13,"./../util/JsonBase":20,"./../util/Persistence":21}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -384,7 +327,7 @@ class EnemyGameboard extends _JsonBase2.default {
 }
 exports.default = EnemyGameboard;
 
-},{"./../../util/JsonBase":18,"./../Shot":3}],6:[function(require,module,exports){
+},{"./../../util/JsonBase":20,"./../Shot":3}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -498,7 +441,7 @@ class Gameboard extends _JsonBase2.default {
 }
 exports.default = Gameboard;
 
-},{"../../util/BattleshipConst":15,"./../../util/JsonBase":18,"./../ships/GameboardShip":12}],7:[function(require,module,exports){
+},{"../../util/BattleshipConst":17,"./../../util/JsonBase":20,"./../ships/GameboardShip":14}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -513,6 +456,10 @@ var _GameboardShip = require('./../ships/GameboardShip');
 
 var _GameboardShip2 = _interopRequireDefault(_GameboardShip);
 
+var _Shot = require('../Shot');
+
+var _Shot2 = _interopRequireDefault(_Shot);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class PlayerGameboard extends _Gameboard2.default {
@@ -520,12 +467,14 @@ class PlayerGameboard extends _Gameboard2.default {
      * Constructs a new instance of the PlayerGameboard class
      *
      * @param id {number}
+     * @param shots
      * @param ships
      */
-    constructor(id, ...ships) {
+    constructor(id, shots, ...ships) {
         super(...ships);
 
         this.id = id;
+        this.shots = shots;
     }
 
     placeShip(ship, cell, orientation) {
@@ -538,17 +487,136 @@ class PlayerGameboard extends _Gameboard2.default {
 
     static fromJson(jsonObject) {
         let ships = [];
+        let _shots = [];
 
         jsonObject.ships.forEach(ship => {
             ships.push(_GameboardShip2.default.fromJson(ship));
         });
 
-        return new PlayerGameboard(jsonObject._id, ...ships);
+        jsonObject.shots.forEach(shot => {
+            _shots.push(_Shot2.default.fromJson(shot));
+        });
+
+        return new PlayerGameboard(jsonObject._id, _shots, ...ships);
     }
 }
 exports.default = PlayerGameboard;
 
-},{"./../ships/GameboardShip":12,"./Gameboard":6}],8:[function(require,module,exports){
+},{"../Shot":3,"./../ships/GameboardShip":14,"./Gameboard":6}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _JsonBase = require('../../util/JsonBase');
+
+var _JsonBase2 = _interopRequireDefault(_JsonBase);
+
+var _Cell = require('../../model/Cell');
+
+var _Cell2 = _interopRequireDefault(_Cell);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class ShotEventArguments extends _JsonBase2.default {
+    constructor(gameId, user, cell, result) {
+        super();
+
+        this.gameId = gameId;
+        this.user = user;
+        this.cell = cell;
+        this.result = result;
+    }
+
+    set result(value) {
+
+        switch (value) {
+            case 'BOOM':
+            case 'SPLASH':
+            case 'WINNER':
+            case 'FAIL':
+                this._result = value;
+                break;
+            default:
+                throw new Error(`The result '${ value }' is not a valid result for ShotEventArguments`);
+        }
+
+        this._result = value;
+    }
+
+    get result() {
+        return this._result;
+    }
+
+    static fromJson(jsonObject) {
+        return new ShotEventArguments(jsonObject.gameId, jsonObject.user, new _Cell2.default(jsonObject.field.x, jsonObject.field.y), jsonObject.result);
+    }
+}
+exports.default = ShotEventArguments;
+
+},{"../../model/Cell":2,"../../util/JsonBase":20}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _JsonBase = require('../../util/JsonBase');
+
+var _JsonBase2 = _interopRequireDefault(_JsonBase);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class UpdateEventArguments extends _JsonBase2.default {
+    constructor(gameId, currentUser) {
+        super();
+
+        this.gameId = gameId;
+        this.currentUser = currentUser;
+    }
+
+    static fromJson(jsonObject) {
+        return new UpdateEventArguments(jsonObject.gameId, jsonObject.user);
+    }
+}
+exports.default = UpdateEventArguments;
+
+},{"../../util/JsonBase":20}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _JsonBase = require('../../util/JsonBase');
+
+var _JsonBase2 = _interopRequireDefault(_JsonBase);
+
+var _BaseGame = require('../games/BaseGame');
+
+var _BaseGame2 = _interopRequireDefault(_BaseGame);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class UpdateEventArguments extends _JsonBase2.default {
+    constructor(gameId, state) {
+        super();
+
+        this.gameId = gameId;
+
+        if (!_BaseGame2.default.isValidState(state)) throw new Error(`The state: '${ state }' is not a valid game state`);
+
+        this.state = state;
+    }
+
+    static fromJson(jsonObject) {
+        return new UpdateEventArguments(jsonObject.gameId, jsonObject.status);
+    }
+}
+exports.default = UpdateEventArguments;
+
+},{"../../util/JsonBase":20,"../games/BaseGame":11}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -568,6 +636,7 @@ var _BattleshipApi2 = _interopRequireDefault(_BattleshipApi);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class BaseGame extends _JsonBase2.default {
+
     /**
      * Constructs a new instance of the BaseGame class
      *
@@ -586,11 +655,12 @@ class BaseGame extends _JsonBase2.default {
      *
      * @param api {BattleshipApi}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    static deleteAll(api, callback) {
+    static deleteAll(api, callback, fail = null) {
         if (!(api instanceof _BattleshipApi2.default)) throw new Error("The 'api' parameter on User.deleteAllGames cannot be null");
 
-        api.apiDelete({ route: _BattleshipApi2.default.routes.currentUserGames }, callback);
+        api.apiDelete({ route: _BattleshipApi2.default.routes.currentUserGames }, callback, fail);
     }
 
     /**
@@ -657,104 +727,46 @@ class BaseGame extends _JsonBase2.default {
 
         return false;
     }
-}
-exports.default = BaseGame;
-
-},{"../../util/BattleshipApi":14,"../../util/BattleshipConst":15,"./../../util/JsonBase":18}],9:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _BaseGame = require('./BaseGame');
-
-var _BaseGame2 = _interopRequireDefault(_BaseGame);
-
-var _StartedGame = require('./StartedGame');
-
-var _StartedGame2 = _interopRequireDefault(_StartedGame);
-
-var _BattleshipConst = require('../../util/BattleshipConst');
-
-var _BattleshipApi = require('../../util/BattleshipApi');
-
-var _BattleshipApi2 = _interopRequireDefault(_BattleshipApi);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-class SetupGame extends _BaseGame2.default {
-    /**
-     * Constructs a new instance of the SetupGame class
-     *
-     * @param id {number}
-     * @param player1 {string}
-     * @param state {string}
-     * @param isAi {boolean}
-     */
-    constructor(id, player1, state, isAi) {
-        super(id, state);
-
-        this.player1 = player1;
-        this.isAi = isAi;
-    }
 
     /**
-     * Creates a new SetupGame
      *
      * @param api {BattleshipApi}
-     * @param isAi {boolean}
-     * @param callback {function|null}
-     */
-    static create(api, callback, isAi = false) {
-        if (!(api instanceof _BattleshipApi2.default)) throw new TypeError("The 'api' parameter on SetupGame.create cannot be null");
-
-        let route = _BattleshipApi2.default.routes.createGame;
-        if (isAi) route = _BattleshipApi2.default.routes.createGameWithAi;
-
-        api.apiGet({ route }, data => {
-            if (callback !== null) callback(SetupGame.fromJson(data));
-        });
-    }
-
-    /**
-     * Submit a Gameboard to the API.
-     *
-     * @param api {BattleshipApi}
-     * @param gameboard {Gameboard}
      * @param callback {function}
      */
-    submitGameboard(api, gameboard, callback) {
-
-        if (this.state !== _BattleshipConst.STATE.SETUP) throw new Error(`You cannot send a Gameboard to a game that is not in the ${ _BattleshipConst.STATE.SETUP } state. Current state: ${ this.state }`);
-
-        if (!(api instanceof _BattleshipApi2.default)) throw new TypeError("The 'api' parameter on SetupGame.submitGameboard cannot be null");
-
-        if (typeof callback !== 'function') throw new TypeError("The 'callback' parameter on SetupGame.submitGameboard has to be a function");
-
-        api.apiPost({ route: _BattleshipApi2.default.routes.gameSetupById, parameter: this.id }, gameboard.toJson(), data => {
-
-            if (data.msg !== undefined && data.msg === 'success') {
-                this.state = data.status;
-
-                if (this.state === _BattleshipConst.STATE.STARTED) _StartedGame2.default.get(api, this.id, callback);else callback(this);
+    onUpdate(api, callback) {
+        api.onUpdate(update => {
+            if (update.gameId === this.id) {
+                this.state = update.state;
+                callback(update);
             }
         });
     }
 
     /**
-     * Converts a Json Object to a new instance of the SetupGame class
      *
-     * @param jsonObject
-     * @returns {SetupGame}
+     * @param api {BattleshipApi}
+     * @param callback {function}
      */
-    static fromJson(jsonObject) {
-        return new SetupGame(jsonObject._id, jsonObject.player1, jsonObject.status, jsonObject.isAI);
+    onTurn(api, callback) {
+        api.onTurn(turn => {
+            if (turn.gameId === this.id) callback(turn);
+        });
+    }
+
+    /**
+     *
+     * @param api {BattleshipApi}
+     * @param callback {function}
+     */
+    onShot(api, callback) {
+        api.onShot(shot => {
+            if (shot.gameId === this.id) callback(shot);
+        });
     }
 }
-exports.default = SetupGame;
+exports.default = BaseGame;
 
-},{"../../util/BattleshipApi":14,"../../util/BattleshipConst":15,"./BaseGame":8,"./StartedGame":10}],10:[function(require,module,exports){
+},{"../../util/BattleshipApi":16,"../../util/BattleshipConst":17,"./../../util/JsonBase":20}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -805,8 +817,9 @@ class StartedGame extends _UserGame2.default {
      * @param api {BattleshipApi}
      * @param cell {Cell}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    doShot(api, cell, callback) {
+    doShot(api, cell, callback, fail = null) {
         if (!this.isPlayerTurn) throw new Error(`You cannot fire a shot in Game#${ this.id } because it is not your turn`);
 
         if (!(api instanceof _BattleshipApi2.default)) throw new TypeError("The 'api' parameter on StartedGame.doShot cannot be null");
@@ -815,7 +828,7 @@ class StartedGame extends _UserGame2.default {
 
         api.apiPost({ route: _BattleshipApi2.default.routes.gameShotById, parameter: this.id }, cell.toJson(), data => {
             callback(data);
-        });
+        }, fail);
     }
 
     /**
@@ -824,8 +837,9 @@ class StartedGame extends _UserGame2.default {
      * @param api {BattleshipApi}
      * @param id {number}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static get(api, id, callback) {
+    static get(api, id, callback, fail = null) {
         if (api === undefined || api === null) throw new Error("The 'api' parameter on StartedGame.get cannot be null");
 
         if (typeof callback !== 'function') throw new Error("The 'callback' parameter on StartedGame.get has to be a function");
@@ -834,7 +848,7 @@ class StartedGame extends _UserGame2.default {
             if (data.error !== undefined) throw new Error(data.error);
 
             callback(StartedGame.fromJson(data));
-        });
+        }, fail);
     }
 
     /**
@@ -845,14 +859,12 @@ class StartedGame extends _UserGame2.default {
      */
     static fromJson(jsonObject) {
 
-        // console.log(jsonObject);
-
         return new StartedGame(jsonObject._id, jsonObject.status, jsonObject.enemyId, jsonObject.enemyName, jsonObject.yourTurn, _PlayerGameboard2.default.fromJson(jsonObject.myGameboard), _EnemyGameboard2.default.fromJson(jsonObject.enemyGameboard));
     }
 }
 exports.default = StartedGame;
 
-},{"../../util/BattleshipApi":14,"../board/EnemyGameboard":5,"../board/PlayerGameboard":7,"./UserGame":11}],11:[function(require,module,exports){
+},{"../../util/BattleshipApi":16,"../board/EnemyGameboard":5,"../board/PlayerGameboard":7,"./UserGame":13}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -892,8 +904,9 @@ class UserGame extends _BaseGame2.default {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static getForCurrentUser(api, callback) {
+    static getForCurrentUser(api, callback, fail = null) {
         if (!(api instanceof _BattleshipApi2.default)) throw new TypeError("The 'api' parameter on UserGame.getForUser cannot be null");
 
         if (typeof callback !== 'function') throw new TypeError("The 'callback' parameter on UserGame.getForUser has to be a function");
@@ -906,7 +919,13 @@ class UserGame extends _BaseGame2.default {
             });
 
             callback(userGames);
-        });
+        }, fail);
+    }
+
+    static get(api, id, callback, fail = null) {
+        UserGame.getForCurrentUser(api, games => {
+            callback(games.find(game => game.id === id));
+        }, fail);
     }
 
     /**
@@ -921,7 +940,7 @@ class UserGame extends _BaseGame2.default {
 }
 exports.default = UserGame;
 
-},{"../../util/BattleshipApi":14,"./BaseGame":8}],12:[function(require,module,exports){
+},{"../../util/BattleshipApi":16,"./BaseGame":11}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -935,6 +954,10 @@ var _Ship2 = _interopRequireDefault(_Ship);
 var _Cell = require('./../Cell');
 
 var _Cell2 = _interopRequireDefault(_Cell);
+
+var _Shot = require('./../Shot');
+
+var _Shot2 = _interopRequireDefault(_Shot);
 
 var _BattleshipConst = require('../../util/BattleshipConst');
 
@@ -1062,8 +1085,9 @@ class GameboardShip extends _Ship2.default {
      */
     static fromJson(jsonObject) {
         let hits = [];
+
         jsonObject.hits.forEach(hit => {
-            hits.push(_Cell2.default.fromJson(hit));
+            hits.push(_Shot2.default.fromJson(hit));
         });
 
         let orientation = bs.HORIZONTAL;
@@ -1074,7 +1098,7 @@ class GameboardShip extends _Ship2.default {
 }
 exports.default = GameboardShip;
 
-},{"../../util/BattleshipConst":15,"./../Cell":2,"./Ship":13}],13:[function(require,module,exports){
+},{"../../util/BattleshipConst":17,"./../Cell":2,"./../Shot":3,"./Ship":15}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1126,8 +1150,9 @@ class Ship extends _JsonBase2.default {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static getAll(api, callback) {
+    static getAll(api, callback, fail = null) {
 
         let processShips = data => {
             _Persistence2.default.set(bs.PER_SHIPSKEY, JSON.stringify(data));
@@ -1152,7 +1177,7 @@ class Ship extends _JsonBase2.default {
 
             api.apiGet({ route: _BattleshipApi2.default.routes.allShips }, data => {
                 processShips(data);
-            });
+            }, fail);
         }
     }
 
@@ -1207,7 +1232,7 @@ class Ship extends _JsonBase2.default {
 }
 exports.default = Ship;
 
-},{"../../util/BattleshipApi":14,"../../util/BattleshipConst":15,"../../util/JsonBase":18,"../../util/Persistence":19}],14:[function(require,module,exports){
+},{"../../util/BattleshipApi":16,"../../util/BattleshipConst":17,"../../util/JsonBase":20,"../../util/Persistence":21}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1221,6 +1246,18 @@ var _BattleshipRoute2 = _interopRequireDefault(_BattleshipRoute);
 var _Persistence = require('./Persistence');
 
 var _Persistence2 = _interopRequireDefault(_Persistence);
+
+var _ShotEventArguments = require('../model/events/ShotEventArguments');
+
+var _ShotEventArguments2 = _interopRequireDefault(_ShotEventArguments);
+
+var _UpdateEventArguments = require('../model/events/UpdateEventArguments');
+
+var _UpdateEventArguments2 = _interopRequireDefault(_UpdateEventArguments);
+
+var _TurnEventArguments = require('../model/events/TurnEventArguments');
+
+var _TurnEventArguments2 = _interopRequireDefault(_TurnEventArguments);
 
 var _BattleshipConst = require('./BattleshipConst');
 
@@ -1241,6 +1278,14 @@ class BattleshipApi {
         if (window.io === undefined) throw new Error('BattleshipApi need Socket.IO to work');
 
         this._token = token;
+
+        this._socketIoCallbacks = [];
+
+        this._socket = io.connect(BattleshipApi.url, {
+            query: BattleshipApi.tokenPrefix + token
+        });
+
+        this._onTokenChangedCallbacks = [];
     }
 
     /**
@@ -1259,6 +1304,7 @@ class BattleshipApi {
     static get url() {
         return 'https://zeeslagavans.herokuapp.com/';
     }
+
     /**
      * All routes available for the Battleship API
      *
@@ -1301,21 +1347,47 @@ class BattleshipApi {
      * @param route {BattleshipRoute}
      * @param parameter {string}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    apiGet({ route, parameter }, callback) {
+    apiGet({ route, parameter }, callback, fail = null) {
         if (route === null || route === undefined) throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
 
         route.checkMethod('get');
 
         let url = this.withApiTokenSuffix(route.format(parameter));
 
-        $.get(url, data => {
-            if (data.error) throw new Error(data.error.replace('Error: ', ''));
+        $.ajax({
+            timeout: bs.AJAX_TIMEOUT,
+            url: url,
+            type: 'GET'
+        }).done(data => {
+            if (data.error) {
+                let _msg = data.error.replace('Error: ', '');
+                fail(_msg);
+                throw new Error(_msg);
+            }
 
             if (callback !== undefined && callback !== null) callback(data);
-        }).fail(() => {
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            if (typeof fail === 'function') fail(textStatus, errorThrown);
             throw new Error(`The Battleship Api failed to process the request to '${ url }'`);
         });
+
+        // $.get(url, data => {
+        //     if (data.error) {
+        //         let _msg = data.error.replace('Error: ', '');
+        //         fail(_msg);
+        //         throw new Error(_msg);
+        //     }
+        //
+        //     if (callback !== undefined && callback !== null)
+        //         callback(data);
+        //
+        // }).fail((jqXHR, textStatus, errorThrown) => {
+        //     if (typeof fail === 'function')
+        //         fail(jqXHR, textStatus, errorThrown);
+        //     throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+        // });
     }
 
     /**
@@ -1328,21 +1400,48 @@ class BattleshipApi {
      * @param parameter {string}
      * @param object {*}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    apiPost({ route, parameter }, object, callback) {
+    apiPost({ route, parameter }, object, callback, fail = null) {
         if (route === null || route === undefined) throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
 
         route.checkMethod('post');
 
         let url = this.withApiTokenSuffix(route.format(parameter));
 
-        $.post(url, object, data => {
-            if (data.error) throw new Error(data.error.replace('Error: ', ''));
+        $.ajax({
+            timeout: bs.AJAX_TIMEOUT,
+            url: url,
+            type: 'POST',
+            contents: object
+        }).done(data => {
+            if (data.error) {
+                let _msg = data.error.replace('Error: ', '');
+                fail(_msg);
+                throw new Error(_msg);
+            }
 
             if (typeof callback === 'function') callback(data);
-        }).fail(() => {
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            if (typeof fail === 'function') fail(textStatus, errorThrown);
             throw new Error(`The Battleship Api failed to process the request to '${ url }'`);
         });
+
+        // $.post(url, object, data => {
+        //     if (data.error) {
+        //         let _msg = data.error.replace('Error: ', '');
+        //         fail(_msg);
+        //         throw new Error(_msg);
+        //     }
+        //
+        //     if (typeof callback === 'function')
+        //         callback(data);
+        //
+        // }).fail((jqXHR, textStatus, errorThrown) => {
+        //     if (typeof fail === 'function')
+        //         fail(jqXHR, textStatus, errorThrown);
+        //     throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+        // });
     }
 
     /**
@@ -1354,23 +1453,29 @@ class BattleshipApi {
      * @param route {BattleshipRoute}
      * @param parameter {string}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    apiDelete({ route, parameter }, callback) {
+    apiDelete({ route, parameter }, callback, fail = null) {
         if (route === null || route === undefined) throw new Error('The route option on the apiDelete function of BattleshipApi cannot be empty');
 
         route.checkMethod('delete');
 
         $.ajax({
+            timeout: bs.AJAX_TIMEOUT,
             url: this.withApiTokenSuffix(route.format(parameter)),
-            type: 'DELETE',
-            success: data => {
-                if (data.error) throw new Error(data.error.replace('Error: ', ''));
-
-                if (typeof callback === 'function') callback(data);
-            },
-            error: () => {
-                throw new Error('The Battleship Api failed to process the request');
+            type: 'DELETE'
+        }).success(data => {
+            if (data.error) {
+                let _msg = data.error.replace('Error: ', '');
+                fail(_msg);
+                throw new Error(_msg);
             }
+
+            if (typeof callback === 'function') callback(data);
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            if (typeof fail === 'function') fail(textStatus, errorThrown);
+
+            throw new Error('The Battleship Api failed to process the request');
         });
     }
 
@@ -1392,11 +1497,33 @@ class BattleshipApi {
      */
     set token(value) {
         if (this.token !== value) {
+            let oldToken = this._token;
             this._token = value;
 
             _Persistence2.default.set(bs.PER_TOKENKEY, value);
             _Persistence2.default.remove(bs.PER_USERKEY);
+
+            this._socket = io.connect(BattleshipApi.url, {
+                query: BattleshipApi.tokenPrefix + this._token
+            });
+
+            let old = this._socketIoCallbacks.slice(0);
+            this._socketIoCallbacks = [];
+
+            old.forEach(obj => {
+                this.on(obj.room, obj.callback);
+            });
+
+            this._onTokenChangedCallbacks.forEach(cb => cb({ oldToken: oldToken, newToken: this._token }));
         }
+    }
+
+    /**
+     *
+     * @param callback {function}
+     */
+    onTokenChanged(callback) {
+        this._onTokenChangedCallbacks.push(callback);
     }
 
     /**
@@ -1406,11 +1533,13 @@ class BattleshipApi {
      * @param callback {function}
      */
     on(room, callback) {
-        var socket = io.connect(this.url, {
-            query: BattleshipApi.tokenPrefix + this.token
+
+        this._socketIoCallbacks.push({
+            room: room,
+            callback: callback
         });
 
-        socket.on(room, callback);
+        this._socket.on(room, callback);
     }
 
     /**
@@ -1419,7 +1548,9 @@ class BattleshipApi {
      * @param callback {function}
      */
     onUpdate(callback) {
-        this.on('update', callback);
+        this.on('update', data => {
+            callback(_UpdateEventArguments2.default.fromJson(data));
+        });
     }
 
     /**
@@ -1428,7 +1559,9 @@ class BattleshipApi {
      * @param callback {function}
      */
     onShot(callback) {
-        this.on('shot', callback);
+        this.on('shot', data => {
+            callback(_ShotEventArguments2.default.fromJson(data));
+        });
     }
 
     /**
@@ -1437,13 +1570,15 @@ class BattleshipApi {
      * @param callback {function}
      */
     onTurn(callback) {
-        this.on('turn', callback);
+        this.on('turn', data => {
+            callback(_TurnEventArguments2.default.fromJson(data));
+        });
     }
 
 }
 exports.default = BattleshipApi;
 
-},{"./BattleshipConst":15,"./BattleshipRoute":16,"./Persistence":19}],15:[function(require,module,exports){
+},{"../model/events/ShotEventArguments":8,"../model/events/TurnEventArguments":9,"../model/events/UpdateEventArguments":10,"./BattleshipConst":17,"./BattleshipRoute":18,"./Persistence":21}],17:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1458,6 +1593,7 @@ const PER_TOKENKEY = exports.PER_TOKENKEY = 'token';
 const PER_SHIPSKEY = exports.PER_SHIPSKEY = 'bs-ships';
 const HORIZONTAL = exports.HORIZONTAL = 'horizontal';
 const VERTICAL = exports.VERTICAL = 'vertical';
+const AJAX_TIMEOUT = exports.AJAX_TIMEOUT = 1000000;
 /**
  *
  * @type {{QUEUE: string, SETUP: string, STARTED: string, DONE: string}}
@@ -1469,7 +1605,7 @@ const STATE = exports.STATE = {
     DONE: 'done'
 };
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1526,7 +1662,7 @@ class BattleshipRoute {
 }
 exports.default = BattleshipRoute;
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1565,7 +1701,7 @@ class Hu {
 }
 exports.default = Hu;
 
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1583,7 +1719,7 @@ class JsonBase {
 }
 exports.default = JsonBase;
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1638,51 +1774,256 @@ class Persistence {
 }
 exports.default = Persistence;
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-class SoundFXViewModel {
-    /**
-     *
-     * @param source {string}
-     * @param loop {boolean}
-     */
-    constructor(source, loop = false) {
-        this.source = source;
-        this.loop = loop;
 
-        this._element = document.createElement('audio');
-        this._element.src = this.source;
-        this._element.loop = this.loop;
+var _ViewModel = require('./ViewModel');
+
+var _ViewModel2 = _interopRequireDefault(_ViewModel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class BSODViewModel extends _ViewModel2.default {
+    constructor(api) {
+        super(api, 'vm-bsod');
     }
 
-    play() {
-        this._element.play();
-    }
+    draw() {
+        let template = `<div id=${ this.name } class="bs-fill-page bs-bsod">
+<p><i class="fa fa-bomb fa-2x"></i></p>
+    <h2>Well done, you broke it</h2>
+    <p>An error occurred, please reload the page and try again.</p>
+</div>`;
 
-    pause() {
-        this._element.pause();
-    }
+        this.parent.prepend(template);
 
-    stop() {
-        this._element.currentTime = 0;
-        this._element.pause();
-    }
-
-    /**
-     *
-     * @param callback {function}
-     */
-    onEnded(callback) {
-        this._element.addEventListener('ended', callback);
+        document.querySelector('.bs-bsod').scrollIntoView();
+        this.parent.addClass('bs-bsod-html');
     }
 }
-exports.default = SoundFXViewModel;
+exports.default = BSODViewModel;
 
-},{}],21:[function(require,module,exports){
+},{"./ViewModel":26}],23:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _BattleshipApi = require('../util/BattleshipApi');
+
+var _BattleshipApi2 = _interopRequireDefault(_BattleshipApi);
+
+var _Ship = require('../model/ships/Ship');
+
+var _Ship2 = _interopRequireDefault(_Ship);
+
+var _UserGame = require('../model/games/UserGame');
+
+var _UserGame2 = _interopRequireDefault(_UserGame);
+
+var _UserViewModel = require('./UserViewModel');
+
+var _UserViewModel2 = _interopRequireDefault(_UserViewModel);
+
+var _BattleshipConst = require('../util/BattleshipConst');
+
+var _StartedGame = require('../model/games/StartedGame');
+
+var _StartedGame2 = _interopRequireDefault(_StartedGame);
+
+var _ViewModel = require('./ViewModel');
+
+var _ViewModel2 = _interopRequireDefault(_ViewModel);
+
+var _Observable = require('./Observable');
+
+var _Observable2 = _interopRequireDefault(_Observable);
+
+var _BSODViewModel = require('./BSODViewModel');
+
+var _BSODViewModel2 = _interopRequireDefault(_BSODViewModel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class BSTestViewModel extends _ViewModel2.default {
+    /**
+     *
+     * @param api {BattleshipApi}
+     */
+    constructor(api) {
+        super(api, 'vm-bstest');
+
+        this.token = new _Observable2.default(this.api.token);
+        this.ships = new _Observable2.default();
+        this.user = new _Observable2.default();
+        this.games = new _Observable2.default();
+
+        this.observe();
+    }
+
+    onError(reason, error) {
+        // console.log(error);
+        // swal({
+        //     title: "You broke it :(",
+        //     text: `<p>An error occurred, please reload the page to try again.</p><code>${reason}</code>`,
+        //     type: "error",
+        //     html: true
+        // });
+
+        let bsod = new _BSODViewModel2.default(this.api);
+        bsod.addTo('body');
+
+        this.loading = false;
+    }
+
+    load() {
+        this.loading = true;
+
+        _Ship2.default.getAll(this.api, ships => this.ships.$value = ships, this.onError.bind(this));
+        _UserViewModel2.default.getCurrent(this.api, user => this.user.$value = user, this.onError.bind(this));
+        _UserGame2.default.getForCurrentUser(this.api, games => {
+            this.games.$value = games;
+            this.loading = false;
+        }, this.onError.bind(this));
+    }
+
+    draw() {
+        let template = `<div id="${ this.name }" class="bs-fill-page">
+<code class="bs-console">
+        Some information... 🎩
+    </code>
+    <input type="text" id="input-token" value="${ this.token.$value }"/>
+    <ul class="bs-tst-cards">
+        <li class="bs-tst-card">
+            <h4>Ships</h4>
+            <ul id="ship-list"></ul>
+        </li>
+        <li class="bs-tst-card">
+            <h4>User</h4>
+            <ul id="user-info"></ul>
+        </li>
+        <li class="bs-tst-card">
+            <h4>Games <a id="tst-delete"><i class="fa fa-trash"></i></a></h4>
+            <ul id="all-games"></ul>
+        </li>
+    </ul>
+</div>`;
+
+        this.parent.append(template);
+        this.bind();
+    }
+
+    bind() {
+        let input = $('#input-token');
+        input.change(() => this.token.$value = input.val());
+
+        $('#tst-delete').click(() => {
+            swal({
+                title: "Are you sure?",
+                text: "This will remove all your games",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Remove them!",
+                cancelButtonText: "Nope",
+                closeOnConfirm: false
+            }, () => _UserGame2.default.deleteAll(this.api, null, this.onError.bind(this)));
+        });
+    }
+
+    observe() {
+        this.api.onTokenChanged(() => this.load());
+
+        this.token.addObserver(args => this.api.token = args.newValue);
+        this.user.addObserver(args => args.newValue.displayOn('#user-info'));
+        this.ships.addObserver(args => {
+            let shipList = $('#ship-list');
+            shipList.empty();
+
+            args.newValue.forEach(ship => shipList.append(`<li>${ ship.name }</li>`));
+        });
+        this.games.addObserver(args => {
+            let gameList = $('#all-games');
+            gameList.empty();
+
+            args.newValue.forEach(game => {
+
+                game.onUpdate(this.api, () => {
+                    $(`#g-${ game.id }-state`).text(game.state);
+                });
+
+                let string = `<li id="g-${ game.id }">
+<ul class="bs-tst-game">
+    <li><small class="game-id">${ game.id }</small></li>
+    <li>Tegen: '${ game.enemyName }'</li>
+    <li><small id="g-${ game.id }-state">${ game.state }</small></li>
+</ul>
+</li>`;
+
+                if (game.state === _BattleshipConst.STATE.STARTED) {
+                    _StartedGame2.default.get(this.api, game.id, startedGame => {
+                        let g_el = $(`#g-${ game.id }`).find(`.bs-tst-game`);
+                        if (startedGame.isPlayerTurn) g_el.append('<li><small>Jouw beurt</small></li>');else g_el.append('<li><small>Niet jouw beurt</small></li>');
+                    }, this.onError);
+                }
+
+                gameList.append(string);
+            });
+        });
+    }
+
+    set loading(value) {
+
+        let allCards = $('.bs-tst-card');
+
+        if (value) allCards.addClass('bs-tst-card-loading');else allCards.removeClass('bs-tst-card-loading');
+
+        super.loading = value;
+    }
+}
+exports.default = BSTestViewModel;
+
+},{"../model/games/StartedGame":12,"../model/games/UserGame":13,"../model/ships/Ship":15,"../util/BattleshipApi":16,"../util/BattleshipConst":17,"./BSODViewModel":22,"./Observable":24,"./UserViewModel":25,"./ViewModel":26}],24:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+class Observable {
+    constructor(value = null) {
+        this._v = value;
+        this._observers = [];
+    }
+
+    get $value() {
+        return this._v;
+    }
+
+    set $value(value) {
+
+        if (this._v === value) return;
+
+        let args = { oldValue: this._v, newValue: value };
+        this._v = value;
+
+        this._observers.forEach(observer => observer(args));
+    }
+
+    /**
+     *
+     * @param observer {function}
+     */
+    addObserver(observer) {
+        this._observers.push(observer);
+    }
+}
+exports.default = Observable;
+
+},{}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1729,4 +2070,67 @@ class UserViewModel extends _User2.default {
 }
 exports.default = UserViewModel;
 
-},{"./../model/User":4,"./../util/Hu":17}]},{},[1]);
+},{"./../model/User":4,"./../util/Hu":19}],26:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+class ViewModel {
+    /**
+     *
+     * @param api {BattleshipApi}
+     * @param name {string}
+     */
+    constructor(api, name) {
+        this.api = api;
+        this.name = name;
+        this.loading = false;
+    }
+
+    /**
+     *
+     * @param parent {string}
+     */
+    addTo(parent = 'body') {
+        this.parent = $(parent);
+
+        this.draw();
+        this.load();
+    }
+
+    destroy() {
+        this.parent.remove(`#${ this.name }`);
+    }
+
+    load() {}
+    draw() {}
+    bind() {}
+    observe() {}
+
+    get loading() {
+        return this._loading;
+    }
+
+    set loading(value) {
+        this._loading = value;
+    }
+
+    onError(reason, error) {
+        // console.log(error);
+        // swal({
+        //     title: "You broke it :(",
+        //     text: `<p>An error occurred, please reload the page to try again.</p><code>${reason}</code>`,
+        //     type: "error",
+        //     html: true
+        // });
+
+        let bsod = new BSODViewModel(this.api);
+        bsod.addTo('body');
+
+        this.loading = false;
+    }
+}
+exports.default = ViewModel;
+
+},{}]},{},[1]);
