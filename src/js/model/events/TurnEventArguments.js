@@ -1,9 +1,11 @@
 import JsonBase from '../../util/JsonBase'
 
 export default class UpdateEventArguments extends JsonBase {
-    constructor(gameId, userWhoHasTurn) {
+    constructor(gameId, currentUser) {
+        super();
+
         this.gameId = gameId;
-        this.userWhoHasTurn = userWhoHasTurn;
+        this.currentUser = currentUser;
     }
 
     static fromJson(jsonObject) {

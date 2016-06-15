@@ -29,8 +29,9 @@ export default class User extends JsonBase {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static getCurrent(api, callback) {
+    static getCurrent(api, callback, fail = null) {
 
         if (Persistence.hasKey(bs.PER_USERKEY)) {
             callback(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
@@ -45,7 +46,7 @@ export default class User extends JsonBase {
         api.apiGet({route: BattleshipApi.routes.currentUser}, data => {
             Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
             callback(User.fromJson(data));
-        });
+        }, fail);
     }
 
     /**
@@ -53,10 +54,11 @@ export default class User extends JsonBase {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      * @returns {*}
      */
-    static getGames(api, callback) {
-        return UserGame.getForCurrentUser(api, callback);
+    static getGames(api, callback, fail = null) {
+        return UserGame.getForCurrentUser(api, callback, fail);
     }
 
     /**
@@ -64,9 +66,10 @@ export default class User extends JsonBase {
      *
      * @param api {BattleshipApi}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    static deleteAllGames(api, callback) {
-        UserGame.deleteAll(api, callback);
+    static deleteAllGames(api, callback, fail = null) {
+        UserGame.deleteAll(api, callback, fail);
     }
 
     /**

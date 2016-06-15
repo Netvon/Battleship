@@ -27,8 +27,9 @@ export default class SetupGame extends BaseGame {
      * @param api {BattleshipApi}
      * @param isAi {boolean}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    static create(api, callback, isAi = false) {
+    static create(api, callback, isAi = false, fail = null) {
         if (!(api instanceof BattleshipApi))
             throw new TypeError("The 'api' parameter on SetupGame.create cannot be null");
 
@@ -39,7 +40,7 @@ export default class SetupGame extends BaseGame {
         api.apiGet({route}, data => {
             if (callback !== null)
                 callback(SetupGame.fromJson(data));
-        });
+        }, fail);
     }
 
     /**
@@ -48,8 +49,9 @@ export default class SetupGame extends BaseGame {
      * @param api {BattleshipApi}
      * @param gameboard {Gameboard}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    submitGameboard(api, gameboard, callback) {
+    submitGameboard(api, gameboard, callback, fail = null) {
 
         if(this.state !== STATE.SETUP)
             throw new Error(`You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`);
@@ -71,7 +73,7 @@ export default class SetupGame extends BaseGame {
                     callback(this);
             }
 
-        });
+        }, fail);
     }
 
     /**

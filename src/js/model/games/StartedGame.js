@@ -29,8 +29,9 @@ export default class StartedGame extends UserGame {
      * @param api {BattleshipApi}
      * @param cell {Cell}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    doShot(api, cell, callback) {
+    doShot(api, cell, callback, fail = null) {
         if(!this.isPlayerTurn)
             throw new Error(`You cannot fire a shot in Game#${this.id} because it is not your turn`);
 
@@ -42,7 +43,7 @@ export default class StartedGame extends UserGame {
 
         api.apiPost({route: BattleshipApi.routes.gameShotById, parameter: this.id}, cell.toJson(), data => {
             callback(data);
-        });
+        }, fail);
     }
 
     /**
@@ -51,8 +52,9 @@ export default class StartedGame extends UserGame {
      * @param api {BattleshipApi}
      * @param id {number}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static get(api, id, callback) {
+    static get(api, id, callback, fail = null) {
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on StartedGame.get cannot be null");
 
@@ -64,7 +66,7 @@ export default class StartedGame extends UserGame {
                 throw new Error(data.error);
 
             callback(StartedGame.fromJson(data));
-        });
+        }, fail);
     }
 
     /**
@@ -74,8 +76,6 @@ export default class StartedGame extends UserGame {
      * @returns {StartedGame}
      */
     static fromJson(jsonObject) {
-
-        // console.log(jsonObject);
 
         return new StartedGame(jsonObject._id,
             jsonObject.status,

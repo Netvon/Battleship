@@ -18,6 +18,14 @@ export default class BattleshipApi {
             throw new Error('BattleshipApi need Socket.IO to work');
 
         this._token = token;
+
+        this._socketIoCallbacks = [];
+
+        this._socket = io.connect(BattleshipApi.url, {
+            query: BattleshipApi.tokenPrefix + token
+        });
+
+        this._onTokenChangedCallbacks = [];
     }
 
     /**
@@ -36,6 +44,7 @@ export default class BattleshipApi {
     static get url() {
         return 'https://zeeslagavans.herokuapp.com/';
     }
+
     /**
      * All routes available for the Battleship API
      *
@@ -80,8 +89,9 @@ export default class BattleshipApi {
      * @param route {BattleshipRoute}
      * @param parameter {string}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    apiGet({route, parameter}, callback) {
+    apiGet({route, parameter}, callback, fail = null) {
         if (route === null || route === undefined)
             throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
 
@@ -89,16 +99,40 @@ export default class BattleshipApi {
 
         let url = this.withApiTokenSuffix(route.format(parameter));
 
-        $.get(url, data => {
-            if (data.error)
-                throw new Error(data.error.replace('Error: ', ''));
+        $.ajax({
+            timeout: bs.AJAX_TIMEOUT,
+            url: url,
+            type: 'GET'
+        }).done(data => {
+            if (data.error) {
+                let _msg = data.error.replace('Error: ', '');
+                fail(_msg);
+                throw new Error(_msg);
+            }
 
             if (callback !== undefined && callback !== null)
                 callback(data);
-
-        }).fail(() => {
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            if (typeof fail === 'function')
+                fail(textStatus, errorThrown);
             throw new Error(`The Battleship Api failed to process the request to '${url}'`);
         });
+
+        // $.get(url, data => {
+        //     if (data.error) {
+        //         let _msg = data.error.replace('Error: ', '');
+        //         fail(_msg);
+        //         throw new Error(_msg);
+        //     }
+        //
+        //     if (callback !== undefined && callback !== null)
+        //         callback(data);
+        //
+        // }).fail((jqXHR, textStatus, errorThrown) => {
+        //     if (typeof fail === 'function')
+        //         fail(jqXHR, textStatus, errorThrown);
+        //     throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+        // });
     }
 
     /**
@@ -111,8 +145,9 @@ export default class BattleshipApi {
      * @param parameter {string}
      * @param object {*}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    apiPost({route, parameter}, object, callback) {
+    apiPost({route, parameter}, object, callback, fail = null) {
         if (route === null || route === undefined)
             throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
 
@@ -120,16 +155,41 @@ export default class BattleshipApi {
 
         let url = this.withApiTokenSuffix(route.format(parameter));
 
-        $.post(url, object, data => {
-            if (data.error)
-                throw new Error(data.error.replace('Error: ', ''));
+        $.ajax({
+            timeout: bs.AJAX_TIMEOUT,
+            url: url,
+            type: 'POST',
+            contents: object
+        }).done(data => {
+            if (data.error) {
+                let _msg = data.error.replace('Error: ', '');
+                fail(_msg);
+                throw new Error(_msg);
+            }
 
             if (typeof callback === 'function')
                 callback(data);
-
-        }).fail(() => {
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            if (typeof fail === 'function')
+                fail(textStatus, errorThrown);
             throw new Error(`The Battleship Api failed to process the request to '${url}'`);
         });
+
+        // $.post(url, object, data => {
+        //     if (data.error) {
+        //         let _msg = data.error.replace('Error: ', '');
+        //         fail(_msg);
+        //         throw new Error(_msg);
+        //     }
+        //
+        //     if (typeof callback === 'function')
+        //         callback(data);
+        //
+        // }).fail((jqXHR, textStatus, errorThrown) => {
+        //     if (typeof fail === 'function')
+        //         fail(jqXHR, textStatus, errorThrown);
+        //     throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+        // });
     }
 
     /**
@@ -141,27 +201,33 @@ export default class BattleshipApi {
      * @param route {BattleshipRoute}
      * @param parameter {string}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    apiDelete({route, parameter}, callback) {
+    apiDelete({route, parameter}, callback, fail = null) {
         if (route === null || route === undefined)
             throw new Error('The route option on the apiDelete function of BattleshipApi cannot be empty');
 
         route.checkMethod('delete');
 
         $.ajax({
+            timeout: bs.AJAX_TIMEOUT,
             url: this.withApiTokenSuffix(route.format(parameter)),
-            type: 'DELETE',
-            success: data => {
-                if (data.error)
-                    throw new Error(data.error.replace('Error: ', ''));
-
-                if (typeof callback === 'function')
-                    callback(data);
-            },
-            error: () => {
-                throw new Error('The Battleship Api failed to process the request');
+            type: 'DELETE'
+        }).success(data => {
+            if (data.error) {
+                let _msg = data.error.replace('Error: ', '');
+                fail(_msg);
+                throw new Error(_msg);
             }
-        })
+
+            if (typeof callback === 'function')
+                callback(data);
+        }).fail((jqXHR, textStatus, errorThrown) => {
+            if (typeof fail === 'function')
+                fail(textStatus, errorThrown);
+
+            throw new Error('The Battleship Api failed to process the request');
+        });
     }
 
     /**
@@ -181,12 +247,34 @@ export default class BattleshipApi {
      * @param value {string}
      */
     set token(value) {
-        if(this.token !== value) {
+        if (this.token !== value) {
+            let oldToken = this._token;
             this._token = value;
 
             Persistence.set(bs.PER_TOKENKEY, value);
             Persistence.remove(bs.PER_USERKEY);
+
+            this._socket = io.connect(BattleshipApi.url, {
+                query: BattleshipApi.tokenPrefix + this._token
+            });
+
+            let old = this._socketIoCallbacks.slice(0);
+            this._socketIoCallbacks = [];
+
+            old.forEach(obj => {
+                this.on(obj.room, obj.callback);
+            });
+
+            this._onTokenChangedCallbacks.forEach(cb => cb({oldToken: oldToken, newToken: this._token}));
         }
+    }
+
+    /**
+     *
+     * @param callback {function}
+     */
+    onTokenChanged(callback) {
+        this._onTokenChangedCallbacks.push(callback);
     }
 
     /**
@@ -196,11 +284,13 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     on(room, callback) {
-        var socket = io.connect(BattleshipApi.url, {
-            query: BattleshipApi.tokenPrefix + this.token
+
+        this._socketIoCallbacks.push({
+            room: room,
+            callback: callback
         });
 
-        socket.on(room, callback);
+        this._socket.on(room, callback);
     }
 
     /**

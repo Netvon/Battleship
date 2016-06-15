@@ -23,6 +23,20 @@
   }
 }
 
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 @mixin reset-list-style {
   text-decoration: none;
   list-style: none;
@@ -94,15 +108,89 @@
   min-height: 3em;
   margin: 1em;
   padding: 2em;
-  border-radius: 6px;
+  border-radius: 1em;
 
   font-family: monospace;
-  background-color: rgba(49, 27, 136, 0.06);
+  background-color: rgba(123, 220, 155, 0.57);
   color: rgba(0, 0, 0, 0.5);
   line-height: 1.6em;
 
-  & > ul {
+  flex-grow: 1;
+
+  transition: background-color .3s ease;
+
+  box-shadow: 0 0.7em 0 rgb(133, 195, 154), 0 0.7em 1em rgba(0, 0, 0, 0.12);
+
+  & ul {
     @include reset-list-style;
+  }
+
+  &:hover {
+    background-color: rgba(123, 220, 155, 0.7);
+  }
+
+  &-loading {
+    animation: pulse .8s infinite;
+
+    &:before {
+      content: 'loading...';
+      font-weight: 600;
+      font-size: 1.1em;
+    }
+  }
+
+  & > h1, & > h2, & > h3, & > h4, & > h5, & > h6 {
+    margin: 0;
+  }
+}
+
+.#{$selector-prefix}tst-game {
+  border-bottom: 1px dotted rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: space-between;
+
+  & > li {
+    padding: 0.5em;
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+.#{$selector-prefix}bsod {
+  background-color: #3b4eaf;
+  color: white;
+  padding: 1em;
+
+  & > h2, & > p {
+    margin: 0;
+    text-align: center;
+  }
+
+  & > h2 {
+    font-size: 3em;
+
+    @media screen and (max-width: $mobile-l) {
+      font-size: 2em;
+    }
+  }
+
+  & > p {
+    font-size: 2em;
+
+    @media screen and (max-width: $mobile-l) {
+      font-size: 1.3em;
+    }
+  }
+
+  &-html {
+    max-height: 100vh;
+    overflow: hidden;
   }
 }
 

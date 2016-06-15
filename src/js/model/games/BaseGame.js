@@ -3,6 +3,7 @@ import {STATE} from '../../util/BattleshipConst';
 import BattleshipApi from '../../util/BattleshipApi';
 
 export default class BaseGame extends JsonBase {
+
     /**
      * Constructs a new instance of the BaseGame class
      *
@@ -21,12 +22,13 @@ export default class BaseGame extends JsonBase {
      *
      * @param api {BattleshipApi}
      * @param callback {function|null}
+     * @param fail {function|null}
      */
-    static deleteAll(api, callback) {
+    static deleteAll(api, callback, fail = null) {
         if (!(api instanceof BattleshipApi))
             throw new Error("The 'api' parameter on User.deleteAllGames cannot be null");
 
-        api.apiDelete({route: BattleshipApi.routes.currentUserGames}, callback);
+        api.apiDelete({route: BattleshipApi.routes.currentUserGames}, callback, fail);
     }
 
     /**
@@ -93,5 +95,43 @@ export default class BaseGame extends JsonBase {
         }
 
         return false;
+    }
+
+    /**
+     *
+     * @param api {BattleshipApi}
+     * @param callback {function}
+     */
+    onUpdate(api, callback) {
+        api.onUpdate(update => {
+            if(update.gameId === this.id) {
+                this.state = update.state;
+                callback(update);
+            }
+        })
+    }
+
+    /**
+     *
+     * @param api {BattleshipApi}
+     * @param callback {function}
+     */
+    onTurn(api, callback) {
+        api.onTurn(turn => {
+            if(turn.gameId === this.id)
+                callback(turn);
+        })
+    }
+
+    /**
+     *
+     * @param api {BattleshipApi}
+     * @param callback {function}
+     */
+    onShot(api, callback) {
+        api.onShot(shot => {
+            if(shot.gameId === this.id)
+                callback(shot);
+        })
     }
 }

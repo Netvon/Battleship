@@ -31,8 +31,9 @@ export default class Ship extends JsonBase {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static getAll(api, callback) {
+    static getAll(api, callback, fail = null) {
 
         let processShips = data => {
             Persistence.set(bs.PER_SHIPSKEY, JSON.stringify(data));
@@ -60,7 +61,7 @@ export default class Ship extends JsonBase {
 
             api.apiGet({route: BattleshipApi.routes.allShips}, data => {
                 processShips(data);
-            });
+            }, fail);
         }
     }
 

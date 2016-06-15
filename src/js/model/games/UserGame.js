@@ -24,8 +24,9 @@ export default class UserGame extends BaseGame {
      *
      * @param api {BattleshipApi}
      * @param callback {function}
+     * @param fail {function|null}
      */
-    static getForCurrentUser(api, callback) {
+    static getForCurrentUser(api, callback, fail = null) {
         if (!(api instanceof BattleshipApi))
             throw new TypeError("The 'api' parameter on UserGame.getForUser cannot be null");
 
@@ -40,7 +41,13 @@ export default class UserGame extends BaseGame {
             });
 
             callback(userGames);
-        });
+        }, fail);
+    }
+
+    static get(api, id, callback, fail = null) {
+        UserGame.getForCurrentUser(api, games => {
+            callback(games.find(game => game.id === id));
+        }, fail)
     }
 
     /**
