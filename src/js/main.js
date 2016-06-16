@@ -1,6 +1,6 @@
 import BattleshipApi from './util/BattleshipApi';
 import Persistence from './util/Persistence';
-import BSTestViewModel from './viewmodel/BSTestViewModel'
+import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
 
 (function () {
 
@@ -13,8 +13,8 @@ import BSTestViewModel from './viewmodel/BSTestViewModel'
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
 
-    let tstView = new BSTestViewModel(battleshipApi);
-    tstView.addTo('body');
+    let titleVM = new TitleScreenViewModel(battleshipApi);
+    titleVM.addTo('body');
 
 }());
 
