@@ -30,38 +30,40 @@ export default class Ship extends JsonBase {
      * Returns an Array of all Ship available to the User
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
+     * @returns {Promise}
      */
-    static getAll(api, callback) {
+    static getAll(api) {
 
-        let processShips = data => {
-            Persistence.set(bs.PER_SHIPSKEY, JSON.stringify(data));
+        return new Promise((resolve, reject) => {
+            let processShips = data => {
+                Persistence.set(bs.PER_SHIPSKEY, JSON.stringify(data));
 
-            let ships = [];
+                let ships = [];
 
-            data.forEach(jsonShip => {
-                ships.push(Ship.fromJson(jsonShip));
-            });
+                data.forEach(jsonShip => {
+                    ships.push(Ship.fromJson(jsonShip));
+                });
 
-            callback(ships);
-        };
+                resolve(ships);
+            };
 
-        if (Persistence.hasKey(bs.PER_SHIPSKEY)) {
-            // console.log('Loading Ships from storage');
-            let json = Persistence.get(bs.PER_SHIPSKEY);
-            processShips(JSON.parse(json));
-        }
-        else {
-            if (api === undefined || api === null)
-                throw new Error("The 'api' parameter on Ship.getAll cannot be null");
+            if (Persistence.hasKey(bs.PER_SHIPSKEY)) {
+                // console.log('Loading Ships from storage');
+                let json = Persistence.get(bs.PER_SHIPSKEY);
+                processShips(JSON.parse(json));
+            }
+            else {
+                if (api === undefined || api === null) {
+                    let msg = "The 'api' parameter on Ship.getAll cannot be null";
+                    reject(msg);
+                    throw new Error(msg);
+                }
 
-            if (typeof callback !== 'function')
-                throw new TypeError("The 'callback' parameter on Ship.getAll has to be a function");
-
-            api.apiGet({route: BattleshipApi.routes.allShips}, data => {
-                processShips(data);
-            });
-        }
+                api.apiGet({route: BattleshipApi.routes.allShips}).then(data => {
+                    processShips(data);
+                }).catch(reject);
+            }
+        });
     }
 
     /**

@@ -1,9 +1,6 @@
 import BattleshipApi from './util/BattleshipApi';
-import Ship from './model/ships/Ship';
-import Hu from './util/Hu';
-import UserViewModel from './viewmodel/UserViewModel';
-import SetupGame from './model/games/SetupGame';
 import Persistence from './util/Persistence';
+import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
 import Gameboard from './model/board/Gameboard';
 import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/UserGameViewModel";
@@ -11,24 +8,24 @@ import SoundFXViewModel from './viewmodel/SoundFXViewModel';
 
 (function () {
 
-    let fx = new SoundFXViewModel('audio/test.mp3');
-    fx.play();
-
-    let allShips = [];
+    // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InNlZS5ncmFuZGlhQHN0dWRlbnQuYXZhbnMubmwi.DtPnllHeZKqv_lM7evo72TyJWpSOELFunRs4myKHMHA
+    // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI
 
     if (!Persistence.hasKey('token'))
         Persistence.set('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI');
 
     let token = Persistence.get('token');
-    // console.log(token);
+    let battleshipApi = new BattleshipApi(token);
 
-// eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI
-    var battleshipApi = new BattleshipApi(token);
-    
-    UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
+    let titleVM = new TitleScreenViewModel(battleshipApi);
+    titleVM.addTo('body');
 
-    var gameboard = new Gameboard();
-    gameboard.drawGameboard();
+    // var battleshipApi = new BattleshipApi(token);
+    //
+    // UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
+    //
+    // var gameboard = new Gameboard();
+    // gameboard.drawGameboard();
     
     // userGameViewModel.showGames();
 

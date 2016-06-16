@@ -28,20 +28,22 @@ export default class StartedGame extends UserGame {
      *
      * @param api {BattleshipApi}
      * @param cell {Cell}
-     * @param callback {function}
+     * @return {Promise}
      */
-    doShot(api, cell, callback) {
-        if(!this.isPlayerTurn)
-            throw new Error(`You cannot fire a shot in Game#${this.id} because it is not your turn`);
-
+    doShot(api, cell) {
         if (!(api instanceof BattleshipApi))
             throw new TypeError("The 'api' parameter on StartedGame.doShot cannot be null");
 
-        if (typeof callback !== 'function')
-            throw new TypeError("The 'callback' parameter on StartedGame.doShot has to be a function");
+        return new Promise((resolve, reject) => {
 
-        api.apiPost({route: BattleshipApi.routes.gameShotById, parameter: this.id}, cell.toJson(), data => {
-            callback(data);
+            if(!this.isPlayerTurn) {
+                let msg = `You cannot fire a shot in Game#${this.id} because it is not your turn`;
+                reject(msg);
+                throw new Error(msg);
+            }
+
+            api.apiPost({route: BattleshipApi.routes.gameShotById, parameter: this.id}, cell.toJson())
+                .then(resolve).catch(fail);
         });
     }
 
@@ -50,21 +52,24 @@ export default class StartedGame extends UserGame {
      *
      * @param api {BattleshipApi}
      * @param id {number}
-     * @param callback {function}
+     * @return {Promise}
      */
-    static get(api, id, callback) {
+    static get(api, id) {
         if (api === undefined || api === null)
             throw new Error("The 'api' parameter on StartedGame.get cannot be null");
 
-        if (typeof callback !== 'function')
-            throw new Error("The 'callback' parameter on StartedGame.get has to be a function");
+        return new Promise((resolve, reject) => {
+            api.apiGet({route: BattleshipApi.routes.gameById, parameter: id}).then(data => {
+                if (data.error !== undefined) {
+                    reject(data.error);
+                    throw new Error(data.error);
+                }
 
-        api.apiGet({route: BattleshipApi.routes.gameById, parameter: id}, data => {
-            if (data.error !== undefined)
-                throw new Error(data.error);
-
-            callback(StartedGame.fromJson(data));
+                resolve(StartedGame.fromJson(data));
+            }).catch(reject);
         });
+
+
     }
 
     /**
@@ -74,8 +79,6 @@ export default class StartedGame extends UserGame {
      * @returns {StartedGame}
      */
     static fromJson(jsonObject) {
-
-        // console.log(jsonObject);
 
         return new StartedGame(jsonObject._id,
             jsonObject.status,

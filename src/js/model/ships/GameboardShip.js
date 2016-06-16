@@ -1,5 +1,6 @@
 import Ship from './Ship';
 import Cell from './../Cell';
+import Shot from './../Shot';
 import * as bs from '../../util/BattleshipConst';
 
 export default class GameboardShip extends Ship {
@@ -123,8 +124,9 @@ export default class GameboardShip extends Ship {
      */
     static fromJson(jsonObject) {
         let hits = [];
+
         jsonObject.hits.forEach(hit => {
-            hits.push(Cell.fromJson(hit));
+            hits.push(Shot.fromJson(hit));
         });
 
         let orientation = bs.HORIZONTAL;

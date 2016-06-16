@@ -28,23 +28,25 @@ export default class User extends JsonBase {
      * Returns the current User
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
+     * @returns {Promise}
      */
-    static getCurrent(api, callback) {
+    static getCurrent(api) {
+        return new Promise((resolve, reject) => {
 
-        if (Persistence.hasKey(bs.PER_USERKEY)) {
-            callback(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
-        }
+            if (Persistence.hasKey(bs.PER_USERKEY)) {
+                resolve(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
+            }
 
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on User.getCurrent cannot be null");
+            if (api === undefined || api === null) {
+                let msg = "The 'api' parameter on User.getCurrent cannot be null";
+                reject(msg);
+                throw new Error(msg);
+            }
 
-        if (typeof callback !== 'function')
-            throw new TypeError("The 'callback' parameter on User.getCurrent has to be a function");
-
-        api.apiGet({route: BattleshipApi.routes.currentUser}, data => {
-            Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
-            callback(User.fromJson(data));
+            api.apiGet({route: BattleshipApi.routes.currentUser}).then( data => {
+                Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
+                resolve(User.fromJson(data));
+            }).catch(reject);
         });
     }
 
@@ -52,21 +54,20 @@ export default class User extends JsonBase {
      * Returns an Array of all Games the current user is participating in.
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
-     * @returns {*}
+     * @returns {Promise}
      */
-    static getGames(api, callback) {
-        return UserGame.getForCurrentUser(api, callback);
+    static getGames(api) {
+        return UserGame.getForCurrentUser(api);
     }
 
     /**
      * Removes all Games the current user is participating in.
      *
      * @param api {BattleshipApi}
-     * @param callback {function|null}
+     * @return {Promise}
      */
-    static deleteAllGames(api, callback) {
-        UserGame.deleteAll(api, callback);
+    static deleteAllGames(api) {
+        return UserGame.deleteAll(api);
     }
 
     /**

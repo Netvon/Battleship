@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Battleship Alpha</title>
+    <title>Battleship</title>
     <meta name="description" content="Battleship assessment made for Avans Webs3">
     <meta name="keywords" content="battleship, avans, js, javascript, webs3">
     <meta name="author" content="Sander Grandia, Tom van Nimwegen">
@@ -17,6 +17,7 @@
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="https://zeeslagavans.herokuapp.com/socket.io/socket.io.js"></script>
+    <script src="js/vendor/sweetalert.min.js"></script>
     <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -25,13 +26,7 @@
         Battleship
     </p>
 
-    <div class="bs-hero-menu">
-        <button id="new-game" class="hero-button">New Game</button>
-        <button id="resume-game" class="hero-button">Resume Game</button>
-        <button id="instructions" class="hero-button">Instructions</button>
-        <button id="quit" class="hero-button">Quit</button>
-    </div>
-
+    <button class="hero-button">Play</button>
     <p class="bs-hero-credit">Made by Sander & Tom</p>
 </header>
 <main class="bs-fill-page">

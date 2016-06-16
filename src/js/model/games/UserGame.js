@@ -23,23 +23,36 @@ export default class UserGame extends BaseGame {
      * Returns an Array of all Games this user is participating in.
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
+     * @return {Promise}
      */
-    static getForCurrentUser(api, callback) {
+    static getForCurrentUser(api) {
         if (!(api instanceof BattleshipApi))
             throw new TypeError("The 'api' parameter on UserGame.getForUser cannot be null");
 
-        if (typeof callback !== 'function')
-            throw new TypeError("The 'callback' parameter on UserGame.getForUser has to be a function");
+        return new Promise((resolve, reject) => {
+            api.apiGet({route: BattleshipApi.routes.currentUserGames}).then(data => {
+                let userGames = [];
 
-        api.apiGet({route: BattleshipApi.routes.currentUserGames}, data => {
-            let userGames = [];
+                data.forEach(item => {
+                    userGames.push(UserGame.fromJson(item));
+                });
 
-            data.forEach(item => {
-                userGames.push(UserGame.fromJson(item));
-            });
+                resolve(userGames);
+            }).then(reject);
+        });
+    }
 
-            callback(userGames);
+    /**
+     *
+     * @param api
+     * @param id
+     * @returns {Promise}
+     */
+    static get(api, id) {
+        return new Promise((resolve, reject) => {
+            UserGame.getForCurrentUser(api).then(games => {
+                resolve(games.find(game => game.id === id));
+            }).catch(reject)
         });
     }
 
