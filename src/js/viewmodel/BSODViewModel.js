@@ -6,8 +6,6 @@ export default class BSODViewModel extends ViewModel {
 
         this.errorCode = errorCode;
         this.reason = reason;
-
-        console.log(this.reason);
     }
 
     draw() {
@@ -26,7 +24,7 @@ export default class BSODViewModel extends ViewModel {
             $(this.name).append(`<pre><code>Status: ${this.errorCode}</code></pre>`);
         }
 
-        console.log(this.reason);
+        // console.log(this.reason);
 
         if (this.reason !== null) {
             $(`#${this.name}`).append(`<pre><code>${this.reason}</code></pre>`);

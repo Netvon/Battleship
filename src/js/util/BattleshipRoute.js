@@ -51,7 +51,6 @@ export default class BattleshipRoute {
      * @returns {boolean}
      */
     checkMethod(method) {
-        if(this.methods.indexOf(method) === -1)
-            throw new Error(`The selected route ('${this.urlFormat}') does not support the '${method}' method`);
+        return this.methods.indexOf(method) !== -1;
     }
 }

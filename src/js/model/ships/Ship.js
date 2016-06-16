@@ -34,41 +34,32 @@ export default class Ship extends JsonBase {
      */
     static getAll(api) {
 
-        return new Promise((resolve, reject) => {
-            let processShips = data => {
-                Persistence.set(bs.PER_SHIPSKEY, JSON.stringify(data));
+        let processShips = data => {
+            Persistence.set(bs.PER_SHIPSKEY, JSON.stringify(data));
 
-                let ships = [];
+            let ships = [];
 
-                data.forEach(jsonShip => {
-                    ships.push(Ship.fromJson(jsonShip));
-                });
+            data.forEach(jsonShip => {
+                ships.push(Ship.fromJson(jsonShip));
+            });
 
-                resolve(ships);
-            };
+            return ships;
+        };
 
-            if (Persistence.hasKey(bs.PER_SHIPSKEY)) {
-                // console.log('Loading Ships from storage');
-                let json = Persistence.get(bs.PER_SHIPSKEY);
-                processShips(JSON.parse(json));
-            }
-            else {
-                if (api === undefined || api === null) {
-                    let msg = "The 'api' parameter on Ship.getAll cannot be null";
-                    reject(msg);
-                    throw new Error(msg);
-                }
+        if (Persistence.hasKey(bs.PER_SHIPSKEY)) {
+            let json = Persistence.get(bs.PER_SHIPSKEY);
+            return Promise.resolve(processShips(JSON.parse(json)));
+        }
 
-                api.apiGet({route: BattleshipApi.routes.allShips}).then(data => {
-                    processShips(data);
-                }).catch(reject);
-            }
-        });
+        return api.apiGet({route: BattleshipApi.routes.allShips})
+            .then(data => {
+                return processShips(data);
+            });
     }
 
     /**
      * Get the bounds of this Ship
-     * 
+     *
      * @param cell {Cell}
      * @param orientation {string}
      * @returns {{xmin: number, ymin: number, xmax: number, ymax: number}}

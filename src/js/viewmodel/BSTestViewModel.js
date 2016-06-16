@@ -33,7 +33,7 @@ export default class BSTestViewModel extends ViewModel {
         //     html: true
         // });
 
-        console.log(reason);
+        // console.log(statusCode);
 
         let bsod = new BSODViewModel(this.api, statusCode, reason);
         bsod.addTo('body');
@@ -44,12 +44,20 @@ export default class BSTestViewModel extends ViewModel {
     load() {
         this.loading = true;
 
-        Ship.getAll(this.api).then(ships => this.ships.$value = ships).catch(this.onError.bind(this));
-        UserViewModel.getCurrent(this.api).then(user => this.user.$value = user).catch(this.onError.bind(this));
-        UserGame.getForCurrentUser(this.api).then(games => {
-            this.games.$value = games;
-            this.loading = false;
-        }).catch(this.onError.bind(this));
+        let promises = [
+            Ship.getAll(this.api)
+                .then(ships => this.ships.$value = ships),
+
+            UserViewModel.getCurrent(this.api)
+                .then(user => this.user.$value = user),
+
+            UserGame.getForCurrentUser(this.api)
+                .then(games => this.games.$value = games)
+        ];
+
+        Promise.all(promises)
+            .then(() => this.loading = false)
+            .catch(this.onError.bind(this));
     }
 
     draw() {

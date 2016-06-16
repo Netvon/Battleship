@@ -26,20 +26,16 @@ export default class UserGame extends BaseGame {
      * @return {Promise}
      */
     static getForCurrentUser(api) {
-        if (!(api instanceof BattleshipApi))
-            throw new TypeError("The 'api' parameter on UserGame.getForUser cannot be null");
-
-        return new Promise((resolve, reject) => {
-            api.apiGet({route: BattleshipApi.routes.currentUserGames}).then(data => {
+        return api.apiGet({route: BattleshipApi.routes.currentUserGames})
+            .then(data => {
                 let userGames = [];
 
                 data.forEach(item => {
                     userGames.push(UserGame.fromJson(item));
                 });
 
-                resolve(userGames);
-            }).then(reject);
-        });
+                return userGames;
+            });
     }
 
     /**
@@ -49,16 +45,15 @@ export default class UserGame extends BaseGame {
      * @returns {Promise}
      */
     static get(api, id) {
-        return new Promise((resolve, reject) => {
-            UserGame.getForCurrentUser(api).then(games => {
-                resolve(games.find(game => game.id === id));
-            }).catch(reject)
-        });
+        return UserGame.getForCurrentUser(api)
+            .then(games => {
+                return games.find(game => game.id === id);
+            });
     }
 
     /**
      * Converts a Json Object to a new instance of the UserGame class
-     * 
+     *
      * @param jsonObject
      * @returns {UserGame}
      */

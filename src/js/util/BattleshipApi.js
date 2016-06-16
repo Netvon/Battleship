@@ -92,14 +92,14 @@ export default class BattleshipApi {
      */
     apiGet({route, parameter}) {
 
-        return new Promise((resolve, reject) => {
+        return new Promise(function(resolve, reject) {
             if (route === null || route === undefined) {
                 let msg = 'The route option on the apiGet function of BattleshipApi cannot be empty';
                 reject(msg);
-                throw new Error(msg);
             }
 
-            route.checkMethod('get');
+            if (!route.checkMethod('get'))
+                reject(`The selected route ('${route.urlFormat}') does not support the 'get' method`);
 
             let url = this.withApiTokenSuffix(route.format(parameter));
 
@@ -111,16 +111,14 @@ export default class BattleshipApi {
                 if (data.error) {
                     let _msg = data.error.replace('Error: ', '');
                     reject(_msg);
-                    throw new Error(_msg);
                 }
 
                 resolve(data);
 
-            }).fail((jqXHR, textStatus, errorThrown) => {
-                reject(textStatus, errorThrown, jqXHR.status);
-                throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+            }).fail(jqXHR => {
+                reject(`HTTP Status: ${jqXHR.status}`);
             });
-        });
+        }.bind(this));
 
 
     }
@@ -142,10 +140,10 @@ export default class BattleshipApi {
             if (route === null || route === undefined) {
                 let msg = 'The route option on the apiGet function of BattleshipApi cannot be empty';
                 reject(msg);
-                throw new Error(msg);
             }
 
-            route.checkMethod('post');
+            if (!route.checkMethod('post'))
+                reject(`The selected route ('${route.urlFormat}') does not support the 'post' method`);
 
             let url = this.withApiTokenSuffix(route.format(parameter));
 
@@ -158,13 +156,11 @@ export default class BattleshipApi {
                 if (data.error) {
                     let _msg = data.error.replace('Error: ', '');
                     reject(_msg);
-                    throw new Error(_msg);
                 }
 
                 resolve(data);
-            }).fail((jqXHR, textStatus, errorThrown) => {
-                reject(textStatus, errorThrown, jqXHR.status);
-                throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+            }).fail(jqXHR => {
+                reject(`HTTP Status: ${jqXHR.status}`);
             });
         });
     }
@@ -185,10 +181,10 @@ export default class BattleshipApi {
             if (route === null || route === undefined) {
                 let msg = 'The route option on the apiDelete function of BattleshipApi cannot be empty';
                 reject(msg);
-                throw new Error(msg);
             }
 
-            route.checkMethod('delete');
+            if (!route.checkMethod('delete'))
+                reject(`The selected route ('${route.urlFormat}') does not support the 'delete' method`);
 
             $.ajax({
                 timeout: bs.AJAX_TIMEOUT,
@@ -198,13 +194,11 @@ export default class BattleshipApi {
                 if (data.error) {
                     let _msg = data.error.replace('Error: ', '');
                     reject(_msg);
-                    throw new Error(_msg);
                 }
 
                 resolve(data);
-            }).fail((jqXHR, textStatus, errorThrown) => {
-                reject(textStatus, errorThrown, jqXHR.status);
-                throw new Error('The Battleship Api failed to process the request');
+            }).fail(jqXHR => {
+                reject(`HTTP Status: ${jqXHR.status}`);
             });
         });
 

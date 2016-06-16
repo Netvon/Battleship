@@ -31,20 +31,13 @@ export default class StartedGame extends UserGame {
      * @return {Promise}
      */
     doShot(api, cell) {
-        if (!(api instanceof BattleshipApi))
-            throw new TypeError("The 'api' parameter on StartedGame.doShot cannot be null");
 
-        return new Promise((resolve, reject) => {
+        if (!this.isPlayerTurn) {
+            let msg = `You cannot fire a shot in Game#${this.id} because it is not your turn`;
+            return Promise.reject(msg);
+        }
 
-            if(!this.isPlayerTurn) {
-                let msg = `You cannot fire a shot in Game#${this.id} because it is not your turn`;
-                reject(msg);
-                throw new Error(msg);
-            }
-
-            api.apiPost({route: BattleshipApi.routes.gameShotById, parameter: this.id}, cell.toJson())
-                .then(resolve).catch(fail);
-        });
+        return api.apiPost({route: BattleshipApi.routes.gameShotById, parameter: this.id}, cell.toJson());
     }
 
     /**
@@ -55,19 +48,14 @@ export default class StartedGame extends UserGame {
      * @return {Promise}
      */
     static get(api, id) {
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on StartedGame.get cannot be null");
-
-        return new Promise((resolve, reject) => {
-            api.apiGet({route: BattleshipApi.routes.gameById, parameter: id}).then(data => {
+        return api.apiGet({route: BattleshipApi.routes.gameById, parameter: id})
+            .then(data => {
                 if (data.error !== undefined) {
-                    reject(data.error);
                     throw new Error(data.error);
                 }
 
-                resolve(StartedGame.fromJson(data));
-            }).catch(reject);
-        });
+                return StartedGame.fromJson(data);
+            });
 
 
     }
