@@ -114,7 +114,7 @@ export default class BattleshipApi {
                 callback(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
             if (typeof fail === 'function')
-                fail(textStatus, errorThrown);
+                fail(textStatus, errorThrown, jqXHR.status);
             throw new Error(`The Battleship Api failed to process the request to '${url}'`);
         });
 
@@ -171,7 +171,7 @@ export default class BattleshipApi {
                 callback(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
             if (typeof fail === 'function')
-                fail(textStatus, errorThrown);
+                fail(textStatus, errorThrown, jqXHR.status);
             throw new Error(`The Battleship Api failed to process the request to '${url}'`);
         });
 
@@ -224,7 +224,7 @@ export default class BattleshipApi {
                 callback(data);
         }).fail((jqXHR, textStatus, errorThrown) => {
             if (typeof fail === 'function')
-                fail(textStatus, errorThrown);
+                fail(textStatus, errorThrown, jqXHR.status);
 
             throw new Error('The Battleship Api failed to process the request');
         });

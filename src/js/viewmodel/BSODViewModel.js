@@ -1,8 +1,10 @@
 import ViewModel from "./ViewModel";
 
 export default class BSODViewModel extends ViewModel {
-    constructor(api) {
+    constructor(api, errorCode) {
         super(api, 'vm-bsod');
+
+        this.errorCode = errorCode;
     }
 
     draw() {
@@ -10,6 +12,7 @@ export default class BSODViewModel extends ViewModel {
 <p><i class="fa fa-bomb fa-2x"></i></p>
     <h2>Well done, you broke it</h2>
     <p>An error occurred, please reload the page and try again.</p>
+    <pre><code>Status: ${this.errorCode}</code></pre>
 </div>`;
 
         this.parent.prepend(template);

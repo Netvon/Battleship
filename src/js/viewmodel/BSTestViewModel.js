@@ -24,7 +24,7 @@ export default class BSTestViewModel extends ViewModel {
         this.observe();
     }
 
-    onError(reason, error) {
+    onError(reason, error, statusCode) {
         // console.log(error);
         // swal({
         //     title: "You broke it :(",
@@ -33,7 +33,7 @@ export default class BSTestViewModel extends ViewModel {
         //     html: true
         // });
 
-        let bsod = new BSODViewModel(this.api);
+        let bsod = new BSODViewModel(this.api, statusCode);
         bsod.addTo('body');
 
         this.loading = false;
