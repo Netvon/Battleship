@@ -12,8 +12,8 @@ export default class Shot extends Cell {
     constructor(x, y, id, isHit = null) {
         super(x, y);
 
-        // if(typeof id !== 'string')
-        //     throw new TypeError(`The ID of a shot must be a string. was: ${id}`);
+        if(typeof id !== 'string' && typeof id !== 'number')
+            throw new TypeError(`The ID of a shot must be a string or a number. was: ${typeof id}`);
         
         this.id = id;
 
