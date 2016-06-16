@@ -33,8 +33,6 @@ export default class User extends JsonBase {
     static getCurrent(api) {
         return new Promise((resolve, reject) => {
 
-            throw new Error("Test");
-
             if (Persistence.hasKey(bs.PER_USERKEY)) {
                 resolve(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
             }
@@ -56,23 +54,20 @@ export default class User extends JsonBase {
      * Returns an Array of all Games the current user is participating in.
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
-     * @param fail {function|null}
-     * @returns {*}
+     * @returns {Promise}
      */
-    static getGames(api, callback, fail = null) {
-        return UserGame.getForCurrentUser(api, callback, fail);
+    static getGames(api) {
+        return UserGame.getForCurrentUser(api);
     }
 
     /**
      * Removes all Games the current user is participating in.
      *
      * @param api {BattleshipApi}
-     * @param callback {function|null}
-     * @param fail {function|null}
+     * @return {Promise}
      */
-    static deleteAllGames(api, callback, fail = null) {
-        UserGame.deleteAll(api, callback, fail);
+    static deleteAllGames(api) {
+        return UserGame.deleteAll(api);
     }
 
     /**
