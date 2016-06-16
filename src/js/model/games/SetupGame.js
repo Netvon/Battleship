@@ -29,18 +29,15 @@ export default class SetupGame extends BaseGame {
      * @return {Promise}
      */
     static create(api, isAi = false) {
-        if (!(api instanceof BattleshipApi))
-            throw new TypeError("The 'api' parameter on SetupGame.create cannot be null");
 
-        return new Promise((resolve, reject) => {
-            let route = BattleshipApi.routes.createGame;
-            if (isAi)
-                route = BattleshipApi.routes.createGameWithAi;
+        let route = BattleshipApi.routes.createGame;
+        if (isAi)
+            route = BattleshipApi.routes.createGameWithAi;
 
-            api.apiGet({route}).then(data => {
-                    resolve(SetupGame.fromJson(data));
-            }).catch(reject);
-        });
+        return api.apiGet({route})
+            .then(data => {
+                return SetupGame.fromJson(data);
+            });
 
 
     }
@@ -54,29 +51,24 @@ export default class SetupGame extends BaseGame {
      */
     submitGameboard(api, gameboard) {
 
-        if (!(api instanceof BattleshipApi))
-            throw new TypeError("The 'api' parameter on SetupGame.submitGameboard cannot be null");
+        if (this.state !== STATE.SETUP) {
+            let msg = `You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`;
+            return Promise.reject(msg);
+        }
 
-        return new Promise((resolve, reject) => {
-            if(this.state !== STATE.SETUP) {
-                let msg = `You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`;
-                reject(msg);
-                throw new Error(msg);
-            }
-
-            api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson()).then(data => {
+        return api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson())
+            .then(data => {
 
                 if (data.msg !== undefined && data.msg === 'success') {
                     this.state = data.status;
 
-                    if(this.state === STATE.STARTED)
-                        StartedGame.get(api, this.id).then(resolve);
+                    if (this.state === STATE.STARTED)
+                        return StartedGame.get(api, this.id);
                     else
-                        resolve(this);
+                        return this;
                 }
 
-            }).catch(reject);
-        });
+            });
     }
 
     /**

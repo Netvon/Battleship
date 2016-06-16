@@ -22,7 +22,7 @@ export default class ViewModel {
     }
 
     destroy() {
-        this.parent.remove(`#${this.name}`);
+        $(`#${this.name}`).remove();
     }
 
     load() {}

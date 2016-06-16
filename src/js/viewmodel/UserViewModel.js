@@ -22,13 +22,16 @@ export default class UserViewModel extends User {
     static fromUser(user) {
         return new UserViewModel(user.email, user.name);
     }
-    
+
     static getCurrent(api) {
-        return new Promise((resolve, reject) => {
-            super.getCurrent(api).then(user => {
-                resolve(UserViewModel.fromUser(user));
-            }).catch(reject);
-        });
+
+        let s = super.getCurrent(api).catch(console.dir);
+
+        return new Promise(function (resolve, reject) {
+                s.then(user => {
+                    resolve(UserViewModel.fromUser(user));
+                }).catch(() => console.log('hallo! (userviewmodel)'));
+        }.bind(this));
 
     }
 }

@@ -31,23 +31,20 @@ export default class User extends JsonBase {
      * @returns {Promise}
      */
     static getCurrent(api) {
-        return new Promise((resolve, reject) => {
 
-            if (Persistence.hasKey(bs.PER_USERKEY)) {
-                resolve(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
-            }
+        if (Persistence.hasKey(bs.PER_USERKEY)) {
+            return Promise.resolve(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
+        }
 
-            if (api === undefined || api === null) {
-                let msg = "The 'api' parameter on User.getCurrent cannot be null";
-                reject(msg);
-                throw new Error(msg);
-            }
-
-            api.apiGet({route: BattleshipApi.routes.currentUser}).then( data => {
+        return api.apiGet({route: BattleshipApi.routes.currentUser})
+            .then(data => {
                 Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
-                resolve(User.fromJson(data));
-            }).catch(reject);
-        });
+                return User.fromJson(data);
+            });
+    }
+
+    static hallo() {
+        console.log('hallo')
     }
 
     /**
