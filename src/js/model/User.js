@@ -28,25 +28,28 @@ export default class User extends JsonBase {
      * Returns the current User
      *
      * @param api {BattleshipApi}
-     * @param callback {function}
-     * @param fail {function|null}
+     * @returns {Promise}
      */
-    static getCurrent(api, callback, fail = null) {
+    static getCurrent(api) {
+        return new Promise((resolve, reject) => {
 
-        if (Persistence.hasKey(bs.PER_USERKEY)) {
-            callback(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
-        }
+            throw new Error("Test");
 
-        if (api === undefined || api === null)
-            throw new Error("The 'api' parameter on User.getCurrent cannot be null");
+            if (Persistence.hasKey(bs.PER_USERKEY)) {
+                resolve(User.fromJson(JSON.parse(Persistence.get(bs.PER_USERKEY))));
+            }
 
-        if (typeof callback !== 'function')
-            throw new TypeError("The 'callback' parameter on User.getCurrent has to be a function");
+            if (api === undefined || api === null) {
+                let msg = "The 'api' parameter on User.getCurrent cannot be null";
+                reject(msg);
+                throw new Error(msg);
+            }
 
-        api.apiGet({route: BattleshipApi.routes.currentUser}, data => {
-            Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
-            callback(User.fromJson(data));
-        }, fail);
+            api.apiGet({route: BattleshipApi.routes.currentUser}).then( data => {
+                Persistence.set(bs.PER_USERKEY, JSON.stringify(data));
+                resolve(User.fromJson(data));
+            }).catch(reject);
+        });
     }
 
     /**

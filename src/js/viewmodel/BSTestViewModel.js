@@ -33,7 +33,9 @@ export default class BSTestViewModel extends ViewModel {
         //     html: true
         // });
 
-        let bsod = new BSODViewModel(this.api, statusCode);
+        console.log(reason);
+
+        let bsod = new BSODViewModel(this.api, statusCode, reason);
         bsod.addTo('body');
 
         this.loading = false;
@@ -42,12 +44,12 @@ export default class BSTestViewModel extends ViewModel {
     load() {
         this.loading = true;
 
-        Ship.getAll(this.api, ships => this.ships.$value = ships, this.onError.bind(this));
-        UserViewModel.getCurrent(this.api, user => this.user.$value = user, this.onError.bind(this));
-        UserGame.getForCurrentUser(this.api, games => {
+        Ship.getAll(this.api).then(ships => this.ships.$value = ships).catch(this.onError.bind(this));
+        UserViewModel.getCurrent(this.api).then(user => this.user.$value = user).catch(this.onError.bind(this));
+        UserGame.getForCurrentUser(this.api).then(games => {
             this.games.$value = games;
             this.loading = false;
-        }, this.onError.bind(this));
+        }).catch(this.onError.bind(this));
     }
 
     draw() {
@@ -90,7 +92,7 @@ export default class BSTestViewModel extends ViewModel {
                 confirmButtonText: "Remove them!",
                 cancelButtonText: "Nope",
                 closeOnConfirm: false
-            }, () => UserGame.deleteAll(this.api, null, this.onError.bind(this)));
+            }, () => UserGame.deleteAll(this.api).catch(this.onError.bind(this)));
         });
     }
 
@@ -124,13 +126,13 @@ export default class BSTestViewModel extends ViewModel {
 </li>`;
 
                 if (game.state === STATE.STARTED) {
-                    StaredGame.get(this.api, game.id, startedGame => {
+                    StaredGame.get(this.api, game.id).then(startedGame => {
                         let g_el = $(`#g-${game.id}`).find(`.bs-tst-game`);
                         if (startedGame.isPlayerTurn)
                             g_el.append('<li><small>Jouw beurt</small></li>');
                         else
                             g_el.append('<li><small>Niet jouw beurt</small></li>');
-                    }, this.onError);
+                    }).catch(this.onError.bind(this));
                 }
 
                 gameList.append(string);

@@ -88,51 +88,41 @@ export default class BattleshipApi {
      *
      * @param route {BattleshipRoute}
      * @param parameter {string}
-     * @param callback {function|null}
-     * @param fail {function|null}
+     * @returns {Promise}
      */
-    apiGet({route, parameter}, callback, fail = null) {
-        if (route === null || route === undefined)
-            throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
+    apiGet({route, parameter}) {
 
-        route.checkMethod('get');
-
-        let url = this.withApiTokenSuffix(route.format(parameter));
-
-        $.ajax({
-            timeout: bs.AJAX_TIMEOUT,
-            url: url,
-            type: 'GET'
-        }).done(data => {
-            if (data.error) {
-                let _msg = data.error.replace('Error: ', '');
-                fail(_msg);
-                throw new Error(_msg);
+        return new Promise((resolve, reject) => {
+            if (route === null || route === undefined) {
+                let msg = 'The route option on the apiGet function of BattleshipApi cannot be empty';
+                reject(msg);
+                throw new Error(msg);
             }
 
-            if (callback !== undefined && callback !== null)
-                callback(data);
-        }).fail((jqXHR, textStatus, errorThrown) => {
-            if (typeof fail === 'function')
-                fail(textStatus, errorThrown, jqXHR.status);
-            throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+            route.checkMethod('get');
+
+            let url = this.withApiTokenSuffix(route.format(parameter));
+
+            $.ajax({
+                timeout: bs.AJAX_TIMEOUT,
+                url: url,
+                type: 'GET'
+            }).done(data => {
+                if (data.error) {
+                    let _msg = data.error.replace('Error: ', '');
+                    reject(_msg);
+                    throw new Error(_msg);
+                }
+
+                resolve(data);
+
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                reject(textStatus, errorThrown, jqXHR.status);
+                throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+            });
         });
 
-        // $.get(url, data => {
-        //     if (data.error) {
-        //         let _msg = data.error.replace('Error: ', '');
-        //         fail(_msg);
-        //         throw new Error(_msg);
-        //     }
-        //
-        //     if (callback !== undefined && callback !== null)
-        //         callback(data);
-        //
-        // }).fail((jqXHR, textStatus, errorThrown) => {
-        //     if (typeof fail === 'function')
-        //         fail(jqXHR, textStatus, errorThrown);
-        //     throw new Error(`The Battleship Api failed to process the request to '${url}'`);
-        // });
+
     }
 
     /**
@@ -144,52 +134,39 @@ export default class BattleshipApi {
      * @param route {BattleshipRoute}
      * @param parameter {string}
      * @param object {*}
-     * @param callback {function|null}
-     * @param fail {function|null}
+     * @returns {Promise}
      */
-    apiPost({route, parameter}, object, callback, fail = null) {
-        if (route === null || route === undefined)
-            throw new Error('The route option on the apiGet function of BattleshipApi cannot be empty');
+    apiPost({route, parameter}, object) {
 
-        route.checkMethod('post');
-
-        let url = this.withApiTokenSuffix(route.format(parameter));
-
-        $.ajax({
-            timeout: bs.AJAX_TIMEOUT,
-            url: url,
-            type: 'POST',
-            contents: object
-        }).done(data => {
-            if (data.error) {
-                let _msg = data.error.replace('Error: ', '');
-                fail(_msg);
-                throw new Error(_msg);
+        return new Promise((resolve, reject) => {
+            if (route === null || route === undefined) {
+                let msg = 'The route option on the apiGet function of BattleshipApi cannot be empty';
+                reject(msg);
+                throw new Error(msg);
             }
 
-            if (typeof callback === 'function')
-                callback(data);
-        }).fail((jqXHR, textStatus, errorThrown) => {
-            if (typeof fail === 'function')
-                fail(textStatus, errorThrown, jqXHR.status);
-            throw new Error(`The Battleship Api failed to process the request to '${url}'`);
-        });
+            route.checkMethod('post');
 
-        // $.post(url, object, data => {
-        //     if (data.error) {
-        //         let _msg = data.error.replace('Error: ', '');
-        //         fail(_msg);
-        //         throw new Error(_msg);
-        //     }
-        //
-        //     if (typeof callback === 'function')
-        //         callback(data);
-        //
-        // }).fail((jqXHR, textStatus, errorThrown) => {
-        //     if (typeof fail === 'function')
-        //         fail(jqXHR, textStatus, errorThrown);
-        //     throw new Error(`The Battleship Api failed to process the request to '${url}'`);
-        // });
+            let url = this.withApiTokenSuffix(route.format(parameter));
+
+            $.ajax({
+                timeout: bs.AJAX_TIMEOUT,
+                url: url,
+                type: 'POST',
+                contents: object
+            }).done(data => {
+                if (data.error) {
+                    let _msg = data.error.replace('Error: ', '');
+                    reject(_msg);
+                    throw new Error(_msg);
+                }
+
+                resolve(data);
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                reject(textStatus, errorThrown, jqXHR.status);
+                throw new Error(`The Battleship Api failed to process the request to '${url}'`);
+            });
+        });
     }
 
     /**
@@ -200,34 +177,37 @@ export default class BattleshipApi {
      *
      * @param route {BattleshipRoute}
      * @param parameter {string}
-     * @param callback {function|null}
-     * @param fail {function|null}
+     * @returns {Promise}
      */
-    apiDelete({route, parameter}, callback, fail = null) {
-        if (route === null || route === undefined)
-            throw new Error('The route option on the apiDelete function of BattleshipApi cannot be empty');
+    apiDelete({route, parameter}) {
 
-        route.checkMethod('delete');
-
-        $.ajax({
-            timeout: bs.AJAX_TIMEOUT,
-            url: this.withApiTokenSuffix(route.format(parameter)),
-            type: 'DELETE'
-        }).success(data => {
-            if (data.error) {
-                let _msg = data.error.replace('Error: ', '');
-                fail(_msg);
-                throw new Error(_msg);
+        return new Promise((resolve, reject) => {
+            if (route === null || route === undefined) {
+                let msg = 'The route option on the apiDelete function of BattleshipApi cannot be empty';
+                reject(msg);
+                throw new Error(msg);
             }
 
-            if (typeof callback === 'function')
-                callback(data);
-        }).fail((jqXHR, textStatus, errorThrown) => {
-            if (typeof fail === 'function')
-                fail(textStatus, errorThrown, jqXHR.status);
+            route.checkMethod('delete');
 
-            throw new Error('The Battleship Api failed to process the request');
+            $.ajax({
+                timeout: bs.AJAX_TIMEOUT,
+                url: this.withApiTokenSuffix(route.format(parameter)),
+                type: 'DELETE'
+            }).success(data => {
+                if (data.error) {
+                    let _msg = data.error.replace('Error: ', '');
+                    reject(_msg);
+                    throw new Error(_msg);
+                }
+
+                resolve(data);
+            }).fail((jqXHR, textStatus, errorThrown) => {
+                reject(textStatus, errorThrown, jqXHR.status);
+                throw new Error('The Battleship Api failed to process the request');
+            });
         });
+
     }
 
     /**

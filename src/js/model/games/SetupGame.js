@@ -26,21 +26,23 @@ export default class SetupGame extends BaseGame {
      *
      * @param api {BattleshipApi}
      * @param isAi {boolean}
-     * @param callback {function|null}
-     * @param fail {function|null}
+     * @return {Promise}
      */
-    static create(api, callback, isAi = false, fail = null) {
+    static create(api, isAi = false) {
         if (!(api instanceof BattleshipApi))
             throw new TypeError("The 'api' parameter on SetupGame.create cannot be null");
 
-        let route = BattleshipApi.routes.createGame;
-        if (isAi)
-            route = BattleshipApi.routes.createGameWithAi;
+        return new Promise((resolve, reject) => {
+            let route = BattleshipApi.routes.createGame;
+            if (isAi)
+                route = BattleshipApi.routes.createGameWithAi;
 
-        api.apiGet({route}, data => {
-            if (callback !== null)
-                callback(SetupGame.fromJson(data));
-        }, fail);
+            api.apiGet({route}).then(data => {
+                    resolve(SetupGame.fromJson(data));
+            }).catch(reject);
+        });
+
+
     }
 
     /**
@@ -48,32 +50,33 @@ export default class SetupGame extends BaseGame {
      *
      * @param api {BattleshipApi}
      * @param gameboard {Gameboard}
-     * @param callback {function}
-     * @param fail {function|null}
+     * @return {Promise}
      */
-    submitGameboard(api, gameboard, callback, fail = null) {
-
-        if(this.state !== STATE.SETUP)
-            throw new Error(`You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`);
+    submitGameboard(api, gameboard) {
 
         if (!(api instanceof BattleshipApi))
             throw new TypeError("The 'api' parameter on SetupGame.submitGameboard cannot be null");
 
-        if (typeof callback !== 'function')
-            throw new TypeError("The 'callback' parameter on SetupGame.submitGameboard has to be a function");
-
-        api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson(), data => {
-
-            if (data.msg !== undefined && data.msg === 'success') {
-                this.state = data.status;
-
-                if(this.state === STATE.STARTED)
-                    StartedGame.get(api, this.id, callback);
-                else
-                    callback(this);
+        return new Promise((resolve, reject) => {
+            if(this.state !== STATE.SETUP) {
+                let msg = `You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`;
+                reject(msg);
+                throw new Error(msg);
             }
 
-        }, fail);
+            api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson()).then(data => {
+
+                if (data.msg !== undefined && data.msg === 'success') {
+                    this.state = data.status;
+
+                    if(this.state === STATE.STARTED)
+                        StartedGame.get(api, this.id).then(resolve);
+                    else
+                        resolve(this);
+                }
+
+            }).catch(reject);
+        });
     }
 
     /**

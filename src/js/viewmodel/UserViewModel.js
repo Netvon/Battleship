@@ -23,9 +23,12 @@ export default class UserViewModel extends User {
         return new UserViewModel(user.email, user.name);
     }
     
-    static getCurrent(api, callback) {
-        super.getCurrent(api, user => {
-            callback(UserViewModel.fromUser(user));
-        })
+    static getCurrent(api) {
+        return new Promise((resolve, reject) => {
+            super.getCurrent(api).then(user => {
+                resolve(UserViewModel.fromUser(user));
+            }).catch(reject);
+        });
+
     }
 }
