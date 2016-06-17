@@ -45,20 +45,22 @@ gulp.task('nodemd', () => {
     return merge(css, fonts, swal, swaljs, normalize);
 });
 
-gulp.task('enjoy', () => {
-    gulp.src('./src/css/enjoy.css')
+gulp.task('vendor_css', () => {
+    gulp.src('./src/css/**/*')
         .pipe(gulp.dest('./dist/css/vendor'));
 });
 
-gulp.task('deploy', ['es6', 'sass', 'nodemd', 'enjoy'],  () => {
+gulp.task('deploy', ['es6', 'sass', 'nodemd', 'vendor_css'],  () => {
    gulp.src('./dist/**/*')
        .pipe(ghPages({
            "remoteUrl" : "git@github.com:Netvon/Battleship.git"
        }));
 });
 
-gulp.task('default', ['es6', 'sass', 'nodemd', 'enjoy'], () => {
+gulp.task('default', ['es6', 'sass', 'nodemd', 'vendor_css'], () => {
     gulp.watch('./src/js/**/*.js', ['es6']);
     gulp.watch('./src/sass/**/*.scss', ['sass']);
+    gulp.watch('./node_modules/normalize.css/**/*.*', ['normalize']);
+    gulp.watch('./src/css/**/*.css', ['vendor_css']);
     gulp.watch('./node_modules/**/*.*', ['nodemd']);
 });

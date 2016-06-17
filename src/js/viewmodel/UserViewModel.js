@@ -13,7 +13,7 @@ export default class UserViewModel extends User {
     displayOn(query) {
         Hu.querySet(query, this.html);
     }
-
+    
     /**
      *
      * @param user {User}

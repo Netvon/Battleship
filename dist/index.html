@@ -15,10 +15,35 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script src="https://zeeslagavans.herokuapp.com/socket.io/socket.io.js"></script>
     <script src="js/vendor/sweetalert.min.js"></script>
     <script src="js/main.js" defer></script>
 </head>
 <body>
+<header class="bs-fill-page bs-hero">
+    <p class="bs-hero-title">
+        Battleship
+    </p>
+
+    <button class="hero-button">Play</button>
+    <p class="bs-hero-credit">Made by Sander & Tom</p>
+</header>
+<main class="bs-fill-page">
+    <code class="bs-console">
+        Some information... 🎩
+    </code>
+    <ul class="bs-tst-cards">
+        <li class="bs-tst-card">
+            <ul id="ship-list"></ul>
+        </li>
+        <li class="bs-tst-card" id="user-info"></li>
+        <li class="bs-tst-card" id="all-games">
+            <ul></ul>
+        </li>
+        <li class="bs-tst-card"></li>
+    </ul>
+
+</main>
 </body>
 </html>
