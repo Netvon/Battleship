@@ -1,3 +1,5 @@
+'use strict';
+
 import BattleshipApi from './util/BattleshipApi';
 import Persistence from './util/Persistence';
 import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
