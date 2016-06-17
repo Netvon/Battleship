@@ -107,54 +107,6 @@ export default class Gameboard extends JsonBase {
         $('.bs-hero-title').hide();
         $('.bs-hero-menu').hide();
 
-        let html = ``;
-
-        html += `<div class='gameboard'>`;
-        html += `<table class='player-grid'>`;
-
-        for (let y = bs.CELLMIN; y <= bs.CELLMAX; y++) {
-            html += `<tr data-y="${y}">`;
-
-            for (let x = bs.CELLMIN; x <= bs.CELLMAX; x++) {
-                html += `<td data-x="${x}" data-y="${y}"></td>`;
-            }
-
-            html += `</tr>`;
-        }
-
-        html += `</table>`;
-
-        html += `</div>`;
-
-        // Replace by ship assets
-        for (let i = 1; i <= bs.SHIPMAX; i++) {
-            html += `<div class="test-block"></div>`;
-        }
-
-        $('header').append(html);
-
-        $('.player-grid td').droppable({
-                                        // accept:
-                                        // function(d) {
-                                        //     console.log(d, this);
-                                        //     return true;
-                                        // },
-            drop: function(event, ui) {
-            console.log(event.target);
-        },  });
-        $('.test-block').draggable({ revert: 'invalid', snap: '.player-grid td', snapMode: 'outer' });
-
-        // $('header').append('<div class="player-grid">');
-        // $('.player-grid').append('<table border="1">');
-        //
-        // for (let x = 1; x <= bs.CELLMAX; x++) {
-        //     $('.player-grid').append(`<tr data-x="${x}">`);
-        //     for (let y = 0; y <= bs.CELLMAX; y++) {
-        //         $('.player-grid').append('<td>x</td>');
-        //     }
-        //     $('.player-grid').append(`</tr>`);
-        // }
-        //
-        // $('.player-grid').append('</table>');
+        
     }
 }

@@ -1,7 +1,7 @@
 import BattleshipApi from './util/BattleshipApi';
 import Persistence from './util/Persistence';
 import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
-import Gameboard from './model/board/Gameboard';
+import PlayerGameboardViewModel from './viewmodel/PlayerGameboardViewModel';
 import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/UserGameViewModel";
 import SoundFXViewModel from './viewmodel/SoundFXViewModel';
@@ -17,15 +17,15 @@ import SoundFXViewModel from './viewmodel/SoundFXViewModel';
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
 
-    let titleVM = new TitleScreenViewModel(battleshipApi);
-    titleVM.addTo('body');
+    // let titleVM = new TitleScreenViewModel(battleshipApi);
+    // titleVM.addTo('body');
 
     // var battleshipApi = new BattleshipApi(token);
     //
     // UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
     //
-    // var gameboard = new Gameboard();
-    // gameboard.drawGameboard();
+    let playerGameboardVM = new PlayerGameboardViewModel();
+    playerGameboardVM.addTo('body');
     
     // userGameViewModel.showGames();
 
