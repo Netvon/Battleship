@@ -12,8 +12,8 @@ table.player-grid {
 
 table.player-grid td {
     border: 5px solid #837f84;
-    width: 25px;
-    height: 25px;
+    width: 45px;
+    height: 45px;
     color:#666B85;
     font-size:16px;
     font-weight:normal;
