@@ -14,11 +14,11 @@ export default class LobbyGameViewModel extends ViewModel {
     }
 
     draw() {
-        let template = `<li id="lobby-g-${this.userGame.id}" title="Playing against '${this.userGame.enemyName}'">
+        let template = `<li id="lobby-g-${this.userGame.id}" data-state="${this.userGame.state}" title="Playing against '${this.userGame.enemyName}'">
 <ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}">
     <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${this.userGame.id}</small></li>
-    <li class="bs-lobby-list-item-vs">${this.userGame.enemyName}</li>
+    <li class="bs-lobby-list-item-vs" id="lobby-g-${this.userGame.id}-vs">${this.userGame.enemyName}</li>
     <li class="bs-lobby-list-item-state"><small id="lobby-g-${this.userGame.id}-state">${this.userGame.state}</small></li>
     <li class="bs-lobby-list-item-turn"><small></small></li>
     <li class="bs-lobby-list-item-go"><i class="fa fa-chevron-circle-right"></i></li>
@@ -34,6 +34,11 @@ export default class LobbyGameViewModel extends ViewModel {
         let checkStarted = () => {
 
             this.loading = true;
+
+            if(this.userGame.enemyName === undefined) {
+                $(`#lobby-g-${this.userGame.id}-vs`).text('Searching for opponent ...');
+                $(`#lobby-g-${this.userGame.id}`).attr('title', 'Searching for opponent ...');
+            }
 
             // console.log(this.userGame.state);
 
@@ -61,7 +66,11 @@ export default class LobbyGameViewModel extends ViewModel {
         checkStarted();
 
         this.userGame.onUpdate(this.api, () => {
+            let main = $(`#lobby-g-${this.userGame.id}`);
             $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
+            $(`#lobby-g-${this.userGame.id}-vs`).text(this.userGame.enemyName);
+            main.attr('title', `Playing against '${this.userGame.enemyName}'`);
+            main.attr('data-state', this.userGame.state);
 
             checkStarted();
         });

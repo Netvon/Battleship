@@ -136,12 +136,11 @@ export default class MainViewModel extends ViewModel {
         });
 
         let playSound = () => {
-            console.log('Hallo mouse over');
             AudioManager.play('btn1', false, false);
         };
 
-        this.parent.delegate('.bs-button', 'mouseenter click', playSound);
-        this.parent.delegate('.hero-button', 'mouseenter click', playSound);
+        this.parent.delegate('.bs-button', 'click', playSound);
+        this.parent.delegate('.hero-button', 'click', playSound);
     }
 
     changeBsTestVMVisibility() {

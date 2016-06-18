@@ -3,6 +3,7 @@ import UserGame from "../model/games/UserGame";
 import Observable from "./Observable";
 import LobbyGameViewModel from "./LobbyGameViewModel";
 import User from "../model/User";
+import SetupGame from "../model/games/SetupGame";
 
 export default class LobbyViewModel extends ViewModel {
     constructor(api) {
@@ -33,6 +34,37 @@ export default class LobbyViewModel extends ViewModel {
     }
 
     bind() {
+
+        $('#lobby-new-game').on('click', () => {
+            SetupGame.create(this.api)
+                .then(() => swal('Game created!'))
+                .catch((reason, error, statusCode) => {
+                    if (statusCode !== undefined) {
+                        this.onError(reason, error, statusCode);
+                    } else {
+                        swal({
+                            title: "Can't let you do that.",
+                            text: reason
+                        })
+                    }
+                });
+        });
+
+        $('#lobby-new-ai').on('click', () => {
+            SetupGame.create(this.api, true)
+                .then(() => swal('Game created!'))
+                .catch((reason, error, statusCode) => {
+                    if (statusCode !== undefined) {
+                        this.onError(reason, error, statusCode);
+                    } else {
+                        swal({
+                            title: "Can't let you do that.",
+                            text: reason
+                        })
+                    }
+                });
+        });
+
         $('#lobby-remove-games').on('click', () => {
             swal({
                     title: "Are you sure?",
@@ -65,7 +97,8 @@ export default class LobbyViewModel extends ViewModel {
 <div id="lobby-user-info" class="bs-lobby-user">
     <p>Here's a list of all the Battles currently happening.</p>
     <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i><span class="bs-button-text">Remove all Battles</span></button>
-    <button id="lobby-new-game" class="bs-button bs-button-primary" title="Start Battle"><i class="fa fa-plus"></i><span class="bs-button-text">New Battle</span></button>
+    <button id="lobby-new-game" class="bs-button bs-button-primary" title="New Battle"><i class="fa fa-plus"></i><span class="bs-button-text">New Battle</span></button>
+    <button id="lobby-new-ai" class="bs-button bs-button-primary" title="Start Training"><i class="fa fa-plus"></i><span class="bs-button-text">New Training</span></button>
 </div>
 <ul class="bs-lobby-list" id="bs-lobby-list" role="list"></ul>
 </div>
