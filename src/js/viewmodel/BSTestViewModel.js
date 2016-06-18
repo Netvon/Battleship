@@ -7,6 +7,7 @@ import StaredGame from "../model/games/StartedGame";
 import ViewModel from './ViewModel';
 import Observable from "./Observable";
 import BSODViewModel from "./BSODViewModel";
+import SetupGame from "../model/games/SetupGame";
 
 export default class BSTestViewModel extends ViewModel {
     /**
@@ -20,8 +21,6 @@ export default class BSTestViewModel extends ViewModel {
         this.ships = new Observable();
         this.user = new Observable();
         this.games = new Observable();
-
-        this.observe();
     }
 
     onError(reason, error, statusCode) {
@@ -61,12 +60,14 @@ export default class BSTestViewModel extends ViewModel {
     }
 
     draw() {
+        this.observe();
+
         let template =
-            `<div id="${this.name}" class="bs-fill-page">
+            `<div id="${this.name}" class="bs-fill-page bs-tst">
 <code class="bs-console">
         Some information... 🎩
     </code>
-    <input type="text" id="input-token" value="${this.token.$value}"/>
+    <input class="bs-input" type="text" id="input-token" value="${this.token.$value}"/>
     <ul class="bs-tst-cards">
         <li class="bs-tst-card">
             <h4>Ships</h4>
@@ -81,6 +82,7 @@ export default class BSTestViewModel extends ViewModel {
             <ul id="all-games"></ul>
         </li>
     </ul>
+    <button id="tst-ai-game" class="bs-button bs-button-primary">Create AI Game</button>
 </div>`;
 
         this.parent.append(template);
@@ -102,6 +104,12 @@ export default class BSTestViewModel extends ViewModel {
                 closeOnConfirm: false
             }, () => UserGame.deleteAll(this.api).catch(this.onError.bind(this)));
         });
+
+        $('#tst-ai-game').click(() => {
+            SetupGame.create(this.api, true)
+                .then(() => swal('Game created!'))
+                .catch(this.onError.bind(this));
+        })
     }
 
     observe() {
@@ -147,6 +155,11 @@ export default class BSTestViewModel extends ViewModel {
 
             });
         });
+
+        this.api.onUpdate(console.dir);
+        this.api.onTurn(console.log);
+        this.api.onShot(console.log);
+
     }
 
     set loading(value) {

@@ -11,33 +11,50 @@ export default class LobbyGameViewModel extends ViewModel {
 
         this.userGame = userGame;
 
-        this.observe();
     }
 
     draw() {
-        let template = `<li id="lobby-g-${this.userGame.id}">
-<ul class="bs-lobby-list-item">
+        let template = `<li id="lobby-g-${this.userGame.id}" title="Playing against '${this.userGame.enemyName}'">
+<ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}">
+    <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${this.userGame.id}</small></li>
-    <li class="bs-lobby-list-item-vs">Tegen: '${this.userGame.enemyName}'</li>
+    <li class="bs-lobby-list-item-vs">VS '${this.userGame.enemyName}'</li>
     <li class="bs-lobby-list-item-state"><small id="lobby-g-${this.userGame.id}-state">${this.userGame.state}</small></li>
+    <li class="bs-lobby-list-item-turn"><small></small></li>
+    <li class="bs-lobby-list-item-go"><i class="fa fa-chevron-circle-right"></i></li>
 </ul>
 </li>`;
 
         this.parent.append(template);
+        this.observe();
     }
 
     observe() {
 
         let checkStarted = () => {
+
+            this.loading = true;
+
+            // console.log(this.userGame.state);
+
             if (this.userGame.state === STATE.STARTED) {
                 StaredGame.get(this.api, this.userGame.id)
                     .then(startedGame => {
-                        let g_el = $(`#lobby-g-${this.userGame.id}`).find(`.bs-lobby-game`);
+                        let g_el = $(`#lobby-g-${this.userGame.id}`)
+                            .find(`.bs-lobby-list-item`)
+                            .find('.bs-lobby-list-item-turn small');
+
                         if (startedGame.isPlayerTurn)
-                            g_el.append('<li><small>Jouw beurt</small></li>');
+                            g_el.text('Your turn!');
                         else
-                            g_el.append('<li><small>Niet jouw beurt</small></li>');
+                            g_el.text('Not your turn');
+
+                        this.loading = false;
                     }).catch(this.onError.bind(this));
+            }
+            else{
+                this.loading = false;
+
             }
         };
 
@@ -50,6 +67,27 @@ export default class LobbyGameViewModel extends ViewModel {
         });
 
 
+    }
+
+    set loading(value) {
+        super.loading = value;
+
+
+        if(this.userGame !== undefined) {
+            // console.log(`ID: ${this.userGame.id} - ${super.loading}`);
+
+            let item = $(`#lobby-g-${this.userGame.id}`)
+                .find('.bs-lobby-list-item-li');
+
+            // console.log(item);
+
+            if (super.loading) {
+                item.show();
+            }
+            else {
+                item.hide();
+            }
+        }
     }
 
     showGames() {

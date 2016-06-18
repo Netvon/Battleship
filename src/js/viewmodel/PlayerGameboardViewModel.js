@@ -24,7 +24,7 @@ export default class PlayerGameboardViewModel extends ViewModel {
     draw() {
         console.log('draw');
 
-        let html = ``;
+        let html = `<div class="bs-fill-page" id=${this.name}>`;
 
         html += `<p class="bs-hero-title">
         Battleship
@@ -52,7 +52,7 @@ export default class PlayerGameboardViewModel extends ViewModel {
             html += `<div class="test-block"></div>`;
         }
 
-        this.parent.append(html);
+        this.parent.append(html + '</div>');
     }
     
     bind() {

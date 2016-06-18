@@ -13,7 +13,9 @@ export default class TitleScreenViewModel extends ViewModel {
     }
 
     load() {
-        User.getCurrent(this.api).then(user => this.user.$value = user);
+        User.getCurrent(this.api)
+            .then(user => this.user.$value = user)
+            .catch(this.onError.bind(this));
     }
 
     draw() {
@@ -21,52 +23,40 @@ export default class TitleScreenViewModel extends ViewModel {
     <p id="bs-title" class="bs-hero-title">
         Battleship
     </p>
-    <p id="lblWelcomeMsg">Welcome</p>
+    <div class="bs-hero-token">
+        <p class="bs-hero-token-welcome" id="lblWelcomeMsg">Ahoy, Stanger!</p>
+        <input class="bs-input" type="text" id="title-input-token" placeholder="your token" value="${this.api.token}"/>
+    </div>
     <button id="play-button" class="hero-button">Play</button>
 </main>`;
 
         this.parent.append(template);
-
 
         this.bind();
     }
 
     bind() {
 
-        // let btnDebugToggle = $('#debug-toggle');
-        //
-        // this.bsTestVisible.addObserver(() => {
-        //     if (this.bsTestVisible.$value)
-        //         btnDebugToggle.text('Hide Test View');
-        //     else
-        //         btnDebugToggle.text('Show Test View');
-        // });
-        //
-        // $('html').keydown(event => {
-        //     if (event.keyCode === 192) {
-        //         this.changeBsTestVMVisibility();
-        //     }
-        // });
+        let input = $('#title-input-token');
+        input.change(() => {
+
+            let val = input.val();
+
+            this.api.isValidToken(val)
+                .then(() => this.api.token = val)
+                .catch((reason, error, statusCode) => {
+                    console.error(reason);
+
+                    swal({title: 'Validation Error', text: reason});
+
+                    input.val(this.api.token);
+                });
+        });
+
+        this.api.onTokenChanged(() => this.load());
 
         this.user.addObserver(({oldValue, newValue}) => {
-            $('#lblWelcomeMsg').text(`Welcome, ${newValue.name}`);
+            $('#lblWelcomeMsg').text(`Ahoy, Captain ${newValue.name}!`);
         });
-    }
-
-    // changeBsTestVMVisibility() {
-    //     if (this.bsTestVisible.$value) {
-    //         this.bsTestVM.destroy();
-    //         this.bsTestVisible.$value = false;
-    //     }
-    //     else {
-    //         this.bsTestVM.addTo('body');
-    //         this.bsTestVisible.$value = true;
-    //
-    //         document.querySelector(`#${this.bsTestVM.name}`).scrollIntoView();
-    //     }
-    // }
-
-    onPlayClick(callback){
-        $('#play-button').click(callback);
     }
 }
