@@ -44,6 +44,15 @@
   padding: 0;
 }
 
+@mixin ocean-bg {
+  background-size: cover;
+  background-image: url('../img/background.png');
+  background-attachment: fixed;
+  background-position: bottom;
+
+  background-blend-mode: overlay;
+}
+
 .#{$selector-prefix}fill-page {
   @include fill-viewport-h;
   @include flex-align(center, center);
@@ -52,12 +61,7 @@
 }
 
 .#{$selector-prefix}hero {
-  background-size: cover;
-  background-image: url('../img/background.png');
-  background-attachment: fixed;
-  background-position: bottom;
-
-  background-blend-mode: overlay;
+  @include ocean-bg;
 
   animation: fadeIn 2s ease-in;
 
@@ -83,16 +87,54 @@
     }
   }
 
-  & > &-credit {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    margin: 0;
-    padding: 0.8em 0;
-    color: #9bccd8;
-    font-weight: 900;
-    font-family: monospace;
+  //& > &-credit {
+  //  position: absolute;
+  //  bottom: 0;
+  //  width: 100%;
+  //  text-align: center;
+  //  margin: 0;
+  //  padding: 0.8em 0;
+  //  color: #9bccd8;
+  //  font-weight: 900;
+  //  font-family: monospace;
+  //}
+}
+
+.#{$selector-prefix}credit {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: monospace;
+  margin: 0;
+  padding: 0.8em 0;
+  color: #9bccd8;
+  font-weight: 900;
+}
+
+.#{$selector-prefix}lobby {
+  @include ocean-bg;
+
+  &-list {
+    @include reset-list-style;
+
+    display: flex;
+    justify-content: space-between;
+
+    &-item {
+      @include reset-list-style;
+
+      padding: 0.5em;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
   }
 }
 

@@ -5,8 +5,9 @@ import Persistence from './util/Persistence';
 import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
 import Gameboard from './model/board/Gameboard';
 import Cell from './model/Cell';
-import UserGameViewModel from "./viewmodel/UserGameViewModel";
+import UserGameViewModel from "./viewmodel/LobbyGameViewModel";
 import SoundFXViewModel from './viewmodel/SoundFXViewModel';
+import MainViewModel from "./viewmodel/MainViewModel";
 
 (function () {
 
@@ -19,7 +20,7 @@ import SoundFXViewModel from './viewmodel/SoundFXViewModel';
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
 
-    let titleVM = new TitleScreenViewModel(battleshipApi);
+    let titleVM = new MainViewModel(battleshipApi);
     titleVM.addTo('body');
 
     // var battleshipApi = new BattleshipApi(token);
