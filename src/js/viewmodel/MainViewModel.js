@@ -4,6 +4,9 @@ import LobbyViewModel from "./LobbyViewModel";
 import Observable from "./Observable";
 import BSTestViewModel from "./BSTestViewModel";
 import Session from "../util/Session";
+import BSODViewModel from "./BSODViewModel";
+import LobbyGameViewModel from "./LobbyGameViewModel";
+import PlayerGameboardViewModel from "./PlayerGameboardViewModel";
 
 export default class MainViewModel extends ViewModel {
     constructor(api) {
@@ -12,6 +15,12 @@ export default class MainViewModel extends ViewModel {
         if (!Session.hasKey('last-page')) {
             Session.set('last-page', 'title');
         }
+        
+        LobbyViewModel.prototype.onError = this.handleError;
+        TitleScreenViewModel.prototype.onError = this.handleError;
+        LobbyGameViewModel.prototype.onError = this.handleError;
+        BSTestViewModel.prototype.onError = this.handleError;
+        PlayerGameboardViewModel.prototype.onError = this.handleError;
 
         this.bsTestVM = new BSTestViewModel(this.api);
         this.bsTestVisible = new Observable(false);
@@ -80,5 +89,20 @@ export default class MainViewModel extends ViewModel {
 
             document.querySelector(`#${this.bsTestVM.name}`).scrollIntoView();
         }
+    }
+
+    handleError(reason, error, statusCode) {
+        // console.log(error);
+        // swal({
+        //     title: "You broke it :(",
+        //     text: `<p>An error occurred, please reload the page to try again.</p><code>${reason}</code>`,
+        //     type: "error",
+        //     html: true
+        // });
+
+        let bsod = new BSODViewModel(this.api, statusCode, reason);
+        bsod.addTo('body');
+
+        this.loading = false;
     }
 }

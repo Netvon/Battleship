@@ -1,3 +1,5 @@
+// import BSODViewModel from "./BSODViewModel";
+
 export default class ViewModel {
     /**
      *
@@ -47,8 +49,8 @@ export default class ViewModel {
         //     html: true
         // });
 
-        let bsod = new BSODViewModel(this.api);
-        bsod.addTo('body');
+        // let bsod = new BSODViewModel(this.api);
+        // bsod.addTo('body');
 
         this.loading = false;
     }
