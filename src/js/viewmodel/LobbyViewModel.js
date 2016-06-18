@@ -12,7 +12,7 @@ export default class LobbyViewModel extends ViewModel {
         this.games = new Observable();
         this.user = new Observable();
 
-        this._ids = [];
+        this._ids = new Set();
 
         this.observe();
     }
@@ -113,17 +113,18 @@ export default class LobbyViewModel extends ViewModel {
 
         this.api.onUpdate(args => {
 
-            let contains = this._ids.some(item => item.id === args.gameId);
+            let contains = this._ids.has(args.gameId);
 
             if (!contains) {
 
                 this.loading = true;
                 UserGame.get(this.api, args.gameId)
                     .then(userGame => {
-                        let old = this.games.$value.slice(0);
-                        old.push(userGame);
 
-                        this.games.$value = old;
+                        this._ids.add(userGame.id);
+                        let lgvm = new LobbyGameViewModel(this.api, userGame);
+                        lgvm.addTo('#bs-lobby-list');
+
                         this.loading = false;
                     })
                     .catch(this.onError.bind(this));
@@ -135,7 +136,7 @@ export default class LobbyViewModel extends ViewModel {
             list.empty();
 
             args.newValue.forEach(item => {
-                this._ids.push(item.id);
+                this._ids.add(item.id);
                 let lgvm = new LobbyGameViewModel(this.api, item);
                 lgvm.addTo('#bs-lobby-list');
             });

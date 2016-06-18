@@ -4,6 +4,7 @@
 import ViewModel from "./ViewModel";
 import {STATE} from "../util/BattleshipConst";
 import StaredGame from "../model/games/StartedGame";
+import UserGame from "../model/games/UserGame";
 
 export default class LobbyGameViewModel extends ViewModel {
     constructor(api, userGame) {
@@ -35,7 +36,7 @@ export default class LobbyGameViewModel extends ViewModel {
 
             this.loading = true;
 
-            if(this.userGame.enemyName === undefined) {
+            if (this.userGame.state === STATE.QUEUE) {
                 $(`#lobby-g-${this.userGame.id}-vs`).text('Searching for opponent ...');
                 $(`#lobby-g-${this.userGame.id}`).attr('title', 'Searching for opponent ...');
             }
@@ -57,20 +58,35 @@ export default class LobbyGameViewModel extends ViewModel {
                         this.loading = false;
                     }).catch(this.onError.bind(this));
             }
-            else{
-                this.loading = false;
+            else if (this.userGame.state === STATE.SETUP && this.userGame.enemyName === undefined) {
+                UserGame.get(this.api, this.userGame.id)
+                    .then(userGame => {
+                        let main = $(`#lobby-g-${userGame.id}`);
+                        $(`#lobby-g-${userGame.id}-state`).text(userGame.state);
+                        $(`#lobby-g-${userGame.id}-vs`).text(userGame.enemyName);
+                        main.attr('title', `Playing against '${userGame.enemyName}'`);
+                        main.attr('data-state', userGame.state);
 
+                        this.loading = false;
+                    }).catch(this.onError.bind(this));
+            }
+            else {
+                this.loading = false;
             }
         };
 
         checkStarted();
 
         this.userGame.onUpdate(this.api, () => {
-            let main = $(`#lobby-g-${this.userGame.id}`);
-            $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
-            $(`#lobby-g-${this.userGame.id}-vs`).text(this.userGame.enemyName);
-            main.attr('title', `Playing against '${this.userGame.enemyName}'`);
-            main.attr('data-state', this.userGame.state);
+
+            console.log(`[${this.userGame.id}] I got updated`);
+            console.log(this.userGame.state);
+
+            // let main = $(`#lobby-g-${this.userGame.id}`);
+            // $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
+            // $(`#lobby-g-${this.userGame.id}-vs`).text(this.userGame.enemyName);
+            // main.attr('title', `Playing against '${this.userGame.enemyName}'`);
+            // main.attr('data-state', this.userGame.state);
 
             checkStarted();
         });
@@ -82,7 +98,7 @@ export default class LobbyGameViewModel extends ViewModel {
         super.loading = value;
 
 
-        if(this.userGame !== undefined) {
+        if (this.userGame !== undefined) {
             // console.log(`ID: ${this.userGame.id} - ${super.loading}`);
 
             let item = $(`#lobby-g-${this.userGame.id}`)

@@ -17,7 +17,7 @@ export default class AudioManager {
         if (this._audio === undefined || !this._audio.has(name))
             this._audio = new Map();
 
-        console.dir(this._audio);
+        // console.dir(this._audio);
 
         let el = this._audio.get(name);
 

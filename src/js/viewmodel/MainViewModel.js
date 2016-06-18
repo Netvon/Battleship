@@ -28,14 +28,14 @@ export default class MainViewModel extends ViewModel {
 
         this.titleVM = new TitleScreenViewModel(this.api);
         this.lobbyVM = new LobbyViewModel(this.api);
-        this.gameBoardVM = new PlayerGameboardViewModel(this.api);
+        // this.gameBoardVM = new PlayerGameboardViewModel(this.api);
 
         this.playingBGM = new Observable(true);
 
         this.views = {
             1: this.titleVM,
-            2: this.lobbyVM,
-            3: this.gameBoardVM
+            2: this.lobbyVM
+            // 3: this.gameBoardVM
         };
 
         this.currentView = new Observable(null);
