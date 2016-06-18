@@ -42,7 +42,7 @@ export default class BattleshipApi {
      * @returns {string}
      */
     static get url() {
-        return 'https://zeeslagavans.herokuapp.com/';
+        return 'https://zeeslagavans3.herokuapp.com/';
     }
 
     /**

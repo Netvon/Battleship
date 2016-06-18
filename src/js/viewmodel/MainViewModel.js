@@ -7,6 +7,7 @@ import Session from "../util/Session";
 import BSODViewModel from "./BSODViewModel";
 import LobbyGameViewModel from "./LobbyGameViewModel";
 import PlayerGameboardViewModel from "./PlayerGameboardViewModel";
+import AudioManager from "../util/AudioManager";
 
 export default class MainViewModel extends ViewModel {
     constructor(api) {
@@ -15,7 +16,7 @@ export default class MainViewModel extends ViewModel {
         if (!Session.hasKey('last-page')) {
             Session.set('last-page', '1');
         }
-        
+
         LobbyViewModel.prototype.onError = this.handleError;
         TitleScreenViewModel.prototype.onError = this.handleError;
         LobbyGameViewModel.prototype.onError = this.handleError;
@@ -29,6 +30,8 @@ export default class MainViewModel extends ViewModel {
         this.lobbyVM = new LobbyViewModel(this.api);
         this.gameBoardVM = new PlayerGameboardViewModel(this.api);
 
+        this.playingBGM = new Observable(true);
+
         this.views = {
             1: this.titleVM,
             2: this.lobbyVM,
@@ -39,10 +42,17 @@ export default class MainViewModel extends ViewModel {
     }
 
     draw() {
+
+        AudioManager.load('btn1', 'audio/button-37.mp3');
+
+        AudioManager.load('test2', 'audio/test2.mp3');
+        AudioManager.play('test2');
+
         let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
+        this.parent.append(`<button id="mute" class="bs-button bs-button-primary" title="Mute"><i class="fa fa-volume-up"></i></button>`);
 
         this.bind();
     }
@@ -51,7 +61,7 @@ export default class MainViewModel extends ViewModel {
 
         this.currentView.addObserver(args => {
             let ov = this.views[args.oldValue];
-            if(ov !== undefined && ov != null)
+            if (ov !== undefined && ov != null)
                 $(`#${ov.name}`).remove();
 
             let nv = this.views[args.newValue];
@@ -59,7 +69,7 @@ export default class MainViewModel extends ViewModel {
 
             Session.set('last-page', `${args.newValue}`);
 
-            if(args.newValue <= 1)
+            if (args.newValue <= 1)
                 $('#go-back').hide();
             else
                 $('#go-back').show();
@@ -92,11 +102,46 @@ export default class MainViewModel extends ViewModel {
             this.currentView.$value -= 1;
         });
 
+        let mute = $('#mute');
+
+        mute.click(() => {
+
+            if (this.playingBGM.$value) {
+
+                AudioManager.pause('test2');
+
+                mute.find('.fa')
+                    .removeClass('fa-volume-up');
+
+                mute.find('.fa').addClass('fa-volume-off');
+
+                this.playingBGM.$value = false;
+            }
+            else {
+                AudioManager.play('test2');
+
+                mute.find('.fa')
+                    .removeClass('fa-volume-off');
+
+                mute.find('.fa').addClass('fa-volume-up');
+
+                this.playingBGM.$value = true;
+            }
+        });
+
         this.parent.delegate('.bs-lobby-list-item', 'click', e => {
             console.log($(e.target).attr('data-gid'));
 
             this.currentView.$value += 1;
         });
+
+        let playSound = () => {
+            console.log('Hallo mouse over');
+            AudioManager.play('btn1', false, false);
+        };
+
+        this.parent.delegate('.bs-button', 'mouseenter click', playSound);
+        this.parent.delegate('.hero-button', 'mouseenter click', playSound);
     }
 
     changeBsTestVMVisibility() {

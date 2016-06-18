@@ -13,10 +13,12 @@
 @mixin ocean-bg {
   background-size: cover;
   background-image: url('../img/background.png');
-  background-attachment: fixed;
-  background-position: bottom;
+  background-position: center;
 
-  background-blend-mode: overlay;
+  @media screen and (max-width: $mobile-l) {
+    background-blend-mode: overlay;
+    background-attachment: fixed;
+  }
 }
 
 @mixin title {
@@ -46,14 +48,22 @@
 .#{$selector-prefix}hero {
   @include ocean-bg;
 
-  animation: fadeIn 2s ease-in;
+  @media screen and (min-width: $mobile-l) {
+    animation: fadeIn 2s ease-in;
+  }
+
+  @media screen and (max-width: $mobile-l) {
+    animation: fadeIn 1s ease-in;
+  }
 
   & > &-title {
     margin: 0;
     font-size: 6em;
     @include title;
 
-    animation: scaleIn .5s ease-out;
+    @media screen and (min-width: $mobile-l) {
+      animation: scaleIn .5s ease-out;
+    }
 
     //&:after {
     //  content: 'alpha';
@@ -73,8 +83,6 @@
 
     display: flex;
     flex-direction: column;
-
-
 
     &-welcome {
       margin-top: 0;
@@ -145,8 +153,12 @@
       margin-top: 0;
     }
 
-    & > .#{$selector-prefix}-button-primary {
+    & > .#{$selector-prefix}button-primary {
       font-size: 1rem;
+
+      @media screen and (max-width: $mobile-l) {
+        font-size: .8rem;
+      }
     }
   }
 
@@ -180,12 +192,9 @@
       justify-content: space-between;
       align-content: center;
 
-      transition: background-color .5s ease;
-
       color: #751f1f;
 
       &:hover {
-        background-color: rgba(255, 255, 255, 0.3);
         cursor: pointer;
       }
 
@@ -199,6 +208,9 @@
 
       &-id {
         font-family: monospace;
+        @media screen and (max-width: $mobile-l) {
+          display: none;
+        }
       }
 
       &-go, &-turn {
@@ -208,12 +220,6 @@
       &-li, &-id {
         margin-right: 1em;
       }
-
-      &-state {
-        @media screen and (max-width: $mobile-l) {
-          display: none;
-        }
-      }
     }
 
     &:empty:before {
@@ -221,7 +227,12 @@
     }
 
     &-loading {
-      animation: pulse .8s infinite;
+
+      color: inherit;
+
+      @media screen and (min-width: $mobile-l) {
+        animation: pulse .8s infinite;
+      }
 
       &:before {
         content: 'loading...' !important;
@@ -258,20 +269,19 @@
 
   flex-grow: 1;
 
-  transition: background-color .3s ease;
-
   box-shadow: 0 0.7em 0 rgb(133, 195, 154), 0 0.7em 1em rgba(0, 0, 0, 0.12);
 
   & ul {
     @include reset-list-style(0, 0);
   }
 
-  &:hover {
-    background-color: rgba(123, 220, 155, 0.7);
-  }
-
   &-loading {
-    animation: pulse .8s infinite;
+
+    color: inherit;
+
+    @media screen and (min-width: $mobile-l) {
+      animation: pulse .8s infinite;
+    }
 
     &:before {
       content: 'loading...';
@@ -359,6 +369,10 @@
 
   transition: opacity .2s ease;
 
+  @media screen and (max-width: $mobile-l) {
+    opacity: 1;
+  }
+
   &:hover, &:active, &:focus {
     opacity: 1;
     cursor: pointer;
@@ -375,7 +389,10 @@
     background: #d3deef;
     border-radius: .6em;
     color: #345877;
-    opacity: 0.65;
+  }
+
+  & > &-text {
+    margin-left: .6em;
   }
 }
 
@@ -387,7 +404,15 @@
   color: #345877;
 
   &[type=text] {
-    transition: background-color .3s ease;
+
+    @media screen and (min-width: $mobile-l) {
+      transition: background-color .3s ease;
+    }
+
+    @media screen and (max-width: $mobile-l) {
+      background: #bdcdef;
+      color: #345877;
+    }
 
     &mono {
       font-family: monospace;
@@ -408,4 +433,10 @@
   position: fixed;
   top: 1em;
   left: 1em;
+}
+
+#mute {
+  position: fixed;
+  top: 1em;
+  right: 1em;
 }

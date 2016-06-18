@@ -64,8 +64,8 @@ export default class LobbyViewModel extends ViewModel {
 <h1 class="bs-lobby-title">Battleship</h1>
 <div id="lobby-user-info" class="bs-lobby-user">
     <p>Here's a list of all the Battles currently happening.</p>
-    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i>Remove all Battles</button>
-    <button id="lobby-new-game" class="bs-button bs-button-primary" title="Start Battle"><i class="fa fa-plus"></i>Start Battle</button>
+    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i><span class="bs-button-text">Remove all Battles</span></button>
+    <button id="lobby-new-game" class="bs-button bs-button-primary" title="Start Battle"><i class="fa fa-plus"></i><span class="bs-button-text">New Battle</span></button>
 </div>
 <ul class="bs-lobby-list" id="bs-lobby-list" role="list"></ul>
 </div>

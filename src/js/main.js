@@ -1,13 +1,11 @@
-'use strict';
-
 import BattleshipApi from './util/BattleshipApi';
 import Persistence from './util/Persistence';
 import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
 import PlayerGameboardViewModel from './viewmodel/PlayerGameboardViewModel';
 import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/LobbyGameViewModel";
-import SoundFXViewModel from './viewmodel/SoundFXViewModel';
 import MainViewModel from "./viewmodel/MainViewModel";
+import AudioManager from "./util/AudioManager";
 
 (function () {
 
@@ -19,6 +17,7 @@ import MainViewModel from "./viewmodel/MainViewModel";
 
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
+    
 
     let titleVM = new MainViewModel(battleshipApi);
     titleVM.addTo('body');
@@ -29,11 +28,11 @@ import MainViewModel from "./viewmodel/MainViewModel";
     //
     // let playerGameboardVM = new PlayerGameboardViewModel();
     // playerGameboardVM.addTo('body');
-    
+
     // userGameViewModel.showGames();
 
     // UserViewModel.getCurrent(battleshipApi, user => user.displayOn('#user-info'));
-    
+
     // SetupGame.deleteAll(battleshipApi, e => {
     //
     //     Ship.getAll(battleshipApi, ships => {

@@ -18,7 +18,7 @@ export default class LobbyGameViewModel extends ViewModel {
 <ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}">
     <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${this.userGame.id}</small></li>
-    <li class="bs-lobby-list-item-vs">VS '${this.userGame.enemyName}'</li>
+    <li class="bs-lobby-list-item-vs">${this.userGame.enemyName}</li>
     <li class="bs-lobby-list-item-state"><small id="lobby-g-${this.userGame.id}-state">${this.userGame.state}</small></li>
     <li class="bs-lobby-list-item-turn"><small></small></li>
     <li class="bs-lobby-list-item-go"><i class="fa fa-chevron-circle-right"></i></li>
