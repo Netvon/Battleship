@@ -56,10 +56,6 @@ export default class LobbyViewModel extends ViewModel {
                 }
             );
         });
-
-        this.parent.delegate('.bs-lobby-list-item', 'click', function () {
-            console.log($(this).attr('data-gid'));
-        });
     }
 
     draw() {

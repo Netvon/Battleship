@@ -13,7 +13,7 @@ export default class MainViewModel extends ViewModel {
         super(api, 'vm-main');
 
         if (!Session.hasKey('last-page')) {
-            Session.set('last-page', 'title');
+            Session.set('last-page', '1');
         }
         
         LobbyViewModel.prototype.onError = this.handleError;
@@ -27,17 +27,25 @@ export default class MainViewModel extends ViewModel {
 
         this.titleVM = new TitleScreenViewModel(this.api);
         this.lobbyVM = new LobbyViewModel(this.api);
+        this.gameBoardVM = new PlayerGameboardViewModel(this.api);
+
+        this.views = {
+            1: this.titleVM,
+            2: this.lobbyVM
+        };
+
+        this.currentView = new Observable(null);
     }
 
     draw() {
         let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
 
-        if (Session.get('last-page') === 'title') {
-            this.titleVM.addTo();
-        }
-        else if (Session.get('last-page') === 'lobby') {
-            this.lobbyVM.addTo();
-        }
+        // if (Session.get('last-page') == 1) {
+        //     this.titleVM.addTo();
+        // }
+        // else if (Session.get('last-page') == 2) {
+        //     this.lobbyVM.addTo();
+        // }
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
@@ -47,13 +55,26 @@ export default class MainViewModel extends ViewModel {
 
     bind() {
 
-        this.titleVM.onPlayClick(() => {
+        this.currentView.addObserver(args => {
+            let ov = this.views[args.oldValue];
+            if(ov !== undefined && ov != null)
+                $(`#${ov.name}`).remove();
 
-            Session.set('last-page', 'lobby');
+            let nv = this.views[args.newValue];
+            nv.addTo();
 
-            this.titleVM.destroy();
+            Session.set('last-page', `${args.newValue}`);
 
-            this.lobbyVM.addTo();
+            if(args.newValue <= 1)
+                $('#go-back').hide();
+            else
+                $('#go-back').show();
+        });
+
+        this.currentView.$value = Number(Session.get('last-page'));
+
+        this.parent.delegate('#play-button', 'click', () => {
+            this.currentView.$value += 1;
         });
 
         let btnDebugToggle = $('#debug-toggle');
@@ -74,8 +95,16 @@ export default class MainViewModel extends ViewModel {
         btnDebugToggle.click(() => this.changeBsTestVMVisibility());
 
         $('#go-back').click(() => {
+            this.currentView.$value -= 1;
+        });
 
-        })
+        this.parent.delegate('.bs-lobby-list-item', 'click', e => {
+            console.log($(e.target).attr('data-gid'));
+
+            this.lobbyVM.destroy();
+
+            this.gameBoardVM.addTo();
+        });
     }
 
     changeBsTestVMVisibility() {

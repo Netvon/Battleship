@@ -65,8 +65,4 @@ export default class TitleScreenViewModel extends ViewModel {
     //         document.querySelector(`#${this.bsTestVM.name}`).scrollIntoView();
     //     }
     // }
-
-    onPlayClick(callback){
-        $('#play-button').click(callback);
-    }
 }
