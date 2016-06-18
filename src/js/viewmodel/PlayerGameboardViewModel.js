@@ -65,10 +65,74 @@ export default class PlayerGameboardViewModel extends ViewModel {
             //     return true;
             // },
             drop: function (event, ui) {
-                console.log(event.target);
+                let ship = event.toElement;
+                let target = event.target;
+
+                let ship_x = $(target).attr('data-x');
+                let ship_y = $(target).attr('data-y');
+                let length = $(ship).attr('data-length');
+
+                if (ship.className.includes('north')) {
+                    switch (length) {
+                        case '5':
+                            ship_y = ship_y - 2;
+                            break;
+                        case '4':
+                            ship_y = ship_y - 2;
+                            break;
+                        case '3':
+                            ship_y = ship_y - 1;
+                            break;
+                        case '2':
+                            ship_y = ship_y - 1;
+                            break;
+                        default:
+                            console.log('Placement ships: invalid length');
+                    }
+                } else {
+                    switch (length) {
+                        case '5':
+                            ship_x = ship_x - 2;
+                            break;
+                        case '4':
+                            ship_x = ship_x - 2;
+                            break;
+                        case '3':
+                            ship_x = ship_x - 1;
+                            break;
+                        case '2':
+                            ship_x = ship_x - 1;
+                            break;
+                        default:
+                            console.log('Placement ships: invalid length');
+                    }
+                }
+
+                console.log('x', ship_x, 'y', ship_y);
             }
         });
         $('.placeble-ship').draggable({revert: 'invalid', snap: '.player-grid td', snapMode: 'outer'});
+
+        for (let i = 0; i < this.ships.$value.length; i++) {
+            let ship = this.slugify_shipname(this.ships.$value[i].name);
+
+            $('#' + ship).on('dblclick', function () {
+                let x = this;
+                if (x.className.includes('north')) {
+                    $(this).removeClass('north');
+                    $(this).addClass('west');
+                    $(this).attr('style', 'position: absolute;');
+                    $(this).attr("src", `img/ships/${ship}-west.png`);
+                } else {
+                    $(this).removeClass('west');
+                    $(this).addClass('north');
+                    $(this).attr('style', 'position: absolute;');
+                    $(this).attr("src", `img/ships/${ship}-north.png`);
+                }
+
+                console.log(this);
+            })
+        }
     }
 
     observe() {
@@ -83,7 +147,10 @@ export default class PlayerGameboardViewModel extends ViewModel {
                 // console.log(this.ships.$value[0].name);
 
                 for (let i = 0; i < this.ships.$value.length; i++) {
-                    ship_template += `<img id="${this.ships.$value[i].name}" class="placeble-ship" src="img/ships/${this.ships.$value[i].name}.png"/>`;
+                    let ship = this.slugify_shipname(this.ships.$value[i].name);
+                    console.log(ship);
+
+                    ship_template += `<img id="${ship}" class="placeble-ship north" data-length="${this.ships.$value[i].length}" src="img/ships/${ship}-north.png"/>`;
                     console.log(this.ships.$value[i].name);
                 }
 
@@ -110,5 +177,13 @@ export default class PlayerGameboardViewModel extends ViewModel {
         //
         //     console.log('ships added');
         // });
+    }
+
+    /*
+     * Replaces space with '-'
+     * Text to lower case
+     */
+    slugify_shipname(name) {
+        return name.replace(/\s+/g, '-').toLowerCase();
     }
 }
