@@ -21,8 +21,6 @@ export default class BSTestViewModel extends ViewModel {
         this.ships = new Observable();
         this.user = new Observable();
         this.games = new Observable();
-
-        this.observe();
     }
 
     onError(reason, error, statusCode) {
@@ -62,12 +60,14 @@ export default class BSTestViewModel extends ViewModel {
     }
 
     draw() {
+        this.observe();
+
         let template =
             `<div id="${this.name}" class="bs-fill-page bs-tst">
 <code class="bs-console">
         Some information... 🎩
     </code>
-    <input type="text" id="input-token" value="${this.token.$value}"/>
+    <input class="bs-input" type="text" id="input-token" value="${this.token.$value}"/>
     <ul class="bs-tst-cards">
         <li class="bs-tst-card">
             <h4>Ships</h4>

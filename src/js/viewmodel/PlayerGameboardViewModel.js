@@ -24,7 +24,7 @@ export default class PlayerGameboardViewModel extends ViewModel {
     draw() {
         console.log('draw');
 
-        let html = ``;
+        let html = `<div class="bs-fill-page" id=${this.name}>`;
 
         html += `<p class="bs-hero-title">
         Battleship
@@ -37,7 +37,7 @@ export default class PlayerGameboardViewModel extends ViewModel {
             html += `<tr data-y="${y}">`;
 
             for (let x = bs.CELLMIN; x <= bs.CELLMAX; x++) {
-                html += `<td data-x="${x}" data-y="${y}"></td>`;
+                html += `<td data-x=${x}" data-y="${y}"></td>`;
             }
 
             html += `</tr>`;
@@ -52,7 +52,7 @@ export default class PlayerGameboardViewModel extends ViewModel {
             html += `<div class="test-block"></div>`;
         }
 
-        this.parent.append(html);
+        this.parent.append(html + '</div>');
     }
     
     bind() {
@@ -69,6 +69,8 @@ export default class PlayerGameboardViewModel extends ViewModel {
             }
         });
         $('.placeble-ship').draggable({revert: 'invalid', snap: '.player-grid td', snapMode: 'outer'});
+
+        
     }
 
     observe() {

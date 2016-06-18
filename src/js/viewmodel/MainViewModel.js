@@ -31,7 +31,8 @@ export default class MainViewModel extends ViewModel {
 
         this.views = {
             1: this.titleVM,
-            2: this.lobbyVM
+            2: this.lobbyVM,
+            3: this.gameBoardVM
         };
 
         this.currentView = new Observable(null);
@@ -39,13 +40,6 @@ export default class MainViewModel extends ViewModel {
 
     draw() {
         let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
-
-        // if (Session.get('last-page') == 1) {
-        //     this.titleVM.addTo();
-        // }
-        // else if (Session.get('last-page') == 2) {
-        //     this.lobbyVM.addTo();
-        // }
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
@@ -101,9 +95,7 @@ export default class MainViewModel extends ViewModel {
         this.parent.delegate('.bs-lobby-list-item', 'click', e => {
             console.log($(e.target).attr('data-gid'));
 
-            this.lobbyVM.destroy();
-
-            this.gameBoardVM.addTo();
+            this.currentView.$value += 1;
         });
     }
 
@@ -121,13 +113,7 @@ export default class MainViewModel extends ViewModel {
     }
 
     handleError(reason, error, statusCode) {
-        // console.log(error);
-        // swal({
-        //     title: "You broke it :(",
-        //     text: `<p>An error occurred, please reload the page to try again.</p><code>${reason}</code>`,
-        //     type: "error",
-        //     html: true
-        // });
+        console.error(error);
 
         let bsod = new BSODViewModel(this.api, statusCode, reason);
         bsod.addTo('body');

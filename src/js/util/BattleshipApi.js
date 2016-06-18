@@ -68,16 +68,17 @@ export default class BattleshipApi {
      * Returns a formatted version of a route URI with the API base url and API token
      *
      * @param formattedRoute {string}
+     * @param token
      * @returns {string}
      */
-    withApiTokenSuffix(formattedRoute) {
+    withApiTokenSuffix(formattedRoute, token = this.token) {
         if (formattedRoute === undefined || formattedRoute === null)
             throw new Error('BattleshipApi needs jQuery to work');
 
         if (typeof(formattedRoute) !== 'string')
             throw new Error("The 'formattedRoute' parameter on BattleshipApi.withApiTokenSuffix must be a string");
 
-        return `${BattleshipApi.url}${formattedRoute}?${BattleshipApi.tokenPrefix }${this.token}`;
+        return `${BattleshipApi.url}${formattedRoute}?${BattleshipApi.tokenPrefix }${token}`;
     };
 
     /**
@@ -202,6 +203,30 @@ export default class BattleshipApi {
             });
         });
 
+    }
+
+    isValidToken(token) {
+
+        if(typeof token !== 'string')
+            return Promise.reject('Token must be a string');
+
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                timeout: bs.AJAX_TIMEOUT,
+                url: this.withApiTokenSuffix(BattleshipApi.routes.currentUser.format(1), token),
+                type: 'GET'
+            }).done(data => {
+                if (data.msg) {
+                    let _msg = data.msg.replace('Error: ', '');
+                    reject(_msg);
+                }
+
+                resolve(data);
+
+            }).fail(jqXHR => {
+                reject(`HTTP Status: ${jqXHR.status}`);
+            });
+        });
     }
 
     /**
