@@ -150,11 +150,12 @@
     }
 
     & > p {
-      margin-top: 0;
+      margin: 0;
     }
 
     & > .#{$selector-prefix}button-primary {
       font-size: 1rem;
+      margin-top: .5em;
 
       @media screen and (max-width: $mobile-l) {
         font-size: .8rem;
