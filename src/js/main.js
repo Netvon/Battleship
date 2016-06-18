@@ -5,8 +5,9 @@ import Persistence from './util/Persistence';
 import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
 import PlayerGameboardViewModel from './viewmodel/PlayerGameboardViewModel';
 import Cell from './model/Cell';
-import UserGameViewModel from "./viewmodel/UserGameViewModel";
+import UserGameViewModel from "./viewmodel/LobbyGameViewModel";
 import SoundFXViewModel from './viewmodel/SoundFXViewModel';
+import MainViewModel from "./viewmodel/MainViewModel";
 
 (function () {
 
@@ -14,20 +15,20 @@ import SoundFXViewModel from './viewmodel/SoundFXViewModel';
     // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI
 
     if (!Persistence.hasKey('token'))
-        Persistence.set('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InNlZS5ncmFuZGlhQHN0dWRlbnQuYXZhbnMubmwi.DtPnllHeZKqv_lM7evo72TyJWpSOELFunRs4myKHMHA');
+        Persistence.set('token', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InRtZS52YW5uaW13ZWdlbkBzdHVkZW50LmF2YW5zLm5sIg.4yuhuKWBCnQuoxAeVL2xQ3Ua41YPLRqT7F8FkhxUcKI');
 
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
 
-    // let titleVM = new TitleScreenViewModel(battleshipApi);
-    // titleVM.addTo('body');
+    let titleVM = new MainViewModel(battleshipApi);
+    titleVM.addTo('body');
 
     // var battleshipApi = new BattleshipApi(token);
     //
     // UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
     //
-    let playerGameboardVM = new PlayerGameboardViewModel();
-    playerGameboardVM.addTo('body');
+    // let playerGameboardVM = new PlayerGameboardViewModel();
+    // playerGameboardVM.addTo('body');
     
     // userGameViewModel.showGames();
 
