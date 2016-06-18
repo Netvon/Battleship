@@ -17,9 +17,9 @@ export default class LobbyGameViewModel extends ViewModel {
     draw() {
         let template = `<li id="lobby-g-${this.userGame.id}">
 <ul class="bs-lobby-list-item">
-    <li><small class="game-id">${this.userGame.id}</small></li>
-    <li>Tegen: '${this.userGame.enemyName}'</li>
-    <li><small id="lobby-g-${this.userGame.id}-state">${this.userGame.state}</small></li>
+    <li class="bs-lobby-list-item-id"><small class="game-id">${this.userGame.id}</small></li>
+    <li class="bs-lobby-list-item-vs">Tegen: '${this.userGame.enemyName}'</li>
+    <li class="bs-lobby-list-item-state"><small id="lobby-g-${this.userGame.id}-state">${this.userGame.state}</small></li>
 </ul>
 </li>`;
 

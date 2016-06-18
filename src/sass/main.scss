@@ -53,6 +53,13 @@
   background-blend-mode: overlay;
 }
 
+@mixin title {
+  color: white;
+  text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 .05em rgba(0, 0, 0, 0.38);
+  font-family: 'Patua One', sans-serif;
+  font-weight: normal;
+}
+
 .#{$selector-prefix}fill-page {
   @include fill-viewport-h;
   @include flex-align(center, center);
@@ -68,9 +75,7 @@
   & > &-title {
     margin: 0;
     font-size: 6em;
-    color: white;
-    text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 .05em rgba(0, 0, 0, 0.38);
-    font-family: 'Patua One', sans-serif;
+    @include title;
 
     animation: scaleIn .5s ease-out;
 
@@ -116,23 +121,75 @@
 .#{$selector-prefix}lobby {
   @include ocean-bg;
 
+  &-container {
+    width: 80vw;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-title {
+    @include title;
+    margin: 0;
+    font-size: 4em;
+    text-align: center;
+
+    @media screen and (max-width: $mobile-l) {
+      font-size: 2em;
+    }
+  }
+
   &-list {
     @include reset-list-style;
 
     display: flex;
-    justify-content: space-between;
+    background: white;
+    box-shadow: 0 .5em 0 rgb(156, 156, 156), 0 .5em 2em rgba(0, 0, 0, 0.37);
+    border-radius: .5em;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-grow: 1;
+
+    & > li {
+      border-bottom: 2px solid rgba(0, 0, 0, 0.11);
+
+      &:last-child {
+        //padding-right: 0;
+        border: none;
+      }
+
+      &:nth-child(odd) {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+    }
 
     &-item {
       @include reset-list-style;
 
-      padding: 0.5em;
+      padding: 1em;
 
-      &:first-child {
-        padding-left: 0;
+      display: flex;
+      justify-content: space-between;
+
+      transition: background-color .5s ease;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        cursor: pointer;
       }
 
-      &:last-child {
-        padding-right: 0;
+      & > &-vs {
+        flex-grow: 1;
+      }
+    }
+
+    &-loading {
+      animation: pulse .8s infinite;
+
+      &:before {
+        content: 'loading...';
+        font-weight: 600;
+        font-size: 1.1em;
       }
     }
   }

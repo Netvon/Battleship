@@ -27,8 +27,8 @@ import MainViewModel from "./viewmodel/MainViewModel";
     //
     // UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
     //
-    let playerGameboardVM = new PlayerGameboardViewModel();
-    playerGameboardVM.addTo('body');
+    // let playerGameboardVM = new PlayerGameboardViewModel();
+    // playerGameboardVM.addTo('body');
     
     // userGameViewModel.showGames();
 

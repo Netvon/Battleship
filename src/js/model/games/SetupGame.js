@@ -2,6 +2,7 @@ import BaseGame from './BaseGame';
 import StartedGame from './StartedGame';
 import {STATE} from '../../util/BattleshipConst';
 import BattleshipApi from '../../util/BattleshipApi';
+import UserGame from "./UserGame";
 
 export default class SetupGame extends BaseGame {
     /**
@@ -47,25 +48,21 @@ export default class SetupGame extends BaseGame {
      *
      * @param api {BattleshipApi}
      * @param gameboard {Gameboard}
+     * @param id {number}
      * @return {Promise}
      */
-    submitGameboard(api, gameboard) {
+    static submitGameboard(api, gameboard, id) {
 
-        if (this.state !== STATE.SETUP) {
-            let msg = `You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`;
-            return Promise.reject(msg);
-        }
+        // if (this.state !== STATE.SETUP) {
+        //     let msg = `You cannot send a Gameboard to a game that is not in the ${STATE.SETUP} state. Current state: ${this.state}`;
+        //     return Promise.reject(msg);
+        // }
 
-        return api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: this.id}, gameboard.toJson())
+        return api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: id}, gameboard.toJson())
             .then(data => {
 
-                if (data.msg !== undefined && data.msg === 'success') {
-                    this.state = data.status;
-
-                    if (this.state === STATE.STARTED)
-                        return StartedGame.get(api, this.id);
-                    else
-                        return this;
+                if (data.msg !== undefined && data.msg !== 'success') {
+                    return Promise.reject(data);
                 }
 
             });
