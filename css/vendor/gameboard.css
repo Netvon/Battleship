@@ -1,0 +1,41 @@
+.test-block {
+    padding: 10px;
+    background-color: red;
+    width: 12px;
+    height: 12px;
+}
+
+table.player-grid {
+    border-collapse: collapse;
+    border-spacing: 10px;
+}
+
+table.player-grid td {
+    border: 5px solid #837f84;
+    width: 45px;
+    height: 45px;
+    color:#666B85;
+    font-size:16px;
+    font-weight:normal;
+    text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+}
+
+/* top-left border-radius */
+table.player-grid tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+}
+
+/* top-right border-radius */
+table.player-grid tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+}
+
+/* bottom-left border-radius */
+table.player-grid tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+}
+
+/* bottom-right border-radius */
+table.player-grid tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+}

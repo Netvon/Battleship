@@ -25,13 +25,13 @@ var _LobbyGameViewModel = require('./viewmodel/LobbyGameViewModel');
 
 var _LobbyGameViewModel2 = _interopRequireDefault(_LobbyGameViewModel);
 
-var _SoundFXViewModel = require('./viewmodel/SoundFXViewModel');
-
-var _SoundFXViewModel2 = _interopRequireDefault(_SoundFXViewModel);
-
 var _MainViewModel = require('./viewmodel/MainViewModel');
 
 var _MainViewModel2 = _interopRequireDefault(_MainViewModel);
+
+var _AudioManager = require('./util/AudioManager');
+
+var _AudioManager2 = _interopRequireDefault(_AudioManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -96,7 +96,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     // });
 })();
 
-},{"./model/Cell":2,"./util/BattleshipApi":17,"./util/Persistence":22,"./viewmodel/LobbyGameViewModel":26,"./viewmodel/MainViewModel":28,"./viewmodel/PlayerGameboardViewModel":30,"./viewmodel/SoundFXViewModel":31,"./viewmodel/TitleScreenViewModel":32}],2:[function(require,module,exports){
+},{"./model/Cell":2,"./util/AudioManager":17,"./util/BattleshipApi":18,"./util/Persistence":23,"./viewmodel/LobbyGameViewModel":27,"./viewmodel/MainViewModel":29,"./viewmodel/PlayerGameboardViewModel":31,"./viewmodel/TitleScreenViewModel":32}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -188,7 +188,7 @@ class Cell extends _JsonBase2.default {
 }
 exports.default = Cell;
 
-},{"../util/BattleshipConst":18,"./../util/JsonBase":21}],3:[function(require,module,exports){
+},{"../util/BattleshipConst":19,"./../util/JsonBase":22}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -338,7 +338,7 @@ class User extends _JsonBase2.default {
 }
 exports.default = User;
 
-},{"../util/BattleshipApi":17,"../util/BattleshipConst":18,"./../model/games/UserGame":14,"./../util/JsonBase":21,"./../util/Persistence":22}],5:[function(require,module,exports){
+},{"../util/BattleshipApi":18,"../util/BattleshipConst":19,"./../model/games/UserGame":14,"./../util/JsonBase":22,"./../util/Persistence":23}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -389,7 +389,7 @@ class EnemyGameboard extends _JsonBase2.default {
 }
 exports.default = EnemyGameboard;
 
-},{"./../../util/JsonBase":21,"./../Shot":3}],6:[function(require,module,exports){
+},{"./../../util/JsonBase":22,"./../Shot":3}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -508,7 +508,7 @@ class Gameboard extends _JsonBase2.default {
 }
 exports.default = Gameboard;
 
-},{"../../util/BattleshipConst":18,"./../../util/JsonBase":21,"./../ships/GameboardShip":15}],7:[function(require,module,exports){
+},{"../../util/BattleshipConst":19,"./../../util/JsonBase":22,"./../ships/GameboardShip":15}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -622,7 +622,7 @@ class ShotEventArguments extends _JsonBase2.default {
 }
 exports.default = ShotEventArguments;
 
-},{"../../model/Cell":2,"../../util/JsonBase":21}],9:[function(require,module,exports){
+},{"../../model/Cell":2,"../../util/JsonBase":22}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -649,7 +649,7 @@ class UpdateEventArguments extends _JsonBase2.default {
 }
 exports.default = UpdateEventArguments;
 
-},{"../../util/JsonBase":21}],10:[function(require,module,exports){
+},{"../../util/JsonBase":22}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -683,7 +683,7 @@ class UpdateEventArguments extends _JsonBase2.default {
 }
 exports.default = UpdateEventArguments;
 
-},{"../../util/JsonBase":21,"../games/BaseGame":11}],11:[function(require,module,exports){
+},{"../../util/JsonBase":22,"../games/BaseGame":11}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -832,7 +832,7 @@ class BaseGame extends _JsonBase2.default {
 }
 exports.default = BaseGame;
 
-},{"../../util/BattleshipApi":17,"../../util/BattleshipConst":18,"./../../util/JsonBase":21}],12:[function(require,module,exports){
+},{"../../util/BattleshipApi":18,"../../util/BattleshipConst":19,"./../../util/JsonBase":22}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -929,7 +929,7 @@ class SetupGame extends _BaseGame2.default {
 }
 exports.default = SetupGame;
 
-},{"../../util/BattleshipApi":17,"../../util/BattleshipConst":18,"./BaseGame":11,"./StartedGame":13,"./UserGame":14}],13:[function(require,module,exports){
+},{"../../util/BattleshipApi":18,"../../util/BattleshipConst":19,"./BaseGame":11,"./StartedGame":13,"./UserGame":14}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1021,7 +1021,7 @@ class StartedGame extends _UserGame2.default {
 }
 exports.default = StartedGame;
 
-},{"../../util/BattleshipApi":17,"../board/EnemyGameboard":5,"../board/PlayerGameboard":7,"./UserGame":14}],14:[function(require,module,exports){
+},{"../../util/BattleshipApi":18,"../board/EnemyGameboard":5,"../board/PlayerGameboard":7,"./UserGame":14}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1098,7 +1098,7 @@ class UserGame extends _BaseGame2.default {
 }
 exports.default = UserGame;
 
-},{"../../util/BattleshipApi":17,"./BaseGame":11}],15:[function(require,module,exports){
+},{"../../util/BattleshipApi":18,"./BaseGame":11}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1256,7 +1256,7 @@ class GameboardShip extends _Ship2.default {
 }
 exports.default = GameboardShip;
 
-},{"../../util/BattleshipConst":18,"./../Cell":2,"./../Shot":3,"./Ship":16}],16:[function(require,module,exports){
+},{"../../util/BattleshipConst":19,"./../Cell":2,"./../Shot":3,"./Ship":16}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1384,7 +1384,58 @@ class Ship extends _JsonBase2.default {
 }
 exports.default = Ship;
 
-},{"../../util/BattleshipApi":17,"../../util/BattleshipConst":18,"../../util/JsonBase":21,"../../util/Persistence":22}],17:[function(require,module,exports){
+},{"../../util/BattleshipApi":18,"../../util/BattleshipConst":19,"../../util/JsonBase":22,"../../util/Persistence":23}],17:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+class AudioManager {
+
+    static load(name, source) {
+        if (this._audio === undefined) this._audio = new Map();
+
+        let el = document.createElement('audio');
+        el.src = source;
+        el.volume = 0.5;
+        this._audio.set(name, el);
+
+        el.currentTime = 0;
+    }
+
+    static play(name, loop = false, removeAfterComplete = true, startAt = 0) {
+
+        if (this._audio === undefined || !this._audio.has(name)) this._audio = new Map();
+
+        // console.dir(this._audio);
+
+        let el = this._audio.get(name);
+
+        if (removeAfterComplete) el.addEventListener('ended', () => this._audio.delete(name));
+
+        el.loop = loop;
+        el.currentTime = startAt;
+        el.play();
+    }
+
+    static pause(name) {
+        if (this._audio === undefined || !this._audio.has(name)) return;
+
+        this._audio.get(name).pause();
+    }
+
+    static stop(name) {
+        if (this._audio === undefined || !this._audio.has(name)) return;
+
+        let audio = this._audio.get(name);
+
+        audio.pause();
+        audio.currentTime = 0;
+    }
+}
+exports.default = AudioManager;
+
+},{}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1454,7 +1505,7 @@ class BattleshipApi {
      * @returns {string}
      */
     static get url() {
-        return 'https://zeeslagavans.herokuapp.com/';
+        return 'https://zeeslagavans3.herokuapp.com/';
     }
 
     /**
@@ -1729,7 +1780,7 @@ class BattleshipApi {
 }
 exports.default = BattleshipApi;
 
-},{"../model/events/ShotEventArguments":8,"../model/events/TurnEventArguments":9,"../model/events/UpdateEventArguments":10,"./BattleshipConst":18,"./BattleshipRoute":19,"./Persistence":22}],18:[function(require,module,exports){
+},{"../model/events/ShotEventArguments":8,"../model/events/TurnEventArguments":9,"../model/events/UpdateEventArguments":10,"./BattleshipConst":19,"./BattleshipRoute":20,"./Persistence":23}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1756,7 +1807,7 @@ const STATE = exports.STATE = {
     DONE: 'done'
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1813,7 +1864,7 @@ class BattleshipRoute {
 }
 exports.default = BattleshipRoute;
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1852,7 +1903,7 @@ class Hu {
 }
 exports.default = Hu;
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1870,7 +1921,7 @@ class JsonBase {
 }
 exports.default = JsonBase;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1925,7 +1976,7 @@ class Persistence {
 }
 exports.default = Persistence;
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1980,7 +2031,7 @@ class Session {
 }
 exports.default = Session;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2026,7 +2077,7 @@ class BSODViewModel extends _ViewModel2.default {
 }
 exports.default = BSODViewModel;
 
-},{"./ViewModel":34}],25:[function(require,module,exports){
+},{"./ViewModel":34}],26:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2218,7 +2269,7 @@ class BSTestViewModel extends _ViewModel2.default {
 }
 exports.default = BSTestViewModel;
 
-},{"../model/games/SetupGame":12,"../model/games/StartedGame":13,"../model/games/UserGame":14,"../model/ships/Ship":16,"../util/BattleshipApi":17,"../util/BattleshipConst":18,"./BSODViewModel":24,"./Observable":29,"./UserViewModel":33,"./ViewModel":34}],26:[function(require,module,exports){
+},{"../model/games/SetupGame":12,"../model/games/StartedGame":13,"../model/games/UserGame":14,"../model/ships/Ship":16,"../util/BattleshipApi":18,"../util/BattleshipConst":19,"./BSODViewModel":25,"./Observable":30,"./UserViewModel":33,"./ViewModel":34}],27:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2235,8 +2286,15 @@ var _StartedGame = require("../model/games/StartedGame");
 
 var _StartedGame2 = _interopRequireDefault(_StartedGame);
 
+var _UserGame = require("../model/games/UserGame");
+
+var _UserGame2 = _interopRequireDefault(_UserGame);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Created by Sander on 07-06-16.
+ */
 class LobbyGameViewModel extends _ViewModel2.default {
     constructor(api, userGame) {
         super(api, `vm-usergame-${ userGame.id }`);
@@ -2245,11 +2303,11 @@ class LobbyGameViewModel extends _ViewModel2.default {
     }
 
     draw() {
-        let template = `<li id="lobby-g-${ this.userGame.id }" title="Playing against '${ this.userGame.enemyName }'">
+        let template = `<li id="lobby-g-${ this.userGame.id }" data-state="${ this.userGame.state }" title="Playing against '${ this.userGame.enemyName }'">
 <ul role="button" class="bs-lobby-list-item" data-gid="${ this.userGame.id }">
     <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${ this.userGame.id }</small></li>
-    <li class="bs-lobby-list-item-vs">VS '${ this.userGame.enemyName }'</li>
+    <li class="bs-lobby-list-item-vs" id="lobby-g-${ this.userGame.id }-vs">${ this.userGame.enemyName }</li>
     <li class="bs-lobby-list-item-state"><small id="lobby-g-${ this.userGame.id }-state">${ this.userGame.state }</small></li>
     <li class="bs-lobby-list-item-turn"><small></small></li>
     <li class="bs-lobby-list-item-go"><i class="fa fa-chevron-circle-right"></i></li>
@@ -2266,6 +2324,11 @@ class LobbyGameViewModel extends _ViewModel2.default {
 
             this.loading = true;
 
+            if (this.userGame.state === _BattleshipConst.STATE.QUEUE) {
+                $(`#lobby-g-${ this.userGame.id }-vs`).text('Searching for opponent ...');
+                $(`#lobby-g-${ this.userGame.id }`).attr('title', 'Searching for opponent ...');
+            }
+
             // console.log(this.userGame.state);
 
             if (this.userGame.state === _BattleshipConst.STATE.STARTED) {
@@ -2273,6 +2336,16 @@ class LobbyGameViewModel extends _ViewModel2.default {
                     let g_el = $(`#lobby-g-${ this.userGame.id }`).find(`.bs-lobby-list-item`).find('.bs-lobby-list-item-turn small');
 
                     if (startedGame.isPlayerTurn) g_el.text('Your turn!');else g_el.text('Not your turn');
+
+                    this.loading = false;
+                }).catch(this.onError.bind(this));
+            } else if (this.userGame.state === _BattleshipConst.STATE.SETUP && this.userGame.enemyName === undefined) {
+                _UserGame2.default.get(this.api, this.userGame.id).then(userGame => {
+                    let main = $(`#lobby-g-${ userGame.id }`);
+                    $(`#lobby-g-${ userGame.id }-state`).text(userGame.state);
+                    $(`#lobby-g-${ userGame.id }-vs`).text(userGame.enemyName);
+                    main.attr('title', `Playing against '${ userGame.enemyName }'`);
+                    main.attr('data-state', userGame.state);
 
                     this.loading = false;
                 }).catch(this.onError.bind(this));
@@ -2284,7 +2357,15 @@ class LobbyGameViewModel extends _ViewModel2.default {
         checkStarted();
 
         this.userGame.onUpdate(this.api, () => {
-            $(`#lobby-g-${ this.userGame.id }-state`).text(this.userGame.state);
+
+            console.log(`[${ this.userGame.id }] I got updated`);
+            console.log(this.userGame.state);
+
+            // let main = $(`#lobby-g-${this.userGame.id}`);
+            // $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
+            // $(`#lobby-g-${this.userGame.id}-vs`).text(this.userGame.enemyName);
+            // main.attr('title', `Playing against '${this.userGame.enemyName}'`);
+            // main.attr('data-state', this.userGame.state);
 
             checkStarted();
         });
@@ -2332,11 +2413,9 @@ class LobbyGameViewModel extends _ViewModel2.default {
         // });
     }
 }
-exports.default = LobbyGameViewModel; /**
-                                       * Created by Sander on 07-06-16.
-                                       */
+exports.default = LobbyGameViewModel;
 
-},{"../model/games/StartedGame":13,"../util/BattleshipConst":18,"./ViewModel":34}],27:[function(require,module,exports){
+},{"../model/games/StartedGame":13,"../model/games/UserGame":14,"../util/BattleshipConst":19,"./ViewModel":34}],28:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2363,6 +2442,10 @@ var _User = require("../model/User");
 
 var _User2 = _interopRequireDefault(_User);
 
+var _SetupGame = require("../model/games/SetupGame");
+
+var _SetupGame2 = _interopRequireDefault(_SetupGame);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class LobbyViewModel extends _ViewModel2.default {
@@ -2372,7 +2455,7 @@ class LobbyViewModel extends _ViewModel2.default {
         this.games = new _Observable2.default();
         this.user = new _Observable2.default();
 
-        this._ids = [];
+        this._ids = new Set();
 
         this.observe();
     }
@@ -2386,6 +2469,33 @@ class LobbyViewModel extends _ViewModel2.default {
     }
 
     bind() {
+
+        $('#lobby-new-game').on('click', () => {
+            _SetupGame2.default.create(this.api).then(() => swal('Game created!')).catch((reason, error, statusCode) => {
+                if (statusCode !== undefined) {
+                    this.onError(reason, error, statusCode);
+                } else {
+                    swal({
+                        title: "Can't let you do that.",
+                        text: reason
+                    });
+                }
+            });
+        });
+
+        $('#lobby-new-ai').on('click', () => {
+            _SetupGame2.default.create(this.api, true).then(() => swal('Game created!')).catch((reason, error, statusCode) => {
+                if (statusCode !== undefined) {
+                    this.onError(reason, error, statusCode);
+                } else {
+                    swal({
+                        title: "Can't let you do that.",
+                        text: reason
+                    });
+                }
+            });
+        });
+
         $('#lobby-remove-games').on('click', () => {
             swal({
                 title: "Are you sure?",
@@ -2413,8 +2523,9 @@ class LobbyViewModel extends _ViewModel2.default {
 <h1 class="bs-lobby-title">Battleship</h1>
 <div id="lobby-user-info" class="bs-lobby-user">
     <p>Here's a list of all the Battles currently happening.</p>
-    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i>Remove all Battles</button>
-    <button id="lobby-new-game" class="bs-button bs-button-primary" title="Start Battle"><i class="fa fa-plus"></i>Start Battle</button>
+    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i><span class="bs-button-text">Remove all Battles</span></button>
+    <button id="lobby-new-game" class="bs-button bs-button-primary" title="New Battle"><i class="fa fa-plus"></i><span class="bs-button-text">New Battle</span></button>
+    <button id="lobby-new-ai" class="bs-button bs-button-primary" title="Start Training"><i class="fa fa-plus"></i><span class="bs-button-text">New Training</span></button>
 </div>
 <ul class="bs-lobby-list" id="bs-lobby-list" role="list"></ul>
 </div>
@@ -2429,16 +2540,17 @@ class LobbyViewModel extends _ViewModel2.default {
 
         this.api.onUpdate(args => {
 
-            let contains = this._ids.some(item => item.id === args.gameId);
+            let contains = this._ids.has(args.gameId);
 
             if (!contains) {
 
                 this.loading = true;
                 _UserGame2.default.get(this.api, args.gameId).then(userGame => {
-                    let old = this.games.$value.slice(0);
-                    old.push(userGame);
 
-                    this.games.$value = old;
+                    this._ids.add(userGame.id);
+                    let lgvm = new _LobbyGameViewModel2.default(this.api, userGame);
+                    lgvm.addTo('#bs-lobby-list');
+
                     this.loading = false;
                 }).catch(this.onError.bind(this));
             }
@@ -2449,7 +2561,7 @@ class LobbyViewModel extends _ViewModel2.default {
             list.empty();
 
             args.newValue.forEach(item => {
-                this._ids.push(item.id);
+                this._ids.add(item.id);
                 let lgvm = new _LobbyGameViewModel2.default(this.api, item);
                 lgvm.addTo('#bs-lobby-list');
             });
@@ -2473,7 +2585,7 @@ class LobbyViewModel extends _ViewModel2.default {
 }
 exports.default = LobbyViewModel;
 
-},{"../model/User":4,"../model/games/UserGame":14,"./LobbyGameViewModel":26,"./Observable":29,"./ViewModel":34}],28:[function(require,module,exports){
+},{"../model/User":4,"../model/games/SetupGame":12,"../model/games/UserGame":14,"./LobbyGameViewModel":27,"./Observable":30,"./ViewModel":34}],29:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2516,6 +2628,10 @@ var _PlayerGameboardViewModel = require("./PlayerGameboardViewModel");
 
 var _PlayerGameboardViewModel2 = _interopRequireDefault(_PlayerGameboardViewModel);
 
+var _AudioManager = require("../util/AudioManager");
+
+var _AudioManager2 = _interopRequireDefault(_AudioManager);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class MainViewModel extends _ViewModel2.default {
@@ -2537,22 +2653,31 @@ class MainViewModel extends _ViewModel2.default {
 
         this.titleVM = new _TitleScreenViewModel2.default(this.api);
         this.lobbyVM = new _LobbyViewModel2.default(this.api);
-        this.gameBoardVM = new _PlayerGameboardViewModel2.default(this.api);
+        // this.gameBoardVM = new PlayerGameboardViewModel(this.api);
+
+        this.playingBGM = new _Observable2.default(true);
 
         this.views = {
             1: this.titleVM,
-            2: this.lobbyVM,
-            3: this.gameBoardVM
+            2: this.lobbyVM
+            // 3: this.gameBoardVM
         };
 
         this.currentView = new _Observable2.default(null);
     }
 
     draw() {
+
+        _AudioManager2.default.load('btn1', 'audio/button-37.mp3');
+
+        _AudioManager2.default.load('test2', 'audio/test2.mp3');
+        _AudioManager2.default.play('test2');
+
         let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
+        this.parent.append(`<button id="mute" class="bs-button bs-button-primary" title="Mute"><i class="fa fa-volume-up"></i></button>`);
 
         this.bind();
     }
@@ -2595,11 +2720,42 @@ class MainViewModel extends _ViewModel2.default {
             this.currentView.$value -= 1;
         });
 
+        let mute = $('#mute');
+
+        mute.click(() => {
+
+            if (this.playingBGM.$value) {
+
+                _AudioManager2.default.pause('test2');
+
+                mute.find('.fa').removeClass('fa-volume-up');
+
+                mute.find('.fa').addClass('fa-volume-off');
+
+                this.playingBGM.$value = false;
+            } else {
+                _AudioManager2.default.play('test2');
+
+                mute.find('.fa').removeClass('fa-volume-off');
+
+                mute.find('.fa').addClass('fa-volume-up');
+
+                this.playingBGM.$value = true;
+            }
+        });
+
         this.parent.delegate('.bs-lobby-list-item', 'click', e => {
             console.log($(e.target).attr('data-gid'));
 
             this.currentView.$value += 1;
         });
+
+        let playSound = () => {
+            _AudioManager2.default.play('btn1', false, false);
+        };
+
+        this.parent.delegate('.bs-button', 'click', playSound);
+        this.parent.delegate('.hero-button', 'click', playSound);
     }
 
     changeBsTestVMVisibility() {
@@ -2625,7 +2781,7 @@ class MainViewModel extends _ViewModel2.default {
 }
 exports.default = MainViewModel;
 
-},{"../util/Session":23,"./BSODViewModel":24,"./BSTestViewModel":25,"./LobbyGameViewModel":26,"./LobbyViewModel":27,"./Observable":29,"./PlayerGameboardViewModel":30,"./TitleScreenViewModel":32,"./ViewModel":34}],29:[function(require,module,exports){
+},{"../util/AudioManager":17,"../util/Session":24,"./BSODViewModel":25,"./BSTestViewModel":26,"./LobbyGameViewModel":27,"./LobbyViewModel":28,"./Observable":30,"./PlayerGameboardViewModel":31,"./TitleScreenViewModel":32,"./ViewModel":34}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2661,7 +2817,7 @@ class Observable {
 }
 exports.default = Observable;
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2797,51 +2953,7 @@ exports.default = PlayerGameboardViewModel; /**
                                              * Created by Sander on 16-06-16.
                                              */
 
-},{"../model/board/PlayerGameboard":7,"../model/ships/Ship":16,"../util/BattleshipConst":18,"./Observable":29,"./ViewModel":34}],31:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-class SoundFXViewModel {
-    /**
-     *
-     * @param source {string}
-     * @param loop {boolean}
-     */
-    constructor(source, loop = false) {
-        this.source = source;
-        this.loop = loop;
-
-        this._element = document.createElement('audio');
-        this._element.src = this.source;
-        this._element.loop = this.loop;
-    }
-
-    play() {
-        this._element.play();
-    }
-
-    pause() {
-        this._element.pause();
-    }
-
-    stop() {
-        this._element.currentTime = 0;
-        this._element.pause();
-    }
-
-    /**
-     *
-     * @param callback {function}
-     */
-    onEnded(callback) {
-        this._element.addEventListener('ended', callback);
-    }
-}
-exports.default = SoundFXViewModel;
-
-},{}],32:[function(require,module,exports){
+},{"../model/board/PlayerGameboard":7,"../model/ships/Ship":16,"../util/BattleshipConst":19,"./Observable":30,"./ViewModel":34}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2918,7 +3030,7 @@ class TitleScreenViewModel extends _ViewModel2.default {
 }
 exports.default = TitleScreenViewModel;
 
-},{"../model/User":4,"./Observable":29,"./ViewModel":34}],33:[function(require,module,exports){
+},{"../model/User":4,"./Observable":30,"./ViewModel":34}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2970,7 +3082,7 @@ class UserViewModel extends _User2.default {
 }
 exports.default = UserViewModel;
 
-},{"./../model/User":4,"./../util/Hu":20}],34:[function(require,module,exports){
+},{"./../model/User":4,"./../util/Hu":21}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

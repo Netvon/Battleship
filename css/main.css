@@ -39,18 +39,27 @@
 .bs-hero {
   background-size: cover;
   background-image: url("../img/background.png");
-  background-attachment: fixed;
-  background-position: bottom;
-  background-blend-mode: overlay;
-  animation: fadeIn 2s ease-in; }
+  background-position: center; }
+  @media screen and (max-width: 425px) {
+    .bs-hero {
+      background-blend-mode: overlay;
+      background-attachment: fixed; } }
+  @media screen and (min-width: 425px) {
+    .bs-hero {
+      animation: fadeIn 2s ease-in; } }
+  @media screen and (max-width: 425px) {
+    .bs-hero {
+      animation: fadeIn 1s ease-in; } }
   .bs-hero > .bs-hero-title {
     margin: 0;
     font-size: 6em;
     color: white;
     text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 0.05em rgba(0, 0, 0, 0.38);
     font-family: 'Patua One', sans-serif;
-    font-weight: normal;
-    animation: scaleIn .5s ease-out; }
+    font-weight: normal; }
+    @media screen and (min-width: 425px) {
+      .bs-hero > .bs-hero-title {
+        animation: scaleIn .5s ease-out; } }
     @media screen and (max-width: 425px) {
       .bs-hero > .bs-hero-title {
         font-size: 3em; } }
@@ -82,9 +91,11 @@
 .bs-lobby {
   background-size: cover;
   background-image: url("../img/background.png");
-  background-attachment: fixed;
-  background-position: bottom;
-  background-blend-mode: overlay; }
+  background-position: center; }
+  @media screen and (max-width: 425px) {
+    .bs-lobby {
+      background-blend-mode: overlay;
+      background-attachment: fixed; } }
   .bs-lobby-container {
     width: 80vw;
     height: 70vh;
@@ -118,9 +129,13 @@
       .bs-lobby-user {
         font-size: .8em; } }
     .bs-lobby-user > p {
-      margin-top: 0; }
-    .bs-lobby-user > .bs--button-primary {
-      font-size: 1rem; }
+      margin: 0; }
+    .bs-lobby-user > .bs-button-primary {
+      font-size: 1rem;
+      margin-top: .5em; }
+      @media screen and (max-width: 425px) {
+        .bs-lobby-user > .bs-button-primary {
+          font-size: .8rem; } }
   .bs-lobby-list {
     text-decoration: none;
     list-style: none;
@@ -147,10 +162,8 @@
       display: flex;
       justify-content: space-between;
       align-content: center;
-      transition: background-color .5s ease;
       color: #751f1f; }
       .bs-lobby-list-item:hover {
-        background-color: rgba(255, 255, 255, 0.3);
         cursor: pointer; }
       .bs-lobby-list-item > .bs-lobby-list-item-vs {
         flex-grow: 1; }
@@ -158,17 +171,20 @@
         opacity: .75; }
       .bs-lobby-list-item-id {
         font-family: monospace; }
+        @media screen and (max-width: 425px) {
+          .bs-lobby-list-item-id {
+            display: none; } }
       .bs-lobby-list-item-go, .bs-lobby-list-item-turn {
         margin-left: 1em; }
       .bs-lobby-list-item-li, .bs-lobby-list-item-id {
         margin-right: 1em; }
-      @media screen and (max-width: 425px) {
-        .bs-lobby-list-item-state {
-          display: none; } }
     .bs-lobby-list:empty:before {
       content: 'there are no battles :('; }
     .bs-lobby-list-loading {
-      animation: pulse .8s infinite; }
+      color: inherit; }
+      @media screen and (min-width: 425px) {
+        .bs-lobby-list-loading {
+          animation: pulse .8s infinite; } }
       .bs-lobby-list-loading:before {
         content: 'loading...' !important;
         font-weight: 600; }
@@ -196,17 +212,17 @@
   color: rgba(0, 0, 0, 0.5);
   line-height: 1.6em;
   flex-grow: 1;
-  transition: background-color .3s ease;
   box-shadow: 0 0.7em 0 #85c39a, 0 0.7em 1em rgba(0, 0, 0, 0.12); }
   .bs-tst-card ul {
     text-decoration: none;
     list-style: none;
     margin: 0;
     padding: 0; }
-  .bs-tst-card:hover {
-    background-color: rgba(123, 220, 155, 0.7); }
   .bs-tst-card-loading {
-    animation: pulse .8s infinite; }
+    color: inherit; }
+    @media screen and (min-width: 425px) {
+      .bs-tst-card-loading {
+        animation: pulse .8s infinite; } }
     .bs-tst-card-loading:before {
       content: 'loading...';
       font-weight: 600;
@@ -264,6 +280,9 @@
   padding: .2em 1em;
   opacity: 0.65;
   transition: opacity .2s ease; }
+  @media screen and (max-width: 425px) {
+    .bs-button {
+      opacity: 1; } }
   .bs-button:hover, .bs-button:active, .bs-button:focus {
     opacity: 1;
     cursor: pointer;
@@ -274,8 +293,9 @@
   .bs-button-primary {
     background: #d3deef;
     border-radius: .6em;
-    color: #345877;
-    opacity: 0.65; }
+    color: #345877; }
+  .bs-button > .bs-button-text {
+    margin-left: .6em; }
 
 .bs-input {
   background: #d3deef;
@@ -283,17 +303,27 @@
   padding: 1em;
   border-radius: 6px;
   color: #345877; }
-  .bs-input[type=text] {
-    transition: background-color .3s ease; }
-    .bs-input[type=text]mono {
-      font-family: monospace; }
-    .bs-input[type=text]:hover, .bs-input[type=text]:active {
+  @media screen and (min-width: 425px) {
+    .bs-input[type=text] {
+      transition: background-color .3s ease; } }
+  @media screen and (max-width: 425px) {
+    .bs-input[type=text] {
       background: #bdcdef;
-      color: #345877; }
-    .bs-input[type=text]:focus {
-      outline: none; }
+      color: #345877; } }
+  .bs-input[type=text]mono {
+    font-family: monospace; }
+  .bs-input[type=text]:hover, .bs-input[type=text]:active {
+    background: #bdcdef;
+    color: #345877; }
+  .bs-input[type=text]:focus {
+    outline: none; }
 
 #go-back {
   position: fixed;
   top: 1em;
   left: 1em; }
+
+#mute {
+  position: fixed;
+  top: 1em;
+  right: 1em; }
