@@ -21,7 +21,7 @@ export default class TitleScreenViewModel extends ViewModel {
     <p id="bs-title" class="bs-hero-title">
         Battleship
     </p>
-    <p id="lblWelcomeMsg">Welcome</p>
+    <p class="bs-welcome" id="lblWelcomeMsg">Ahoy, Captain!</p>
     <button id="play-button" class="hero-button">Play</button>
 </main>`;
 
@@ -49,7 +49,7 @@ export default class TitleScreenViewModel extends ViewModel {
         // });
 
         this.user.addObserver(({oldValue, newValue}) => {
-            $('#lblWelcomeMsg').text(`Welcome, ${newValue.name}`);
+            $('#lblWelcomeMsg').text(`Ahoy, Captain ${newValue.name}!`);
         });
     }
 

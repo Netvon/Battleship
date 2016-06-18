@@ -3,7 +3,7 @@
 }
 
 @mixin fill-viewport-h {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 @mixin flex-align($align-items, $justify-content) {

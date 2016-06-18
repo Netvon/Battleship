@@ -11,6 +11,8 @@ export default class LobbyViewModel extends ViewModel {
         this.games = new Observable();
         this.user = new Observable();
 
+        this._ids = [];
+
         this.observe();
     }
 
@@ -26,37 +28,94 @@ export default class LobbyViewModel extends ViewModel {
         ];
 
         Promise.all(tasks)
-            .then(() => this.loading = false);
+            .then(() => this.loading = false)
+            .catch(this.onError.bind(this));
+    }
+
+    bind() {
+        $('#lobby-remove-games').on('click', () => {
+            swal({
+                    title: "Are you sure?",
+                    text: "This will remove all your games",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Remove them!",
+                    cancelButtonText: "Nope",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                },
+                () => {
+                    this.games.$value = [];
+
+                    UserGame.deleteAll(this.api)
+                        .then(() => swal({
+                            title: "Battles removed",
+                            type: "success"
+                        }))
+                        .catch(this.onError.bind(this));
+                }
+            );
+        });
+
+        this.parent.delegate('.bs-lobby-list-item', 'click', function () {
+            console.log($(this).attr('data-gid'));
+        });
     }
 
     draw() {
         let template = `<div id="${this.name}" class="bs-fill-page bs-lobby">
 <div class="bs-lobby-container">
 <h1 class="bs-lobby-title">Battleship</h1>
-<div id="lobby-user-info" class="bs-lobby-user">User info</div>
+<div id="lobby-user-info" class="bs-lobby-user">
+    Here's a list of all the Battles currently happening.
+    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Games"><i class="fa fa-trash"></i>Remove all games</button>
+</div>
 <ul class="bs-lobby-list" id="bs-lobby-list"></ul>
 </div>
 </div>`;
 
         this.parent.append(template);
+
+        this.bind();
     }
 
     observe() {
+
+        this.api.onUpdate(args => {
+
+            let contains = this._ids.some(item => item.id === args.gameId);
+
+            if (!contains) {
+
+                this.loading = true;
+                UserGame.get(this.api, args.gameId)
+                    .then(userGame => {
+                        let old = this.games.$value.slice(0);
+                        old.push(userGame);
+
+                        this.games.$value = old;
+                        this.loading = false;
+                    })
+                    .catch(this.onError.bind(this));
+            }
+        });
+
         this.games.addObserver(args => {
             let list = $('#bs-lobby-list');
             list.empty();
 
             args.newValue.forEach(item => {
+                this._ids.push(item.id);
                 let lgvm = new LobbyGameViewModel(this.api, item);
                 lgvm.addTo('#bs-lobby-list');
             });
         });
 
-        this.user.addObserver(args => {
-
-            $('#lobby-user-info').text(args.newValue.name);
-
-        });
+        // this.user.addObserver(args => {
+        //
+        //     $('#lobby-user-info').text(args.newValue.name);
+        //
+        // });
     }
 
     set loading(value) {
