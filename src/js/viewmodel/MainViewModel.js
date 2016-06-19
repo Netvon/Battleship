@@ -52,7 +52,7 @@ export default class MainViewModel extends ViewModel {
 
     observe() {
         this.playingBGM.addObserver(args => {
-            Persistence.set('play-music', String(args.newValue));
+            Persistence.set('play-music', args.newValue);
         })
     }
 
@@ -67,7 +67,7 @@ export default class MainViewModel extends ViewModel {
 
         AudioManager.load('test2', 'audio/test2.mp3');
 
-        if (this.playingBGM.$value == true) {
+        if (this.playingBGM.$value === 'true') {
             AudioManager.play('test2');
         }
         else {
@@ -131,7 +131,7 @@ export default class MainViewModel extends ViewModel {
 
         mute.click(() => {
 
-            if (this.playingBGM.$value == true) {
+            if (this.playingBGM.$value === 'true') {
 
                 AudioManager.pause('test2');
 
@@ -140,7 +140,7 @@ export default class MainViewModel extends ViewModel {
 
                 mute.find('.fa').addClass('fa-volume-off');
 
-                this.playingBGM.$value = false;
+                this.playingBGM.$value = 'false';
             }
             else {
                 AudioManager.play('test2');
@@ -150,7 +150,7 @@ export default class MainViewModel extends ViewModel {
 
                 mute.find('.fa').addClass('fa-volume-up');
 
-                this.playingBGM.$value = true;
+                this.playingBGM.$value = 'true';
             }
         });
 

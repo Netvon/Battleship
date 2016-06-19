@@ -43,11 +43,13 @@ export default class TitleScreenViewModel extends ViewModel {
             let val = input.val();
 
             this.api.isValidToken(val)
-                .then(() => this.api.token = val)
+                .then(() => {
+                    this.api.token = val;
+                })
                 .catch((reason, error, statusCode) => {
                     console.error(reason);
 
-                    swal({title: 'Validation Error', text: reason});
+                    swal({title: 'Token Error', text: reason});
 
                     input.val(this.api.token);
                 });

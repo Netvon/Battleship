@@ -48,13 +48,7 @@
 .#{$selector-prefix}hero {
   @include ocean-bg;
 
-  @media screen and (min-width: $mobile-l) {
-    animation: fadeIn 2s ease-in;
-  }
-
-  @media screen and (max-width: $mobile-l) {
-    animation: fadeIn 1s ease-in;
-  }
+  animation: fadeIn 2s ease-in;
 
   & > &-title {
     margin: 0;
@@ -129,6 +123,10 @@
       height: 85vh;
       margin-top: -5vh;
     }
+
+    @media screen and (min-width: $mobile-l) {
+      animation: flyIn .5s ease-out;
+    }
   }
 
   &-title {
@@ -175,7 +173,7 @@
     flex-grow: 1;
 
     & > li {
-      border-bottom: 2px solid rgb(255, 255, 255);
+      border-bottom: .2em dotted rgb(255, 255, 255);
 
       &:nth-child(even) {
         background-color: rgba(255, 255, 255, 0.24);
@@ -223,7 +221,7 @@
       }
 
       &[data-state=queue] &-go,
-      &[data-state=done] &-go{
+      &[data-state=done] &-go {
         display: none;
       }
     }
