@@ -2304,7 +2304,7 @@ class LobbyGameViewModel extends _ViewModel2.default {
 
     draw() {
         let template = `<li id="lobby-g-${ this.userGame.id }" data-state="${ this.userGame.state }" title="Playing against '${ this.userGame.enemyName }'">
-<ul role="button" class="bs-lobby-list-item" data-gid="${ this.userGame.id }">
+<ul role="button" class="bs-lobby-list-item" data-gid="${ this.userGame.id }" data-state="${ this.userGame.state }">
     <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${ this.userGame.id }</small></li>
     <li class="bs-lobby-list-item-vs" id="lobby-g-${ this.userGame.id }-vs">${ this.userGame.enemyName }</li>
@@ -2324,9 +2324,13 @@ class LobbyGameViewModel extends _ViewModel2.default {
 
             this.loading = true;
 
+            let el = $(`#lobby-g-${ this.userGame.id }`);
+
+            el.find('bs-lobby-list-item').attr('data-state', this.userGame.state);
+
             if (this.userGame.state === _BattleshipConst.STATE.QUEUE) {
                 $(`#lobby-g-${ this.userGame.id }-vs`).text('Searching for opponent ...');
-                $(`#lobby-g-${ this.userGame.id }`).attr('title', 'Searching for opponent ...');
+                el.attr('title', 'Searching for opponent ...');
             }
 
             // console.log(this.userGame.state);
@@ -2341,11 +2345,11 @@ class LobbyGameViewModel extends _ViewModel2.default {
                 }).catch(this.onError.bind(this));
             } else if (this.userGame.state === _BattleshipConst.STATE.SETUP && this.userGame.enemyName === undefined) {
                 _UserGame2.default.get(this.api, this.userGame.id).then(userGame => {
-                    let main = $(`#lobby-g-${ userGame.id }`);
                     $(`#lobby-g-${ userGame.id }-state`).text(userGame.state);
                     $(`#lobby-g-${ userGame.id }-vs`).text(userGame.enemyName);
-                    main.attr('title', `Playing against '${ userGame.enemyName }'`);
-                    main.attr('data-state', userGame.state);
+                    el.attr('title', `Playing against '${ userGame.enemyName }'`);
+                    el.attr('data-state', userGame.state);
+                    el.find('.bs-lobby-list-item-go').show();
 
                     this.loading = false;
                 }).catch(this.onError.bind(this));
@@ -2358,14 +2362,8 @@ class LobbyGameViewModel extends _ViewModel2.default {
 
         this.userGame.onUpdate(this.api, () => {
 
-            console.log(`[${ this.userGame.id }] I got updated`);
-            console.log(this.userGame.state);
-
-            // let main = $(`#lobby-g-${this.userGame.id}`);
-            // $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
-            // $(`#lobby-g-${this.userGame.id}-vs`).text(this.userGame.enemyName);
-            // main.attr('title', `Playing against '${this.userGame.enemyName}'`);
-            // main.attr('data-state', this.userGame.state);
+            // console.log(`[${this.userGame.id}] I got updated`);
+            // console.log(this.userGame.state);
 
             checkStarted();
         });
@@ -2387,30 +2385,6 @@ class LobbyGameViewModel extends _ViewModel2.default {
                 item.hide();
             }
         }
-    }
-
-    showGames() {
-        // console.log(this);
-
-        // $('.menu-hero').on('click', '#resume-game', function () {
-        //     $('.bs-hero-menu').hide();
-        //
-        //     Hu.queryAppend('header',
-        //         `<table class="games-table">
-        //         <th>game</th>
-        //         <th>state</th>
-        //     </table>`
-        //     );
-        //
-        //     UserViewModel.getGames(battleshipApi, games => {
-        //         games.forEach(g => {
-        //             Hu.queryAppend('header > .games-table', `<tr id="g-${g.id}"><td>${g.id}</td><td>${g.state}</td></tr>`);
-        //             $(`#g-${g.id}`).on('click', this, function () {
-        //                 console.log(`Starting g-${g.id}...`);
-        //             });
-        //         });
-        //     });
-        // });
     }
 }
 exports.default = LobbyGameViewModel;
@@ -2499,7 +2473,7 @@ class LobbyViewModel extends _ViewModel2.default {
         $('#lobby-remove-games').on('click', () => {
             swal({
                 title: "Are you sure?",
-                text: "This will remove all your games",
+                text: "This will remove all your Battles, including the one currently active.",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Remove them!",
@@ -2632,14 +2606,24 @@ var _AudioManager = require("../util/AudioManager");
 
 var _AudioManager2 = _interopRequireDefault(_AudioManager);
 
+var _BattleshipConst = require("../util/BattleshipConst");
+
+var _Persistence = require("../util/Persistence");
+
+var _Persistence2 = _interopRequireDefault(_Persistence);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class MainViewModel extends _ViewModel2.default {
     constructor(api) {
-        super(api, 'vm-main');
+        super(api, 'vm-mains');
 
         if (!_Session2.default.hasKey('last-page')) {
             _Session2.default.set('last-page', '1');
+        }
+
+        if (!_Persistence2.default.hasKey('play-music')) {
+            _Persistence2.default.set('play-music', 'true');
         }
 
         _LobbyViewModel2.default.prototype.onError = this.handleError;
@@ -2655,29 +2639,46 @@ class MainViewModel extends _ViewModel2.default {
         this.lobbyVM = new _LobbyViewModel2.default(this.api);
         // this.gameBoardVM = new PlayerGameboardViewModel(this.api);
 
-        this.playingBGM = new _Observable2.default(true);
+        this.playingBGM = new _Observable2.default();
 
         this.views = {
             1: this.titleVM,
-            2: this.lobbyVM
+            2: this.lobbyVM //,
             // 3: this.gameBoardVM
         };
 
         this.currentView = new _Observable2.default(null);
+
+        this.observe();
+        this.playingBGM.$value = _Persistence2.default.get('play-music');
+    }
+
+    observe() {
+        this.playingBGM.addObserver(args => {
+            _Persistence2.default.set('play-music', args.newValue);
+        });
     }
 
     draw() {
-
-        _AudioManager2.default.load('btn1', 'audio/button-37.mp3');
-
-        _AudioManager2.default.load('test2', 'audio/test2.mp3');
-        _AudioManager2.default.play('test2');
-
         let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
         this.parent.append(`<button id="mute" class="bs-button bs-button-primary" title="Mute"><i class="fa fa-volume-up"></i></button>`);
+
+        _AudioManager2.default.load('btn1', 'audio/button-37.mp3');
+
+        _AudioManager2.default.load('test2', 'audio/test2.mp3');
+
+        if (this.playingBGM.$value === 'true') {
+            _AudioManager2.default.play('test2');
+        } else {
+            let mute = $('#mute');
+
+            mute.find('.fa').removeClass('fa-volume-up');
+
+            mute.find('.fa').addClass('fa-volume-off');
+        }
 
         this.bind();
     }
@@ -2724,7 +2725,7 @@ class MainViewModel extends _ViewModel2.default {
 
         mute.click(() => {
 
-            if (this.playingBGM.$value) {
+            if (this.playingBGM.$value === 'true') {
 
                 _AudioManager2.default.pause('test2');
 
@@ -2732,7 +2733,7 @@ class MainViewModel extends _ViewModel2.default {
 
                 mute.find('.fa').addClass('fa-volume-off');
 
-                this.playingBGM.$value = false;
+                this.playingBGM.$value = 'false';
             } else {
                 _AudioManager2.default.play('test2');
 
@@ -2740,14 +2741,29 @@ class MainViewModel extends _ViewModel2.default {
 
                 mute.find('.fa').addClass('fa-volume-up');
 
-                this.playingBGM.$value = true;
+                this.playingBGM.$value = 'true';
             }
         });
 
-        this.parent.delegate('.bs-lobby-list-item', 'click', e => {
-            console.log($(e.target).attr('data-gid'));
+        this.parent.delegate(`.bs-lobby-list-item`, 'click', e => {
 
-            this.currentView.$value += 1;
+            let state = $(e.currentTarget).attr('data-state');
+
+            if (state === _BattleshipConst.STATE.QUEUE) {
+                swal({
+                    title: 'Hold on',
+                    text: "We're still looking for an opponent for this Battle",
+                    type: 'error'
+                });
+            } else if (state === _BattleshipConst.STATE.DONE) {
+                swal({
+                    title: 'Nothing to see here',
+                    text: "This Battle has already been fought",
+                    type: 'error'
+                });
+            } else {
+                this.currentView.$value += 1;
+            }
         });
 
         let playSound = () => {
@@ -2781,7 +2797,7 @@ class MainViewModel extends _ViewModel2.default {
 }
 exports.default = MainViewModel;
 
-},{"../util/AudioManager":17,"../util/Session":24,"./BSODViewModel":25,"./BSTestViewModel":26,"./LobbyGameViewModel":27,"./LobbyViewModel":28,"./Observable":30,"./PlayerGameboardViewModel":31,"./TitleScreenViewModel":32,"./ViewModel":34}],30:[function(require,module,exports){
+},{"../util/AudioManager":17,"../util/BattleshipConst":19,"../util/Persistence":23,"../util/Session":24,"./BSODViewModel":25,"./BSTestViewModel":26,"./LobbyGameViewModel":27,"./LobbyViewModel":28,"./Observable":30,"./PlayerGameboardViewModel":31,"./TitleScreenViewModel":32,"./ViewModel":34}],30:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2875,7 +2891,7 @@ class PlayerGameboardViewModel extends _ViewModel2.default {
             html += `<tr data-y="${ y }">`;
 
             for (let x = bs.CELLMIN; x <= bs.CELLMAX; x++) {
-                html += `<td data-x=${ x }" data-y="${ y }"></td>`;
+                html += `<td data-x="${ x }" data-y="${ y }"></td>`;
             }
 
             html += `</tr>`;
@@ -2903,10 +2919,74 @@ class PlayerGameboardViewModel extends _ViewModel2.default {
             //     return true;
             // },
             drop: function (event, ui) {
-                console.log(event.target);
+                let ship = event.toElement;
+                let target = event.target;
+
+                let ship_x = $(target).attr('data-x');
+                let ship_y = $(target).attr('data-y');
+                let length = $(ship).attr('data-length');
+
+                if (ship.className.includes('north')) {
+                    switch (length) {
+                        case '5':
+                            ship_y = ship_y - 2;
+                            break;
+                        case '4':
+                            ship_y = ship_y - 2;
+                            break;
+                        case '3':
+                            ship_y = ship_y - 1;
+                            break;
+                        case '2':
+                            ship_y = ship_y - 1;
+                            break;
+                        default:
+                            console.log('Placement ships: invalid length');
+                    }
+                } else {
+                    switch (length) {
+                        case '5':
+                            ship_x = ship_x - 2;
+                            break;
+                        case '4':
+                            ship_x = ship_x - 2;
+                            break;
+                        case '3':
+                            ship_x = ship_x - 1;
+                            break;
+                        case '2':
+                            ship_x = ship_x - 1;
+                            break;
+                        default:
+                            console.log('Placement ships: invalid length');
+                    }
+                }
+
+                console.log('x', ship_x, 'y', ship_y);
             }
         });
         $('.placeble-ship').draggable({ revert: 'invalid', snap: '.player-grid td', snapMode: 'outer' });
+
+        for (let i = 0; i < this.ships.$value.length; i++) {
+            let ship = this.slugify_shipname(this.ships.$value[i].name);
+
+            $('#' + ship).on('dblclick', function () {
+                let x = this;
+                if (x.className.includes('north')) {
+                    $(this).removeClass('north');
+                    $(this).addClass('west');
+                    $(this).attr('style', 'position: absolute;');
+                    $(this).attr("src", `img/ships/${ ship }-west.png`);
+                } else {
+                    $(this).removeClass('west');
+                    $(this).addClass('north');
+                    $(this).attr('style', 'position: absolute;');
+                    $(this).attr("src", `img/ships/${ ship }-north.png`);
+                }
+
+                console.log(this);
+            });
+        }
     }
 
     observe() {
@@ -2920,7 +3000,10 @@ class PlayerGameboardViewModel extends _ViewModel2.default {
             // console.log(this.ships.$value[0].name);
 
             for (let i = 0; i < this.ships.$value.length; i++) {
-                ship_template += `<img id="${ this.ships.$value[i].name }" class="placeble-ship" src="img/ships/${ this.ships.$value[i].name }.png"/>`;
+                let ship = this.slugify_shipname(this.ships.$value[i].name);
+                console.log(ship);
+
+                ship_template += `<img id="${ ship }" class="placeble-ship north" data-length="${ this.ships.$value[i].length }" src="img/ships/${ ship }-north.png"/>`;
                 console.log(this.ships.$value[i].name);
             }
 
@@ -2947,6 +3030,14 @@ class PlayerGameboardViewModel extends _ViewModel2.default {
         //
         //     console.log('ships added');
         // });
+    }
+
+    /*
+     * Replaces space with '-'
+     * Text to lower case
+     */
+    slugify_shipname(name) {
+        return name.replace(/\s+/g, '-').toLowerCase();
     }
 }
 exports.default = PlayerGameboardViewModel; /**
@@ -3012,10 +3103,12 @@ class TitleScreenViewModel extends _ViewModel2.default {
 
             let val = input.val();
 
-            this.api.isValidToken(val).then(() => this.api.token = val).catch((reason, error, statusCode) => {
+            this.api.isValidToken(val).then(() => {
+                this.api.token = val;
+            }).catch((reason, error, statusCode) => {
                 console.error(reason);
 
-                swal({ title: 'Validation Error', text: reason });
+                swal({ title: 'Token Error', text: reason });
 
                 input.val(this.api.token);
             });

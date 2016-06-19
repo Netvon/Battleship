@@ -14,6 +14,12 @@
     transform: scale(1);
     opacity: 1; } }
 
+@keyframes flyIn {
+  0% {
+    transform: translate(0, -100vh); }
+  100% {
+    transform: translate(0, 0); } }
+
 @keyframes fadeIn {
   0% {
     background-color: white; }
@@ -39,17 +45,12 @@
 .bs-hero {
   background-size: cover;
   background-image: url("../img/background.png");
-  background-position: center; }
+  background-position: center;
+  animation: fadeIn 2s ease-in; }
   @media screen and (max-width: 425px) {
     .bs-hero {
       background-blend-mode: overlay;
       background-attachment: fixed; } }
-  @media screen and (min-width: 425px) {
-    .bs-hero {
-      animation: fadeIn 2s ease-in; } }
-  @media screen and (max-width: 425px) {
-    .bs-hero {
-      animation: fadeIn 1s ease-in; } }
   .bs-hero > .bs-hero-title {
     margin: 0;
     font-size: 6em;
@@ -106,6 +107,9 @@
         width: 90vw;
         height: 85vh;
         margin-top: -5vh; } }
+    @media screen and (min-width: 425px) {
+      .bs-lobby-container {
+        animation: flyIn .5s ease-out; } }
   .bs-lobby-title {
     color: white;
     text-shadow: 0 0.05em rgba(0, 0, 0, 0.31), 0 0 0.05em rgba(0, 0, 0, 0.38);
@@ -149,7 +153,7 @@
     overflow-y: auto;
     flex-grow: 1; }
     .bs-lobby-list > li {
-      border-bottom: 2px solid white; }
+      border-bottom: 0.2em dotted white; }
       .bs-lobby-list > li:nth-child(even) {
         background-color: rgba(255, 255, 255, 0.24); }
       .bs-lobby-list > li:last-child {
@@ -178,6 +182,9 @@
         margin-left: 1em; }
       .bs-lobby-list-item-li, .bs-lobby-list-item-id {
         margin-right: 1em; }
+      .bs-lobby-list-item[data-state=queue] .bs-lobby-list-item-go,
+      .bs-lobby-list-item[data-state=done] .bs-lobby-list-item-go {
+        display: none; }
     .bs-lobby-list:empty:before {
       content: 'there are no battles :('; }
     .bs-lobby-list-loading {
