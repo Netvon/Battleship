@@ -9,6 +9,7 @@ let sass = require('gulp-sass');
 let uglify = require('gulp-uglify');
 let ghPages = require('gulp-gh-pages');
 let merge = require('merge-stream');
+let autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('es6', () => {
     browserify('./src/js/main.js')
@@ -22,6 +23,10 @@ gulp.task('es6', () => {
 gulp.task('sass', () => {
     gulp.src('./src/sass/main.scss')
         .pipe(sass().on('error', sass.logError))
+        // .pipe(autoprefixer({
+        //     browsers: ['last 4 versions'],
+        //     cascade: false
+        // }))
         //.pipe(uglify())
         .pipe(gulp.dest('./dist/css/'));
 });
