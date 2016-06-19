@@ -39,3 +39,48 @@ table.player-grid tr:last-child td:first-child {
 table.player-grid tr:last-child td:last-child {
     border-bottom-right-radius: 6px;
 }
+
+.placeble-ship {
+    cursor: move;
+}
+
+/* Center ships in gridcel */
+#aircraft-carrier.west {
+    padding: 6px 15px;
+}
+
+#aircraft-carrier.north {
+    padding: 15px 6px;
+}
+
+#battleship.west {
+    padding: 9px 16px;
+}
+
+#battleship.north {
+    padding: 11px 9px;
+}
+
+#destroyer, #submarine {
+    padding: 9px;
+}
+
+#patrol-boat.west {
+    padding: 12px 9px;
+}
+
+#patrol-boat.north {
+    padding: 9px 12px;
+}
+
+/* Rotation of ships */
+/*.north {*/
+    /*transform:rotate(90deg);*/
+    /*-ms-transform:rotate(90deg); !* IE 9 *!*/
+    /*-webkit-transform:rotate(90deg); !* Safari and Chrome *!*/
+/*}*/
+/*.west {*/
+    /*transform:rotate(0deg);*/
+    /*-ms-transform:rotate(0deg); !* IE 9 *!*/
+    /*-webkit-transform:rotate(0deg); !* Safari and Chrome *!*/
+/*}*/
