@@ -8,13 +8,19 @@ import BSODViewModel from "./BSODViewModel";
 import LobbyGameViewModel from "./LobbyGameViewModel";
 import PlayerGameboardViewModel from "./PlayerGameboardViewModel";
 import AudioManager from "../util/AudioManager";
+import {STATE} from "../util/BattleshipConst";
+import Persistence from "../util/Persistence";
 
 export default class MainViewModel extends ViewModel {
     constructor(api) {
-        super(api, 'vm-main');
+        super(api, 'vm-mains');
 
         if (!Session.hasKey('last-page')) {
             Session.set('last-page', '1');
+        }
+
+        if (!Persistence.hasKey('play-music')) {
+            Persistence.set('play-music', 'true');
         }
 
         LobbyViewModel.prototype.onError = this.handleError;
@@ -30,29 +36,48 @@ export default class MainViewModel extends ViewModel {
         this.lobbyVM = new LobbyViewModel(this.api);
         // this.gameBoardVM = new PlayerGameboardViewModel(this.api);
 
-        this.playingBGM = new Observable(true);
+        this.playingBGM = new Observable();
 
         this.views = {
             1: this.titleVM,
-            2: this.lobbyVM
+            2: this.lobbyVM//,
             // 3: this.gameBoardVM
         };
 
         this.currentView = new Observable(null);
+
+        this.observe();
+        this.playingBGM.$value = Persistence.get('play-music');
+    }
+
+    observe() {
+        this.playingBGM.addObserver(args => {
+            Persistence.set('play-music', String(args.newValue));
+        })
     }
 
     draw() {
-
-        AudioManager.load('btn1', 'audio/button-37.mp3');
-
-        AudioManager.load('test2', 'audio/test2.mp3');
-        AudioManager.play('test2');
-
         let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
         this.parent.append(`<button id="mute" class="bs-button bs-button-primary" title="Mute"><i class="fa fa-volume-up"></i></button>`);
+
+        AudioManager.load('btn1', 'audio/button-37.mp3');
+
+        AudioManager.load('test2', 'audio/test2.mp3');
+
+        if (this.playingBGM.$value == true) {
+            AudioManager.play('test2');
+        }
+        else {
+            let mute = $('#mute');
+
+            mute.find('.fa')
+                .removeClass('fa-volume-up');
+
+            mute.find('.fa').addClass('fa-volume-off');
+        }
 
         this.bind();
     }
@@ -106,7 +131,7 @@ export default class MainViewModel extends ViewModel {
 
         mute.click(() => {
 
-            if (this.playingBGM.$value) {
+            if (this.playingBGM.$value == true) {
 
                 AudioManager.pause('test2');
 
@@ -129,10 +154,29 @@ export default class MainViewModel extends ViewModel {
             }
         });
 
-        this.parent.delegate('.bs-lobby-list-item', 'click', e => {
-            console.log($(e.target).attr('data-gid'));
+        this.parent.delegate(`.bs-lobby-list-item`, 'click', e => {
 
-            this.currentView.$value += 1;
+            let state = $(e.currentTarget).attr('data-state');
+
+            if (state === STATE.QUEUE) {
+                swal({
+                    title: 'Hold on',
+                    text: "We're still looking for an opponent for this Battle",
+                    type: 'error'
+                })
+            } else if(state === STATE.DONE )
+            {
+                swal({
+                    title: 'Nothing to see here',
+                    text: "This Battle has already been fought",
+                    type: 'error'
+                })
+            }
+            else {
+                this.currentView.$value += 1;
+            }
+
+
         });
 
         let playSound = () => {

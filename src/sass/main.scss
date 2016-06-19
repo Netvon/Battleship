@@ -221,6 +221,11 @@
       &-li, &-id {
         margin-right: 1em;
       }
+
+      &[data-state=queue] &-go,
+      &[data-state=done] &-go{
+        display: none;
+      }
     }
 
     &:empty:before {

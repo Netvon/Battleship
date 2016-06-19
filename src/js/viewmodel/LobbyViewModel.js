@@ -68,7 +68,7 @@ export default class LobbyViewModel extends ViewModel {
         $('#lobby-remove-games').on('click', () => {
             swal({
                     title: "Are you sure?",
-                    text: "This will remove all your games",
+                    text: "This will remove all your Battles, including the one currently active.",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Remove them!",

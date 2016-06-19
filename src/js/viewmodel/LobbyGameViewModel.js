@@ -16,7 +16,7 @@ export default class LobbyGameViewModel extends ViewModel {
 
     draw() {
         let template = `<li id="lobby-g-${this.userGame.id}" data-state="${this.userGame.state}" title="Playing against '${this.userGame.enemyName}'">
-<ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}">
+<ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}" data-state="${this.userGame.state}">
     <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${this.userGame.id}</small></li>
     <li class="bs-lobby-list-item-vs" id="lobby-g-${this.userGame.id}-vs">${this.userGame.enemyName}</li>
@@ -36,9 +36,15 @@ export default class LobbyGameViewModel extends ViewModel {
 
             this.loading = true;
 
+            let el = $(`#lobby-g-${this.userGame.id}`);
+
+            el.find('bs-lobby-list-item')
+              .attr('data-state', this.userGame.state);
+
+
             if (this.userGame.state === STATE.QUEUE) {
                 $(`#lobby-g-${this.userGame.id}-vs`).text('Searching for opponent ...');
-                $(`#lobby-g-${this.userGame.id}`).attr('title', 'Searching for opponent ...');
+                el.attr('title', 'Searching for opponent ...');
             }
 
             // console.log(this.userGame.state);
@@ -61,11 +67,11 @@ export default class LobbyGameViewModel extends ViewModel {
             else if (this.userGame.state === STATE.SETUP && this.userGame.enemyName === undefined) {
                 UserGame.get(this.api, this.userGame.id)
                     .then(userGame => {
-                        let main = $(`#lobby-g-${userGame.id}`);
                         $(`#lobby-g-${userGame.id}-state`).text(userGame.state);
                         $(`#lobby-g-${userGame.id}-vs`).text(userGame.enemyName);
-                        main.attr('title', `Playing against '${userGame.enemyName}'`);
-                        main.attr('data-state', userGame.state);
+                        el.attr('title', `Playing against '${userGame.enemyName}'`);
+                        el.attr('data-state', userGame.state);
+                        el.find('.bs-lobby-list-item-go').show();
 
                         this.loading = false;
                     }).catch(this.onError.bind(this));
@@ -79,14 +85,8 @@ export default class LobbyGameViewModel extends ViewModel {
 
         this.userGame.onUpdate(this.api, () => {
 
-            console.log(`[${this.userGame.id}] I got updated`);
-            console.log(this.userGame.state);
-
-            // let main = $(`#lobby-g-${this.userGame.id}`);
-            // $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
-            // $(`#lobby-g-${this.userGame.id}-vs`).text(this.userGame.enemyName);
-            // main.attr('title', `Playing against '${this.userGame.enemyName}'`);
-            // main.attr('data-state', this.userGame.state);
+            // console.log(`[${this.userGame.id}] I got updated`);
+            // console.log(this.userGame.state);
 
             checkStarted();
         });
@@ -113,29 +113,5 @@ export default class LobbyGameViewModel extends ViewModel {
                 item.hide();
             }
         }
-    }
-
-    showGames() {
-        // console.log(this);
-
-        // $('.menu-hero').on('click', '#resume-game', function () {
-        //     $('.bs-hero-menu').hide();
-        //
-        //     Hu.queryAppend('header',
-        //         `<table class="games-table">
-        //         <th>game</th>
-        //         <th>state</th>
-        //     </table>`
-        //     );
-        //
-        //     UserViewModel.getGames(battleshipApi, games => {
-        //         games.forEach(g => {
-        //             Hu.queryAppend('header > .games-table', `<tr id="g-${g.id}"><td>${g.id}</td><td>${g.state}</td></tr>`);
-        //             $(`#g-${g.id}`).on('click', this, function () {
-        //                 console.log(`Starting g-${g.id}...`);
-        //             });
-        //         });
-        //     });
-        // });
     }
 }
