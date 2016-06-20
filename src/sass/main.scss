@@ -433,6 +433,86 @@
   }
 }
 
+.#{$selector-prefix}game-container {
+  display: flex;
+}
+
+.#{$selector-prefix}grid[data-player=enemy] {
+
+  height: 50vw;
+  width: 50vw;
+}
+
+.#{$selector-prefix}grid[data-player=player] {
+
+  height: 10vw;
+  width: 10vw;
+}
+
+.#{$selector-prefix}grid {
+  display: flex;
+  flex-direction: column;
+  max-width: 100vh;
+  margin: 1em;
+
+  &-row {
+    flex-grow: 1;
+    display: flex;
+
+    //& > .#{$selector-prefix}grid-cell:last-child {
+    //  border-right: .2em solid #a2a2a2;
+    //}
+    //
+    //&:last-child > .#{$selector-prefix}grid-cell {
+    //  border-bottom: .2em solid #a2a2a2;
+    //}
+
+    &:nth-child(even) > .#{$selector-prefix}grid-cell:nth-child(odd),
+    &:nth-child(odd) > .#{$selector-prefix}grid-cell:nth-child(even) {
+      background: #909090;
+    }
+  }
+
+  &-cell {
+    flex-grow: 1;
+    flex-basis: 1em;
+    background-color: #d0d0d0;
+    //border-top: .2em solid #a2a2a2;
+    //border-left: .2em solid #a2a2a2;
+
+    &-ship {
+      background: red !important;
+    }
+    
+    &-shot {
+      background: blue !important;
+    }
+
+    &-hit {
+      background: orange !important;
+    }
+
+    &[data-player='enemy']:hover, &[data-player='enemy']:active {
+      background: #ff5015 !important;
+      border-radius: 1em;
+      cursor: pointer;
+
+    }
+
+    &[data-player='enemy']:hover {
+      transform: scale(1.5, 1.5);
+      animation: pulse .5s infinite;
+
+      box-shadow: 0 0 1em rgba(0, 0, 0, 0.46);
+    }
+
+    &[data-player='enemy']:active {
+      background: #ff5015 !important;
+      transform: scale(1, 1);
+    }
+  }
+}
+
 #go-back {
   position: fixed;
   top: 1em;

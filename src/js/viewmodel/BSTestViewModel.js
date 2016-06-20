@@ -17,10 +17,10 @@ export default class BSTestViewModel extends ViewModel {
     constructor(api) {
         super(api, 'vm-bstest');
 
-        this.token = new Observable(this.api.token);
-        this.ships = new Observable();
-        this.user = new Observable();
-        this.games = new Observable();
+        this.token = new Observable('token', this.api.token);
+        this.ships = new Observable('ships');
+        this.user = new Observable('user');
+        this.games = new Observable('games');
     }
 
     onError(reason, error, statusCode) {
@@ -115,21 +115,21 @@ export default class BSTestViewModel extends ViewModel {
     observe() {
         this.api.onTokenChanged(() => this.load());
 
-        this.token.addObserver(args => this.api.token = args.newValue);
-        this.user.addObserver(args => args.newValue.displayOn('#user-info'));
-        this.ships.addObserver(args => {
+        this.token.addObserver(this.name, args => this.api.token = args.newValue);
+        this.user.addObserver(this.name, args => args.newValue.displayOn('#user-info'));
+        this.ships.addObserver(this.name, args => {
             let shipList = $('#ship-list');
             shipList.empty();
 
             args.newValue.forEach(ship => shipList.append(`<li>${ship.name}</li>`));
         });
-        this.games.addObserver(args => {
+        this.games.addObserver(this.name, args => {
             let gameList = $('#all-games');
             gameList.empty();
 
             args.newValue.forEach(game => {
 
-                game.onUpdate(this.api, () => {
+                game.onUpdate(this.name, this.api, () => {
                     $(`#g-${game.id}-state`).text(game.state);
                 });
 
@@ -156,9 +156,9 @@ export default class BSTestViewModel extends ViewModel {
             });
         });
 
-        this.api.onUpdate(console.dir);
-        this.api.onTurn(console.log);
-        this.api.onShot(console.log);
+        this.api.onUpdate(this.name, console.dir);
+        this.api.onTurn(this.name, console.log);
+        this.api.onShot(this.name, console.log);
 
     }
 

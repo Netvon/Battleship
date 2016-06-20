@@ -23,10 +23,7 @@ export default class ViewModel {
         this.load();
     }
 
-    destroy() {
-        $(`#${this.name}`).remove();
-    }
-
+    destroy() {}
     load() {}
     draw() {}
     bind() {}
