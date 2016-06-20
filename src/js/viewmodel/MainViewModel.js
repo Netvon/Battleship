@@ -32,28 +32,29 @@ export default class MainViewModel extends ViewModel {
         GameViewModel.prototype.onError = this.handleError;
 
         this.bsTestVM = new BSTestViewModel(this.api);
-        this.bsTestVisible = new Observable(false);
+        this.bsTestVisible = new Observable('bsTestVisible', false);
 
-        this.titleVM = new TitleScreenViewModel(this.api);
-        this.lobbyVM = new LobbyViewModel(this.api);
-        this.gameBoardVM = null;
+        // this.titleVM = new TitleScreenViewModel(this.api);
+        // this.lobbyVM = new LobbyViewModel(this.api);
+        // this.gameBoardVM = null;
 
-        this.playingBGM = new Observable();
+        this.playingBGM = new Observable('playingBGM');
 
         this.views = {
-            1: this.titleVM,
-            2: this.lobbyVM,
-            3: this.gameBoardVM
+            1: () => new TitleScreenViewModel(this.api),
+            2: () => new LobbyViewModel(this.api),
+            3: null
         };
 
-        this.currentView = new Observable(null);
+        this.currentView = new Observable('currentView', null);
+        this.currentViewModel = null;
 
         this.observe();
         this.playingBGM.$value = Persistence.get('play-music');
     }
 
     observe() {
-        this.playingBGM.addObserver(args => {
+        this.playingBGM.addObserver(this.name, args => {
             Persistence.set('play-music', args.newValue);
         })
     }
@@ -86,10 +87,12 @@ export default class MainViewModel extends ViewModel {
 
     bind() {
 
-        this.currentView.addObserver(args => {
-            let ov = this.views[args.oldValue];
-            if (ov !== undefined && ov != null)
+        this.currentView.addObserver(this.name, args => {
+            let ov = this.currentViewModel;
+            if (ov !== undefined && ov != null) {
+                ov.destroy();
                 $(`#${ov.name}`).remove();
+            }
 
             let nv = this.views[args.newValue];
 
@@ -98,7 +101,8 @@ export default class MainViewModel extends ViewModel {
                 return;
             }
 
-            nv.addTo();
+            this.currentViewModel = nv();
+            this.currentViewModel.addTo();
 
             Session.set('last-page', `${args.newValue}`);
 
@@ -116,7 +120,7 @@ export default class MainViewModel extends ViewModel {
 
         let btnDebugToggle = $('#debug-toggle');
 
-        this.bsTestVisible.addObserver(() => {
+        this.bsTestVisible.addObserver(this.name, () => {
             if (this.bsTestVisible.$value)
                 btnDebugToggle.text('Hide Test View');
             else
@@ -167,7 +171,7 @@ export default class MainViewModel extends ViewModel {
             let id = $(e.currentTarget).attr('data-gid');
             let state = $(e.currentTarget).attr('data-state');
 
-            console.log(state);
+            // console.log(state);
 
             if (state === STATE.QUEUE) {
                 swal({
@@ -176,11 +180,11 @@ export default class MainViewModel extends ViewModel {
                     type: 'error'
                 })
             } else if (state === STATE.SETUP) {
-                this.views[3] = new GameboardViewModel(this.api, id);
+                this.views[3] = () => new GameboardViewModel(this.api, id);
                 this.currentView.$value++;
 
             } else if (state === STATE.STARTED) {
-                this.views[3] = new GameViewModel(this.api, id);
+                this.views[3] = () => new GameViewModel(this.api, id);
                 this.currentView.$value++;
 
             } else if (state === STATE.DONE) {

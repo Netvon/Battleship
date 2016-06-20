@@ -55,7 +55,7 @@ export default class BaseGame extends JsonBase {
      * @param value
      */
     set state(value) {
-        if(!BaseGame.isValidState(value))
+        if (!BaseGame.isValidState(value))
             throw new Error(`The state: '${value}' is not a valid game state`);
 
         this._state = value;
@@ -80,7 +80,7 @@ export default class BaseGame extends JsonBase {
      *  - setup
      *  - started
      *  - done
-     *  
+     *
      * @param state {string}
      * @returns {boolean}
      */
@@ -99,11 +99,12 @@ export default class BaseGame extends JsonBase {
     /**
      *
      * @param api {BattleshipApi}
+     * @param id
      * @param callback {function}
      */
-    onUpdate(api, callback) {
-        api.onUpdate(update => {
-            if(update.gameId === this.id) {
+    onUpdate(id, api, callback) {
+        api.onUpdate(id, update => {
+            if (update.gameId === this.id) {
                 this.state = update.state;
                 callback(update);
             }
@@ -113,11 +114,12 @@ export default class BaseGame extends JsonBase {
     /**
      *
      * @param api {BattleshipApi}
+     * @param id {string}
      * @param callback {function}
      */
-    onTurn(api, callback) {
-        api.onTurn(turn => {
-            if(turn.gameId === this.id)
+    onTurn(id, api, callback) {
+        api.onTurn(id, turn => {
+            if (turn.gameId === this.id)
                 callback(turn);
         })
     }
@@ -125,11 +127,12 @@ export default class BaseGame extends JsonBase {
     /**
      *
      * @param api {BattleshipApi}
+     * @param id {string}
      * @param callback {function}
      */
-    onShot(api, callback) {
-        api.onShot(shot => {
-            if(shot.gameId === this.id)
+    onShot(id, api, callback) {
+        api.onShot(id, shot => {
+            if (shot.gameId === this.id)
                 callback(shot);
         })
     }

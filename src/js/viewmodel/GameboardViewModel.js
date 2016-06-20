@@ -19,7 +19,7 @@ export default class GameboardViewModel extends ViewModel {
         this.api = api;
         this.id = id;
 
-        this.ships = new Observable();
+        this.ships = new Observable('ships');
         this.gameboard = new Gameboard();
 
         this.observe();

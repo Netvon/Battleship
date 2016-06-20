@@ -6,10 +6,12 @@ export default class TitleScreenViewModel extends ViewModel {
     constructor(api) {
         super(api, 'vm-title');
 
+        console.log('hallo');
+
         // this.bsTestVM = new BSTestViewModel(this.api);
         // this.bsTestVisible = new Observable(false);
 
-        this.user = new Observable(null);
+        this.user = new Observable('user', null);
     }
 
     load() {
@@ -35,6 +37,11 @@ export default class TitleScreenViewModel extends ViewModel {
         this.bind();
     }
 
+    destroy() {
+        this.api.removeOnTokenChanged(this.name);
+        this.user.removeObserver(this.name);
+    }
+
     bind() {
 
         let input = $('#title-input-token');
@@ -55,9 +62,9 @@ export default class TitleScreenViewModel extends ViewModel {
                 });
         });
 
-        this.api.onTokenChanged(() => this.load());
+        this.api.onTokenChanged(this.name, () => this.load());
 
-        this.user.addObserver(({oldValue, newValue}) => {
+        this.user.addObserver(this.name, ({oldValue, newValue}) => {
             $('#lblWelcomeMsg').text(`Ahoy, Captain ${newValue.name}!`);
         });
     }

@@ -29,6 +29,11 @@ export default class LobbyGameViewModel extends ViewModel {
         this.parent.append(template);
         this.observe();
     }
+    
+    destroy() {
+        this.api.removeOn(this.name, 'update');
+        this.api.removeOn(this.name, 'turn');
+    }
 
     observe() {
 
@@ -83,7 +88,15 @@ export default class LobbyGameViewModel extends ViewModel {
 
         checkStarted();
 
-        this.userGame.onUpdate(this.api, () => {
+        this.userGame.onUpdate(this.name, this.api, () => {
+
+            // console.log(`[${this.userGame.id}] I got updated`);
+            // console.log(this.userGame.state);
+
+            checkStarted();
+        });
+
+        this.userGame.onTurn(this.name, this.api, () => {
 
             // console.log(`[${this.userGame.id}] I got updated`);
             // console.log(this.userGame.state);
