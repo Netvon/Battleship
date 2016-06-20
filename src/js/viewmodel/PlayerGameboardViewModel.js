@@ -3,6 +3,7 @@
  */
 import ViewModel from "./ViewModel";
 import * as bs from "../util/BattleshipConst";
+import SetupGame from "../model/games/SetupGame";
 import Ship from "../model/ships/Ship";
 import Cell from "../model/Cell";
 import Gameboard from "../model/board/Gameboard";
@@ -12,11 +13,13 @@ import PlayerGameboard from '../model/board/PlayerGameboard';
 
 export default class PlayerGameboardViewModel extends ViewModel {
 
-    constructor(api) {
+    constructor(api, id) {
         super(api, 'vm-playergameboard');
 
-        this.ships = new Observable();
+        this.api = api;
+        this.id = id;
 
+        this.ships = new Observable();
         this.gameboard = new Gameboard();
 
         this.observe();
@@ -62,6 +65,7 @@ export default class PlayerGameboardViewModel extends ViewModel {
         html += `</table>
             </div>
             <div id="placeable-ships"></div>
+            <button id="submit-button" class="hero-button">Submit gameboard</button>
         </div>`;
 
         this.parent.append(html);
@@ -153,6 +157,12 @@ export default class PlayerGameboardViewModel extends ViewModel {
                 }
             })
         }
+
+        $('#submit-button').on('click', () => {
+            if (this.gameboard.ships.length == bs.SHIPMAX) {
+                SetupGame.submitGameboard(this.api, this.gameboard, this.id);
+            }
+        })
     }
 
     placeShip(name, x, y, orientation) {
@@ -162,15 +172,12 @@ export default class PlayerGameboardViewModel extends ViewModel {
             let ship = this.gameboard.ships.find(s => s.name == name);
             let indexShip = this.gameboard.ships.indexOf(ship);
             let removedItem = this.gameboard.ships.splice(indexShip, 1);
-
-            console.log(removedItem);
         }
 
         try {
             let cell = new Cell(parseInt(x), parseInt(y));
             this.gameboard.placeShip(ship, cell, orientation);
         } catch(e) {
-            // if (e instanceof RangeError)
             this.resetPlacement(name);
         }
 
