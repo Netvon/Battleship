@@ -20,15 +20,15 @@ import MainViewModel from "./viewmodel/MainViewModel";
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
 
-    let titleVM = new MainViewModel(battleshipApi);
-    titleVM.addTo('body');
+    // let titleVM = new MainViewModel(battleshipApi);
+    // titleVM.addTo('body');
 
     // var battleshipApi = new BattleshipApi(token);
     //
     // UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
     //
-    // let playerGameboardVM = new PlayerGameboardViewModel();
-    // playerGameboardVM.addTo('body');
+    let playerGameboardVM = new PlayerGameboardViewModel();
+    playerGameboardVM.addTo('body');
     
     // userGameViewModel.showGames();
 

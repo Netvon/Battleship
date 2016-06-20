@@ -40,24 +40,25 @@ table.player-grid tr:last-child td:last-child {
     border-bottom-right-radius: 6px;
 }
 
-.placeble-ship {
+.placeable-ship {
     cursor: move;
+    position: absolute;
 }
 
 /* Center ships in gridcel */
-#aircraft-carrier.west {
+#aircraft-carrier.horizontal {
     padding: 6px 15px;
 }
 
-#aircraft-carrier.north {
+#aircraft-carrier.vertical {
     padding: 15px 6px;
 }
 
-#battleship.west {
+#battleship.horizontal {
     padding: 9px 16px;
 }
 
-#battleship.north {
+#battleship.vertical {
     padding: 11px 9px;
 }
 
@@ -65,11 +66,11 @@ table.player-grid tr:last-child td:last-child {
     padding: 9px;
 }
 
-#patrol-boat.west {
+#patrol-boat.horizontal {
     padding: 12px 9px;
 }
 
-#patrol-boat.north {
+#patrol-boat.vertical {
     padding: 9px 12px;
 }
 

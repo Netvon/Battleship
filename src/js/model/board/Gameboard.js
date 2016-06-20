@@ -102,11 +102,4 @@ export default class Gameboard extends JsonBase {
 
         return true;
     }
-    
-    drawGameboard() {
-        $('.bs-hero-title').hide();
-        $('.bs-hero-menu').hide();
-
-        
-    }
 }
