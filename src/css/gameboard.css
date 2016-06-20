@@ -41,8 +41,11 @@ table.player-grid tr:last-child td:last-child {
 }
 
 .placeable-ship {
-    cursor: move;
     position: absolute;
+}
+
+.draggable-ship {
+    cursor: move;
 }
 
 /* Center ships in gridcel */
