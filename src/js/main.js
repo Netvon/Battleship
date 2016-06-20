@@ -6,6 +6,8 @@ import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/LobbyGameViewModel";
 import MainViewModel from "./viewmodel/MainViewModel";
 import AudioManager from "./util/AudioManager";
+import Ship from "./model/ships/Ship";
+import Gameboard from "./model/board/Gameboard";
 
 (function () {
 
@@ -35,7 +37,7 @@ import AudioManager from "./util/AudioManager";
 
     // SetupGame.deleteAll(battleshipApi, e => {
     //
-    //     Ship.getAll(battleshipApi, ships => {
+    //     Ship.getAll(battleshipApi).then(ships => {
     //
     //         allShips = ships;
     //
@@ -48,11 +50,13 @@ import AudioManager from "./util/AudioManager";
     //             });
     //
     //             let gameboard = new Gameboard();
-    //             gameboard.placeShip(allShips[0], new Cell(1, 1), 'vertical');
-    //             gameboard.placeShip(allShips[1], new Cell(2, 1), 'vertical');
-    //             gameboard.placeShip(allShips[2], new Cell(3, 1), 'vertical');
-    //             gameboard.placeShip(allShips[3], new Cell(4, 1), 'vertical');
-    //             gameboard.placeShip(allShips[4], new Cell(5, 1), 'vertical');
+    //             gameboard.placeShip(ships[3], new Cell('a', 1), 'horizontal');
+    //             gameboard.placeShip(ships[2], new Cell('b', 1), 'vertical');
+    //
+    //         console.log(gameboard);
+                // gameboard.placeShip(ships[2], new Cell(3, 1), 'vertical');
+                // gameboard.placeShip(ships[3], new Cell(4, 1), 'vertical');
+                // gameboard.placeShip(ships[4], new Cell(5, 1), 'vertical');
     //
     //             game.submitGameboard(battleshipApi, gameboard, data => {
     //                 console.log("Submitted Gameboard");

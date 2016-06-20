@@ -7,6 +7,7 @@ import Session from "../util/Session";
 import BSODViewModel from "./BSODViewModel";
 import LobbyGameViewModel from "./LobbyGameViewModel";
 import GameboardViewModel from "./GameboardViewModel";
+import GameViewModel from "./GameViewModel";
 import AudioManager from "../util/AudioManager";
 import {STATE} from "../util/BattleshipConst";
 import Persistence from "../util/Persistence";
@@ -28,6 +29,7 @@ export default class MainViewModel extends ViewModel {
         LobbyGameViewModel.prototype.onError = this.handleError;
         BSTestViewModel.prototype.onError = this.handleError;
         GameboardViewModel.prototype.onError = this.handleError;
+        GameViewModel.prototype.onError = this.handleError;
 
         this.bsTestVM = new BSTestViewModel(this.api);
         this.bsTestVisible = new Observable(false);
@@ -90,6 +92,12 @@ export default class MainViewModel extends ViewModel {
                 $(`#${ov.name}`).remove();
 
             let nv = this.views[args.newValue];
+
+            if (nv === undefined || nv === null) {
+                this.currentView.$value--;
+                return;
+            }
+
             nv.addTo();
 
             Session.set('last-page', `${args.newValue}`);
@@ -159,6 +167,8 @@ export default class MainViewModel extends ViewModel {
             let id = $(e.currentTarget).attr('data-gid');
             let state = $(e.currentTarget).attr('data-state');
 
+            console.log(state);
+
             if (state === STATE.QUEUE) {
                 swal({
                     title: 'Hold on',
@@ -169,8 +179,11 @@ export default class MainViewModel extends ViewModel {
                 this.views[3] = new GameboardViewModel(this.api, id);
                 this.currentView.$value++;
 
-            } else if(state === STATE.DONE )
-            {
+            } else if (state === STATE.STARTED) {
+                this.views[3] = new GameViewModel(this.api, id);
+                this.currentView.$value++;
+
+            } else if (state === STATE.DONE) {
                 swal({
                     title: 'Nothing to see here',
                     text: "This Battle has already been fought",

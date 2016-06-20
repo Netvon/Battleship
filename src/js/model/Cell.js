@@ -20,10 +20,10 @@ export default class Cell extends JsonBase {
         // console.log(`{x: ${this.x}, y: ${this.y}}`);
 
         if (this.x < bs.CELLMIN || this.x > bs.CELLMAX)
-            throw new RangeError(`The X coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX}`);
+            throw new RangeError(`The X coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX} is ${x}`);
 
         if (this.y < bs.CELLMIN || this.y > bs.CELLMAX)
-            throw new RangeError(`The Y coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX}`);
+            throw new RangeError(`The Y coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX} is ${y}`);
     }
 
     /**
