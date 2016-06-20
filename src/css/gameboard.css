@@ -40,6 +40,13 @@ table.player-grid tr:last-child td:last-child {
     border-bottom-right-radius: 6px;
 }
 
+#placeable-ships {
+    border: 1px solid;
+
+    width: 40%;
+    height: 250px;
+}
+
 .placeable-ship {
     cursor: move;
     position: absolute;
@@ -52,6 +59,7 @@ table.player-grid tr:last-child td:last-child {
 
 #aircraft-carrier.vertical {
     padding: 15px 6px;
+    left: 500px;
 }
 
 #battleship.horizontal {
@@ -60,18 +68,37 @@ table.player-grid tr:last-child td:last-child {
 
 #battleship.vertical {
     padding: 11px 9px;
+    left: 600px;
 }
 
 #destroyer, #submarine {
     padding: 9px;
 }
 
+#destroyer.vertical {
+    left: 700px;
+}
+
+#destroyer.horizontal {
+    left: 650px;
+}
+
+#submarine.vertical {
+    left: 800px;
+}
+
+#submarine.horizontal {
+    left: 750px;
+}
+
 #patrol-boat.horizontal {
     padding: 12px 9px;
+    left: 875px;
 }
 
 #patrol-boat.vertical {
     padding: 9px 12px;
+    left: 900px;
 }
 
 /* Rotation of ships */
