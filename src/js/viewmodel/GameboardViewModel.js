@@ -25,10 +25,6 @@ export default class GameboardViewModel extends ViewModel {
         this.observe();
     }
 
-    load() {
-
-    }
-
     draw() {
         let html = `<div class="bs-fill-page" id=${this.name}>`;
         let alphabet = "ABCDEFGHIJ".split("");
@@ -74,7 +70,7 @@ export default class GameboardViewModel extends ViewModel {
     
     bind() {
         $('.player-grid td').droppable( {
-            accept: '.placeable-ship',
+            accept: '.draggable-ship',
             drop: (event, ui) => {
                 let ship = event.toElement;
                 let target = event.target;
@@ -88,32 +84,16 @@ export default class GameboardViewModel extends ViewModel {
                     orientation = bs.VERTICAL;
                     switch (length) {
                         case '5':
-                            if (ship_y <= 1) {
-                                ship_y = 1;
-                            } else {
-                                ship_y = ship_y - 2;
-                            }
+                            ship_y = ship_y - 2;
                             break;
                         case '4':
-                            if (ship_y <= 1) {
-                                ship_y = 1;
-                            } else {
-                                ship_y = ship_y - 2;
-                            }
+                            ship_y = ship_y - 2;
                             break;
                         case '3':
-                            if (ship_y <= 1) {
-                                ship_y = 1;
-                            } else {
-                                ship_y = ship_y - 1;
-                            }
+                            ship_y = ship_y - 1;
                             break;
                         case '2':
-                            if (ship_y <= 1) {
-                                ship_y = 1;
-                            } else {
-                                ship_y = ship_y - 1;
-                            }
+                            ship_y = ship_y - 1;
                             break;
                         default:
                             console.log('Placement ships: invalid length');
@@ -122,32 +102,16 @@ export default class GameboardViewModel extends ViewModel {
                     orientation = bs.HORIZONTAL;
                     switch (length) {
                         case '5':
-                            if (ship_x <= 1) {
-                                ship_x = 1;
-                            } else {
-                                ship_x = ship_x - 2;
-                            }
+                            ship_x = ship_x - 2;
                             break;
                         case '4':
-                            if (ship_x <= 1) {
-                                ship_x = 1;
-                            } else {
-                                ship_x = ship_x - 2;
-                            }
+                            ship_x = ship_x - 2;
                             break;
                         case '3':
-                            if (ship_x <= 1) {
-                                ship_x = 1;
-                            } else {
-                                ship_x = ship_x - 1;
-                            }
+                            ship_x = ship_x - 1;
                             break;
                         case '2':
-                            if (ship_x <= 1) {
-                                ship_x = 1;
-                            } else {
-                                ship_x = ship_x - 1;
-                            }
+                            ship_x = ship_x - 1;
                             break;
                         default:
                             console.log('Placement ships: invalid length');
@@ -155,10 +119,9 @@ export default class GameboardViewModel extends ViewModel {
                 }
 
                 this.placeShip($(ship).attr('data-name'), ship_x, ship_y, orientation);
-                console.log('x', ship_x, 'y', ship_y);
             }
         });
-        $('.placeable-ship').draggable({revert: 'invalid', snap: '.player-grid td', snapMode: 'outer'});
+        $('.draggable-ship').draggable({revert: 'invalid', snap: '.player-grid td', snapMode: 'outer'});
 
         for (let i = 0; i < this.ships.$value.length; i++) {
             let ship = this.slugify_shipname(this.ships.$value[i].name);
@@ -180,7 +143,7 @@ export default class GameboardViewModel extends ViewModel {
         }
 
         $('#submit-button').on('click', () => {
-            if (this.gameboard.ships.length == bs.SHIPMAX) {
+            if (this.gameboard.isValid) {
                 SetupGame.submitGameboard(this.api, this.gameboard, this.id);
             } else {
                 swal('Please place all your ships!');
@@ -190,69 +153,27 @@ export default class GameboardViewModel extends ViewModel {
 
     placeShip(name, x, y, orientation) {
         let ship = this.ships.$value.find(s => s.name == name);
+        let ship_x = parseInt(x);
+        let ship_y = parseInt(y);
 
-        if (this.gameboard.ships.find(s => s.name == name)){
-            let indexShip = this.gameboard.ships.indexOf(ship);
-            this.gameboard.ships.splice(indexShip, 1);
+        if (ship_x < bs.CELLMIN || ship_x > bs.CELLMAX ||
+            ship_y < bs.CELLMIN || ship_y > bs.CELLMAX) {
+            return this.resetPlacement(ship);
         }
 
-        try {
-            let cell = new Cell(parseInt(x), parseInt(y));
-            if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
-
-                this.gameboard.placeShip(ship, cell, orientation);
-
-                let valid = this.gameboard.isValid;
-                console.log(valid, 'ships count:', this.gameboard.ships.length);
-            } else {
-                this.resetPlacement();
-            }
-        } catch(e) {
-            this.resetPlacement();
-        }
-
-
-    }
-
-    canPlaceShip(name, x, y, orientation) {
-        let ship = this.ships.$value.find(s => s.name == name);
-
-        // if (this.gameboard.ships.find(s => s.name == name)){
-        //     let ship = this.gameboard.ships.find(s => s.name == name);
-        //     let indexShip = this.gameboard.ships.indexOf(ship);
-        //     let removedItem = this.gameboard.ships.splice(indexShip, 1);
-        // }
-
-        try {
-            let cell = new Cell(parseInt(x), parseInt(y));
-            return this.gameboard.canPlaceShip(ship, cell, orientation);
-        } catch(e) {
-            this.resetPlacement(name);
+        let cell = new Cell(ship_x, ship_y);
+        if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
+            this.gameboard.placeShip(ship, cell, orientation);
+            $('#' + this.slugify_shipname(ship.name)).removeClass('draggable-ship ui-draggable ui-draggable-handle').off('dblclick');
+        } else {
+            this.resetPlacement(ship);
         }
     }
 
-    resetPlacement() {
-
-        for (let i = 0; i < this.gameboard.ships.length; i++) {
-            for (let j = 0; j < this.ships.$value.length; j++) {
-                if (this.gameboard.ships[j].id != this.ships.$value[i].id) {
-                    let shipName = this.gameboard.ships[j].name;
-                    console.log(shipName);
-                    $('#' + this.slugify_shipname(shipName)).attr('style', 'position: absolute;');
-                }
-            }
+    resetPlacement(ship) {
+        if (ship != null) {
+            $('#' + this.slugify_shipname(ship.name)).attr('style', 'position: absolute;');
         }
-
-        console.log(this.gameboard.ships);
-
-        // console.log(this.gameboard.ships);
-        // let x = this.ships.$value.filter(notPlacedShips => {
-        //     return !this.gameboard.ships.includes(s => s.id == notPlacedShips.id);
-        // });
-
-        // console.log(x);
-
-
     }
 
     observe() {
@@ -265,27 +186,13 @@ export default class GameboardViewModel extends ViewModel {
                 for (let i = 0; i < this.ships.$value.length; i++) {
                     let ship = this.slugify_shipname(this.ships.$value[i].name);
 
-                    ship_template += `<img id="${ship}" class="placeable-ship vertical" data-length="${this.ships.$value[i].length}" data-name="${this.ships.$value[i].name}" src="img/ships/${ship}-vertical.png"/>`;
+                    ship_template += `<img id="${ship}" class="draggable-ship placeable-ship vertical" data-length="${this.ships.$value[i].length}" data-name="${this.ships.$value[i].name}" src="img/ships/${ship}-vertical.png"/>`;
                 }
 
                 $('#placeable-ships').append(ship_template);
 
                 this.bind();
             });
-
-        // this.ships.addObserver(args => {
-        //     console.log(args.newValue);
-        //
-        //     let ship_template = '';
-        //
-        //     for (let i = 1; i < this.ships.length; i++) {
-        //         ship_template += '<img id=" + this.ships[i].name + " src="../img/ships/' + this.ships[i].name + '.png"/>';
-        //     }
-        //
-        //     $('.game-board').append(ship_template);
-        //
-        //     console.log('ships added');
-        // });
     }
 
     /*

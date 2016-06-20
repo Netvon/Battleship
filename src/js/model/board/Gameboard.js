@@ -42,7 +42,12 @@ export default class Gameboard extends JsonBase {
      * @returns {boolean}
      */
     get isValid() {
+        let shipMax = bs.SHIPMAX;
         let max = bs.CELLMAX;
+
+        if (this.ships.length != shipMax) {
+            return false;
+        }
 
         for (let ship of this.ships) {
             let x = ship.x;
