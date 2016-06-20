@@ -93,7 +93,8 @@ export default class Gameboard extends JsonBase {
 
         let shipBounds = ship.bounds(cell, orientation);
 
-        if (shipBounds.xmax > bs.CELLMAX || shipBounds.ymax > bs.CELLMAX)
+        if (shipBounds.xmax > bs.CELLMAX || shipBounds.xmin < bs.CELLMIN ||
+            shipBounds.ymax > bs.CELLMAX || shipBounds.ymin < bs.CELLMIN)
             return false;
 
         // console.log(this.ships);
@@ -101,6 +102,9 @@ export default class Gameboard extends JsonBase {
         for (let placedShip of this.ships) {
 
             let pShipBounds = placedShip.bounds();
+
+            console.log('Placed ship: ', pShipBounds);
+            console.log('Ship bounds: ', shipBounds);
 
             if (!(pShipBounds.xmin > shipBounds.xmax ||
                 pShipBounds.xmax < shipBounds.xmin ||

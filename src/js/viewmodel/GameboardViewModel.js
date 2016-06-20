@@ -2,6 +2,7 @@
  * Created by Sander on 16-06-16.
  */
 import ViewModel from "./ViewModel";
+import MainViewModel from "./MainViewModel";
 import * as bs from "../util/BattleshipConst";
 import SetupGame from "../model/games/SetupGame";
 import Ship from "../model/ships/Ship";
@@ -145,8 +146,21 @@ export default class GameboardViewModel extends ViewModel {
         $('#submit-button').on('click', () => {
             if (this.gameboard.isValid) {
                 SetupGame.submitGameboard(this.api, this.gameboard, this.id);
+                $('#submit-button').attr('data-success', 'true');
+
+                swal({
+                    title: 'Success',
+                    text: "Your setup has been submitted",
+                    type: 'success'
+                })
             } else {
-                swal('Please place all your ships!');
+                $('#submit-button').attr('data-success', 'false');
+                
+                swal({
+                    title: 'Not so fast',
+                    text: "You need to place all ships to submit your setup",
+                    type: 'error'
+                })
             }
         })
     }
