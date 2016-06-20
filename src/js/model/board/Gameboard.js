@@ -29,6 +29,8 @@ export default class Gameboard extends JsonBase {
             temp.push(ship.toJson());
         });
 
+        console.dir(temp);
+
         return {
             "ships": temp
         }

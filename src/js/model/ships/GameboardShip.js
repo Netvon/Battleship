@@ -112,7 +112,8 @@ export default class GameboardShip extends Ship {
             "length": this.length,
             "name": this.name,
             "startCell": this.startCell.toJson(),
-            "isVertical": this.isVertical
+            "isVertical": this.isVertical,
+            "__v": 0
         }
     }
 

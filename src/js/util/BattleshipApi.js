@@ -148,12 +148,8 @@ export default class BattleshipApi {
 
             let url = this.withApiTokenSuffix(route.format(parameter));
 
-            $.ajax({
-                timeout: bs.AJAX_TIMEOUT,
-                url: url,
-                type: 'POST',
-                contents: object
-            }).done(data => {
+            $.post(url, object)
+            .done(data => {
                 if (data.error) {
                     let _msg = data.error.replace('Error: ', '');
                     reject(_msg);

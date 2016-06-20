@@ -60,7 +60,7 @@ export default class SetupGame extends BaseGame {
 
         return api.apiPost({route: BattleshipApi.routes.gameSetupById, parameter: id}, gameboard.toJson())
             .then(data => {
-
+                
                 if (data.msg !== undefined && data.msg !== 'success') {
                     return Promise.reject(data);
                 }

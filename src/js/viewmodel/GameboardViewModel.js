@@ -66,18 +66,15 @@ export default class GameboardViewModel extends ViewModel {
             </div>
             <div id="placeable-ships"></div>
             <button id="submit-button" class="hero-button">Submit gameboard</button>
-        </div>`;
+            </div>
+            `;
 
         this.parent.append(html);
     }
     
     bind() {
         $('.player-grid td').droppable( {
-            // accept:
-            // function(d) {
-            //     console.log(d, this);
-            //     return true;
-            // },
+            accept: '.placeable-ship',
             drop: (event, ui) => {
                 let ship = event.toElement;
                 let target = event.target;
@@ -85,7 +82,7 @@ export default class GameboardViewModel extends ViewModel {
                 let ship_x = $(target).attr('data-x');
                 let ship_y = $(target).attr('data-y');
                 let length = $(ship).attr('data-length');
-                let orientation = '';
+                let orientation = null;
 
                 if (ship.className.includes(bs.VERTICAL)) {
                     orientation = bs.VERTICAL;
@@ -161,6 +158,8 @@ export default class GameboardViewModel extends ViewModel {
         $('#submit-button').on('click', () => {
             if (this.gameboard.ships.length == bs.SHIPMAX) {
                 SetupGame.submitGameboard(this.api, this.gameboard, this.id);
+            } else {
+                swal('Please place all your ships!');
             }
         })
     }
@@ -169,19 +168,38 @@ export default class GameboardViewModel extends ViewModel {
         let ship = this.ships.$value.find(s => s.name == name);
 
         if (this.gameboard.ships.find(s => s.name == name)){
-            let ship = this.gameboard.ships.find(s => s.name == name);
+            // let ship = this.gameboard.ships.find(s => s.name == ship.name);
             let indexShip = this.gameboard.ships.indexOf(ship);
             let removedItem = this.gameboard.ships.splice(indexShip, 1);
         }
 
         try {
             let cell = new Cell(parseInt(x), parseInt(y));
-            this.gameboard.placeShip(ship, cell, orientation);
+            if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
+                this.gameboard.placeShip(ship, cell, orientation);
+            } else {
+                this.resetPlacement(name);
+            }
         } catch(e) {
             this.resetPlacement(name);
         }
+    }
 
-        console.log(this.gameboard);
+    canPlaceShip(name, x, y, orientation) {
+        let ship = this.ships.$value.find(s => s.name == name);
+
+        // if (this.gameboard.ships.find(s => s.name == name)){
+        //     let ship = this.gameboard.ships.find(s => s.name == name);
+        //     let indexShip = this.gameboard.ships.indexOf(ship);
+        //     let removedItem = this.gameboard.ships.splice(indexShip, 1);
+        // }
+
+        try {
+            let cell = new Cell(parseInt(x), parseInt(y));
+            return this.gameboard.canPlaceShip(ship, cell, orientation);
+        } catch(e) {
+            // this.resetPlacement(name);
+        }
     }
 
     resetPlacement(shipName) {

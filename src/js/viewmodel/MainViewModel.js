@@ -165,8 +165,9 @@ export default class MainViewModel extends ViewModel {
                     text: "We're still looking for an opponent for this Battle",
                     type: 'error'
                 })
-            }else if (state === STATE.SETUP) {
+            } else if (state === STATE.SETUP) {
                 this.views[3] = new GameboardViewModel(this.api, id);
+                this.currentView.$value++;
 
             } else if(state === STATE.DONE )
             {
