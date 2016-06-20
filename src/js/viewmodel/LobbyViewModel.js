@@ -3,6 +3,7 @@ import UserGame from "../model/games/UserGame";
 import Observable from "./Observable";
 import LobbyGameViewModel from "./LobbyGameViewModel";
 import User from "../model/User";
+import SetupGame from "../model/games/SetupGame";
 
 export default class LobbyViewModel extends ViewModel {
     constructor(api) {
@@ -11,7 +12,7 @@ export default class LobbyViewModel extends ViewModel {
         this.games = new Observable();
         this.user = new Observable();
 
-        this._ids = [];
+        this._ids = new Set();
 
         this.observe();
     }
@@ -33,10 +34,41 @@ export default class LobbyViewModel extends ViewModel {
     }
 
     bind() {
+
+        $('#lobby-new-game').on('click', () => {
+            SetupGame.create(this.api)
+                .then(() => swal('Game created!'))
+                .catch((reason, error, statusCode) => {
+                    if (statusCode !== undefined) {
+                        this.onError(reason, error, statusCode);
+                    } else {
+                        swal({
+                            title: "Can't let you do that.",
+                            text: reason
+                        })
+                    }
+                });
+        });
+
+        $('#lobby-new-ai').on('click', () => {
+            SetupGame.create(this.api, true)
+                .then(() => swal('Game created!'))
+                .catch((reason, error, statusCode) => {
+                    if (statusCode !== undefined) {
+                        this.onError(reason, error, statusCode);
+                    } else {
+                        swal({
+                            title: "Can't let you do that.",
+                            text: reason
+                        })
+                    }
+                });
+        });
+
         $('#lobby-remove-games').on('click', () => {
             swal({
                     title: "Are you sure?",
-                    text: "This will remove all your games",
+                    text: "This will remove all your Battles, including the one currently active.",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Remove them!",
@@ -64,8 +96,9 @@ export default class LobbyViewModel extends ViewModel {
 <h1 class="bs-lobby-title">Battleship</h1>
 <div id="lobby-user-info" class="bs-lobby-user">
     <p>Here's a list of all the Battles currently happening.</p>
-    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i>Remove all Battles</button>
-    <button id="lobby-new-game" class="bs-button bs-button-primary" title="Start Battle"><i class="fa fa-plus"></i>Start Battle</button>
+    <button id="lobby-remove-games" class="bs-button bs-button-primary" title="Remove all Battles"><i class="fa fa-trash"></i><span class="bs-button-text">Remove all Battles</span></button>
+    <button id="lobby-new-game" class="bs-button bs-button-primary" title="New Battle"><i class="fa fa-plus"></i><span class="bs-button-text">New Battle</span></button>
+    <button id="lobby-new-ai" class="bs-button bs-button-primary" title="Start Training"><i class="fa fa-plus"></i><span class="bs-button-text">New Training</span></button>
 </div>
 <ul class="bs-lobby-list" id="bs-lobby-list" role="list"></ul>
 </div>
@@ -80,17 +113,18 @@ export default class LobbyViewModel extends ViewModel {
 
         this.api.onUpdate(args => {
 
-            let contains = this._ids.some(item => item.id === args.gameId);
+            let contains = this._ids.has(args.gameId);
 
             if (!contains) {
 
                 this.loading = true;
                 UserGame.get(this.api, args.gameId)
                     .then(userGame => {
-                        let old = this.games.$value.slice(0);
-                        old.push(userGame);
 
-                        this.games.$value = old;
+                        this._ids.add(userGame.id);
+                        let lgvm = new LobbyGameViewModel(this.api, userGame);
+                        lgvm.addTo('#bs-lobby-list');
+
                         this.loading = false;
                     })
                     .catch(this.onError.bind(this));
@@ -102,7 +136,7 @@ export default class LobbyViewModel extends ViewModel {
             list.empty();
 
             args.newValue.forEach(item => {
-                this._ids.push(item.id);
+                this._ids.add(item.id);
                 let lgvm = new LobbyGameViewModel(this.api, item);
                 lgvm.addTo('#bs-lobby-list');
             });

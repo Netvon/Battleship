@@ -4,6 +4,7 @@
 import ViewModel from "./ViewModel";
 import {STATE} from "../util/BattleshipConst";
 import StaredGame from "../model/games/StartedGame";
+import UserGame from "../model/games/UserGame";
 
 export default class LobbyGameViewModel extends ViewModel {
     constructor(api, userGame) {
@@ -14,11 +15,11 @@ export default class LobbyGameViewModel extends ViewModel {
     }
 
     draw() {
-        let template = `<li id="lobby-g-${this.userGame.id}" title="Playing against '${this.userGame.enemyName}'">
-<ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}">
+        let template = `<li id="lobby-g-${this.userGame.id}" data-state="${this.userGame.state}" title="Playing against '${this.userGame.enemyName}'">
+<ul role="button" class="bs-lobby-list-item" data-gid="${this.userGame.id}" data-state="${this.userGame.state}">
     <li class="bs-lobby-list-item-li"><i class="fa fa-refresh fa-spin"></i></li>
     <li class="bs-lobby-list-item-id"><small class="game-id">${this.userGame.id}</small></li>
-    <li class="bs-lobby-list-item-vs">VS '${this.userGame.enemyName}'</li>
+    <li class="bs-lobby-list-item-vs" id="lobby-g-${this.userGame.id}-vs">${this.userGame.enemyName}</li>
     <li class="bs-lobby-list-item-state"><small id="lobby-g-${this.userGame.id}-state">${this.userGame.state}</small></li>
     <li class="bs-lobby-list-item-turn"><small></small></li>
     <li class="bs-lobby-list-item-go"><i class="fa fa-chevron-circle-right"></i></li>
@@ -34,6 +35,17 @@ export default class LobbyGameViewModel extends ViewModel {
         let checkStarted = () => {
 
             this.loading = true;
+
+            let el = $(`#lobby-g-${this.userGame.id}`);
+
+            el.find('bs-lobby-list-item')
+              .attr('data-state', this.userGame.state);
+
+
+            if (this.userGame.state === STATE.QUEUE) {
+                $(`#lobby-g-${this.userGame.id}-vs`).text('Searching for opponent ...');
+                el.attr('title', 'Searching for opponent ...');
+            }
 
             // console.log(this.userGame.state);
 
@@ -52,16 +64,29 @@ export default class LobbyGameViewModel extends ViewModel {
                         this.loading = false;
                     }).catch(this.onError.bind(this));
             }
-            else{
-                this.loading = false;
+            else if (this.userGame.state === STATE.SETUP && this.userGame.enemyName === undefined) {
+                UserGame.get(this.api, this.userGame.id)
+                    .then(userGame => {
+                        $(`#lobby-g-${userGame.id}-state`).text(userGame.state);
+                        $(`#lobby-g-${userGame.id}-vs`).text(userGame.enemyName);
+                        el.attr('title', `Playing against '${userGame.enemyName}'`);
+                        el.attr('data-state', userGame.state);
+                        el.find('.bs-lobby-list-item-go').show();
 
+                        this.loading = false;
+                    }).catch(this.onError.bind(this));
+            }
+            else {
+                this.loading = false;
             }
         };
 
         checkStarted();
 
         this.userGame.onUpdate(this.api, () => {
-            $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
+
+            // console.log(`[${this.userGame.id}] I got updated`);
+            // console.log(this.userGame.state);
 
             checkStarted();
         });
@@ -73,7 +98,7 @@ export default class LobbyGameViewModel extends ViewModel {
         super.loading = value;
 
 
-        if(this.userGame !== undefined) {
+        if (this.userGame !== undefined) {
             // console.log(`ID: ${this.userGame.id} - ${super.loading}`);
 
             let item = $(`#lobby-g-${this.userGame.id}`)
@@ -88,29 +113,5 @@ export default class LobbyGameViewModel extends ViewModel {
                 item.hide();
             }
         }
-    }
-
-    showGames() {
-        // console.log(this);
-
-        // $('.menu-hero').on('click', '#resume-game', function () {
-        //     $('.bs-hero-menu').hide();
-        //
-        //     Hu.queryAppend('header',
-        //         `<table class="games-table">
-        //         <th>game</th>
-        //         <th>state</th>
-        //     </table>`
-        //     );
-        //
-        //     UserViewModel.getGames(battleshipApi, games => {
-        //         games.forEach(g => {
-        //             Hu.queryAppend('header > .games-table', `<tr id="g-${g.id}"><td>${g.id}</td><td>${g.state}</td></tr>`);
-        //             $(`#g-${g.id}`).on('click', this, function () {
-        //                 console.log(`Starting g-${g.id}...`);
-        //             });
-        //         });
-        //     });
-        // });
     }
 }
