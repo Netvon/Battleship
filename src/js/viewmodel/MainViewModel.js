@@ -6,7 +6,7 @@ import BSTestViewModel from "./BSTestViewModel";
 import Session from "../util/Session";
 import BSODViewModel from "./BSODViewModel";
 import LobbyGameViewModel from "./LobbyGameViewModel";
-import PlayerGameboardViewModel from "./PlayerGameboardViewModel";
+import GameboardViewModel from "./GameboardViewModel";
 import AudioManager from "../util/AudioManager";
 import {STATE} from "../util/BattleshipConst";
 import Persistence from "../util/Persistence";
@@ -27,21 +27,21 @@ export default class MainViewModel extends ViewModel {
         TitleScreenViewModel.prototype.onError = this.handleError;
         LobbyGameViewModel.prototype.onError = this.handleError;
         BSTestViewModel.prototype.onError = this.handleError;
-        PlayerGameboardViewModel.prototype.onError = this.handleError;
+        GameboardViewModel.prototype.onError = this.handleError;
 
         this.bsTestVM = new BSTestViewModel(this.api);
         this.bsTestVisible = new Observable(false);
 
         this.titleVM = new TitleScreenViewModel(this.api);
         this.lobbyVM = new LobbyViewModel(this.api);
-        // this.gameBoardVM = new PlayerGameboardViewModel(this.api);
+        this.gameBoardVM = null;
 
         this.playingBGM = new Observable();
 
         this.views = {
             1: this.titleVM,
-            2: this.lobbyVM//,
-            // 3: this.gameBoardVM
+            2: this.lobbyVM,
+            3: this.gameBoardVM
         };
 
         this.currentView = new Observable(null);
@@ -156,6 +156,7 @@ export default class MainViewModel extends ViewModel {
 
         this.parent.delegate(`.bs-lobby-list-item`, 'click', e => {
 
+            let id = $(e.currentTarget).attr('data-gid');
             let state = $(e.currentTarget).attr('data-state');
 
             if (state === STATE.QUEUE) {
@@ -164,6 +165,9 @@ export default class MainViewModel extends ViewModel {
                     text: "We're still looking for an opponent for this Battle",
                     type: 'error'
                 })
+            }else if (state === STATE.SETUP) {
+                this.views[3] = new GameboardViewModel(this.api, id);
+
             } else if(state === STATE.DONE )
             {
                 swal({

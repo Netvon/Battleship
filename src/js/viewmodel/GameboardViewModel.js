@@ -11,7 +11,7 @@ import GameboardShip from "../model/ships/GameboardShip";
 import Observable from "./Observable";
 import PlayerGameboard from '../model/board/PlayerGameboard';
 
-export default class PlayerGameboardViewModel extends ViewModel {
+export default class GameboardViewModel extends ViewModel {
 
     constructor(api, id) {
         super(api, 'vm-playergameboard');

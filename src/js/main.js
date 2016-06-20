@@ -1,7 +1,7 @@
 import BattleshipApi from './util/BattleshipApi';
 import Persistence from './util/Persistence';
 import TitleScreenViewModel from "./viewmodel/TitleScreenViewModel";
-import PlayerGameboardViewModel from './viewmodel/PlayerGameboardViewModel';
+import GameboardViewModel from './viewmodel/GameboardViewModel';
 import Cell from './model/Cell';
 import UserGameViewModel from "./viewmodel/LobbyGameViewModel";
 import MainViewModel from "./viewmodel/MainViewModel";
@@ -26,8 +26,8 @@ import AudioManager from "./util/AudioManager";
     //
     // UserGameViewModel.getForCurrentUser(battleshipApi, games => games.forEach(game => console.log(game.enemyId)));
     //
-    // let playerGameboardVM = new PlayerGameboardViewModel(battleshipApi, 2000);
-    // playerGameboardVM.addTo('body');
+    // let gameboardVM = new GameboardViewModel(battleshipApi, 2000);
+    // gameboardVM.addTo('body');
 
     // userGameViewModel.showGames();
 
