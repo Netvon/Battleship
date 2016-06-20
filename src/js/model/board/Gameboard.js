@@ -52,6 +52,8 @@ export default class Gameboard extends JsonBase {
                 (!ship.isVertical && (x + ship.length) > max))
                 return false;
         }
+
+        return true;
     }
 
     /**

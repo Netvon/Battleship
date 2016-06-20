@@ -88,13 +88,25 @@ export default class GameboardViewModel extends ViewModel {
                     orientation = bs.VERTICAL;
                     switch (length) {
                         case '5':
-                            ship_y = ship_y - 2;
+                            if (ship_y <= 1) {
+                                ship_y = 1;
+                            } else {
+                                ship_y = ship_y - 2;
+                            }
                             break;
                         case '4':
-                            ship_y = ship_y - 2;
+                            if (ship_y <= 1) {
+                                ship_y = 1;
+                            } else {
+                                ship_y = ship_y - 2;
+                            }
                             break;
                         case '3':
-                            ship_y = ship_y - 1;
+                            if (ship_y <= 1) {
+                                ship_y = 1;
+                            } else {
+                                ship_y = ship_y - 1;
+                            }
                             break;
                         case '2':
                             if (ship_y <= 1) {
@@ -110,13 +122,25 @@ export default class GameboardViewModel extends ViewModel {
                     orientation = bs.HORIZONTAL;
                     switch (length) {
                         case '5':
-                            ship_x = ship_x - 2;
+                            if (ship_x <= 1) {
+                                ship_x = 1;
+                            } else {
+                                ship_x = ship_x - 2;
+                            }
                             break;
                         case '4':
-                            ship_x = ship_x - 2;
+                            if (ship_x <= 1) {
+                                ship_x = 1;
+                            } else {
+                                ship_x = ship_x - 2;
+                            }
                             break;
                         case '3':
-                            ship_x = ship_x - 1;
+                            if (ship_x <= 1) {
+                                ship_x = 1;
+                            } else {
+                                ship_x = ship_x - 1;
+                            }
                             break;
                         case '2':
                             if (ship_x <= 1) {
@@ -168,21 +192,26 @@ export default class GameboardViewModel extends ViewModel {
         let ship = this.ships.$value.find(s => s.name == name);
 
         if (this.gameboard.ships.find(s => s.name == name)){
-            // let ship = this.gameboard.ships.find(s => s.name == ship.name);
             let indexShip = this.gameboard.ships.indexOf(ship);
-            let removedItem = this.gameboard.ships.splice(indexShip, 1);
+            this.gameboard.ships.splice(indexShip, 1);
         }
 
         try {
             let cell = new Cell(parseInt(x), parseInt(y));
             if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
+
                 this.gameboard.placeShip(ship, cell, orientation);
+
+                let valid = this.gameboard.isValid;
+                console.log(valid, 'ships count:', this.gameboard.ships.length);
             } else {
-                this.resetPlacement(name);
+                this.resetPlacement();
             }
         } catch(e) {
-            this.resetPlacement(name);
+            this.resetPlacement();
         }
+
+
     }
 
     canPlaceShip(name, x, y, orientation) {
@@ -198,12 +227,32 @@ export default class GameboardViewModel extends ViewModel {
             let cell = new Cell(parseInt(x), parseInt(y));
             return this.gameboard.canPlaceShip(ship, cell, orientation);
         } catch(e) {
-            // this.resetPlacement(name);
+            this.resetPlacement(name);
         }
     }
 
-    resetPlacement(shipName) {
-        $('#' + this.slugify_shipname(shipName)).attr('style', 'position: absolute;');
+    resetPlacement() {
+
+        for (let i = 0; i < this.gameboard.ships.length; i++) {
+            for (let j = 0; j < this.ships.$value.length; j++) {
+                if (this.gameboard.ships[j].id != this.ships.$value[i].id) {
+                    let shipName = this.gameboard.ships[j].name;
+                    console.log(shipName);
+                    $('#' + this.slugify_shipname(shipName)).attr('style', 'position: absolute;');
+                }
+            }
+        }
+
+        console.log(this.gameboard.ships);
+
+        // console.log(this.gameboard.ships);
+        // let x = this.ships.$value.filter(notPlacedShips => {
+        //     return !this.gameboard.ships.includes(s => s.id == notPlacedShips.id);
+        // });
+
+        // console.log(x);
+
+
     }
 
     observe() {
