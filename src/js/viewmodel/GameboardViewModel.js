@@ -27,13 +27,14 @@ export default class GameboardViewModel extends ViewModel {
     }
 
     draw() {
-        let html = `<div class="bs-fill-page" id=${this.name}>`;
+        let html = `<div class="bs-fill-page sea" id=${this.name}>`;
         let alphabet = "ABCDEFGHIJ".split("");
 
-        html += `<p class="bs-hero-title">
+        html += `<p class="bs-lobby-title">
         Battleship
     </p>`;
-        html += `<div class='gameboard'>`;
+        html += `<div id="bs-setup-area">`;
+        html += `<div id='gameboard'>`;
         html += `<table class='player-grid'>`;
 
         for (let y = 0; y <= bs.CELLMAX; y++)
@@ -63,7 +64,8 @@ export default class GameboardViewModel extends ViewModel {
             </div>
             <div id="placeable-ships"></div>
             <button id="submit-button" class="hero-button">Submit gameboard</button>
-            </div>
+        </div>
+    </div>
             `;
 
         this.parent.append(html);

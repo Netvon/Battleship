@@ -12,7 +12,7 @@ export default class AudioManager {
         el.currentTime = 0;
     }
 
-    static play(name, loop = false, removeAfterComplete = true, startAt = 0) {
+    static play(name, loop = false, removeAfterComplete = false, startAt = 0) {
 
         if (this._audio === undefined || !this._audio.has(name))
             this._audio = new Map();
