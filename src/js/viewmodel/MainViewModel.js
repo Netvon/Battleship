@@ -11,6 +11,7 @@ import GameViewModel from "./GameViewModel";
 import AudioManager from "../util/AudioManager";
 import {STATE} from "../util/BattleshipConst";
 import Persistence from "../util/Persistence";
+import SetupGame from '../model/games/SetupGame';
 
 export default class MainViewModel extends ViewModel {
     constructor(api) {

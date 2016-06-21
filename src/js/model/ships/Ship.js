@@ -79,7 +79,7 @@ export default class Ship extends JsonBase {
             ymin = ymax = cell.y;
         }
 
-        console.log(`length: ${this.length} - xmin:${xmin}|xmax:${xmax}|ymin:${ymin}|ymax:${ymax}`);
+        // console.log(`length: ${this.length} - xmin:${xmin}|xmax:${xmax}|ymin:${ymin}|ymax:${ymax}`);
 
         return {xmin, ymin, xmax, ymax};
     }
