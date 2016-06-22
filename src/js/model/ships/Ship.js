@@ -70,11 +70,11 @@ export default class Ship extends JsonBase {
         if (orientation === bs.VERTICAL) {
             xmin = xmax = cell.x;
             ymin = cell.y;
-            ymax = ymin + this.length;
+            ymax = ymin + this.length - 1;
 
         } else if (orientation === bs.HORIZONTAL) {
             xmin = cell.x;
-            xmax = xmin + this.length;
+            xmax = xmin + this.length - 1;
 
             ymin = ymax = cell.y;
         }

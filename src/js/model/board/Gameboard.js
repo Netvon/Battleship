@@ -29,8 +29,6 @@ export default class Gameboard extends JsonBase {
             temp.push(ship.toJson());
         });
 
-        console.dir(temp);
-
         return {
             "ships": temp
         }
@@ -53,9 +51,10 @@ export default class Gameboard extends JsonBase {
             let x = ship.x;
             let y = ship.y;
 
-            if ((ship.isVertical && (y + ship.length) > max) ||
-                (!ship.isVertical && (x + ship.length) > max))
+            if ((ship.isVertical && (y + ship.length - 1) > max) ||
+                (!ship.isVertical && (x + ship.length - 1) > max)) {
                 return false;
+            }
         }
 
         return true;
@@ -93,10 +92,9 @@ export default class Gameboard extends JsonBase {
 
         let shipBounds = ship.bounds(cell, orientation);
 
-        if (shipBounds.xmax > bs.CELLMAX || shipBounds.ymax > bs.CELLMAX)
+        if (shipBounds.xmax > bs.CELLMAX || shipBounds.xmin < bs.CELLMIN ||
+            shipBounds.ymax > bs.CELLMAX || shipBounds.ymin < bs.CELLMIN)
             return false;
-
-        // console.log(this.ships);
 
         for (let placedShip of this.ships) {
 

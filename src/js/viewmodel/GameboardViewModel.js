@@ -2,6 +2,7 @@
  * Created by Sander on 16-06-16.
  */
 import ViewModel from "./ViewModel";
+import MainViewModel from "./MainViewModel";
 import * as bs from "../util/BattleshipConst";
 import SetupGame from "../model/games/SetupGame";
 import Ship from "../model/ships/Ship";
@@ -26,13 +27,14 @@ export default class GameboardViewModel extends ViewModel {
     }
 
     draw() {
-        let html = `<div class="bs-fill-page" id=${this.name}>`;
+        let html = `<div class="bs-fill-page sea" id=${this.name}>`;
         let alphabet = "ABCDEFGHIJ".split("");
 
-        html += `<p class="bs-hero-title">
+        html += `<p class="bs-lobby-title">
         Battleship
     </p>`;
-        html += `<div class='gameboard'>`;
+        html += `<div id="bs-setup-area">`;
+        html += `<div id='gameboard'>`;
         html += `<table class='player-grid'>`;
 
         for (let y = 0; y <= bs.CELLMAX; y++)
@@ -62,7 +64,8 @@ export default class GameboardViewModel extends ViewModel {
             </div>
             <div id="placeable-ships"></div>
             <button id="submit-button" class="hero-button">Submit gameboard</button>
-            </div>
+        </div>
+    </div>
             `;
 
         this.parent.append(html);
@@ -93,7 +96,9 @@ export default class GameboardViewModel extends ViewModel {
                             ship_y = ship_y - 1;
                             break;
                         case '2':
-                            ship_y = ship_y - 1;
+                            if (ship_y !== '1') {
+                                ship_y = ship_y - 1;
+                            }
                             break;
                         default:
                             console.log('Placement ships: invalid length');
@@ -111,7 +116,10 @@ export default class GameboardViewModel extends ViewModel {
                             ship_x = ship_x - 1;
                             break;
                         case '2':
-                            ship_x = ship_x - 1;
+                            if (ship_x !== '1') {
+                                ship_x = ship_x - 1;
+                            }
+                            console.log(ship_x);
                             break;
                         default:
                             console.log('Placement ships: invalid length');
@@ -143,16 +151,45 @@ export default class GameboardViewModel extends ViewModel {
         }
 
         $('#submit-button').on('click', () => {
+
             if (this.gameboard.isValid) {
-                SetupGame.submitGameboard(this.api, this.gameboard, this.id);
+
+                let submitSuccess = SetupGame.submitGameboard(this.api, this.gameboard, this.id).catch((e) => {
+                    $('#submit-button').attr('data-success', 'false');
+
+                    swal({
+                        title: 'Are you serious?!',
+                        text: `${e.msg}`,
+                        type: 'error'
+                    });
+
+                    return false;
+                });
+
+                if (submitSuccess) {
+                    $('#submit-button').attr('data-success', 'true');
+
+                    swal({
+                        title: 'Success',
+                        text: "Your setup has been submitted",
+                        type: 'success'
+                    })
+                }
             } else {
-                swal('Please place all your ships!');
+                $('#submit-button').attr('data-success', 'false');
+                
+                swal({
+                    title: 'Not so fast',
+                    text: "You need to place all ships to submit your setup",
+                    type: 'error'
+                })
             }
         })
     }
 
     placeShip(name, x, y, orientation) {
         let ship = this.ships.$value.find(s => s.name == name);
+        console.log(ship);
         let ship_x = parseInt(x);
         let ship_y = parseInt(y);
 
@@ -166,7 +203,7 @@ export default class GameboardViewModel extends ViewModel {
             this.gameboard.placeShip(ship, cell, orientation);
             $('#' + this.slugify_shipname(ship.name)).removeClass('draggable-ship ui-draggable ui-draggable-handle').off('dblclick');
         } else {
-            this.resetPlacement(ship);
+            return this.resetPlacement(ship);
         }
     }
 

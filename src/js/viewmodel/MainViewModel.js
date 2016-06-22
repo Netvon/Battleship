@@ -11,6 +11,7 @@ import GameViewModel from "./GameViewModel";
 import AudioManager from "../util/AudioManager";
 import {STATE} from "../util/BattleshipConst";
 import Persistence from "../util/Persistence";
+import SetupGame from '../model/games/SetupGame';
 
 export default class MainViewModel extends ViewModel {
     constructor(api) {
@@ -201,6 +202,16 @@ export default class MainViewModel extends ViewModel {
 
         });
 
+        this.parent.delegate(`#submit-button`, 'click', e => {
+            let attr = $(e.currentTarget).attr('data-success');
+
+            if (typeof attr !== typeof undefined && attr == 'true') {
+                this.currentView.$value = 2;
+            } else {
+                console.log('undefined');
+            }
+        });
+
         let playSound = () => {
             AudioManager.play('btn1', false, false);
         };
@@ -209,6 +220,10 @@ export default class MainViewModel extends ViewModel {
         this.parent.delegate('.hero-button', 'click', playSound);
     }
 
+    static set setCurrentView(newCurrentView) {
+        this.currentView.$value = newCurrentView;
+    }
+    
     changeBsTestVMVisibility() {
         if (this.bsTestVisible.$value) {
             this.bsTestVM.destroy();

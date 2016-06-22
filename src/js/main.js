@@ -20,7 +20,6 @@ import Gameboard from "./model/board/Gameboard";
     let token = Persistence.get('token');
     let battleshipApi = new BattleshipApi(token);
     
-
     let titleVM = new MainViewModel(battleshipApi);
     titleVM.addTo('body');
 

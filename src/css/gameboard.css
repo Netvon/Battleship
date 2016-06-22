@@ -1,10 +1,33 @@
+.sea {
+    background-color: #327cbe;
+}
+
+#bs-setup-area {
+    width: 80%;
+    min-width: 680px;
+}
+
+@media screen and (min-width: 425px) {
+    #gameboard {
+        animation: flyIn 1s ease-out;
+    }
+
+    #placeable-ships {
+        animation: flyIn .7s ease-out;
+    }
+}
+
+#gameboard {
+    float: left;
+}
+
 table.player-grid {
     border-collapse: collapse;
     border-spacing: 10px;
 }
 
 table.player-grid td {
-    border: 5px solid #837f84;
+    border: 5px solid #2489cd;
     width: 45px;
     height: 45px;
     color:#666B85;
@@ -34,10 +57,18 @@ table.player-grid tr:last-child td:last-child {
 }
 
 #placeable-ships {
-    border: 1px solid;
+    float: right;
 
     width: 40%;
     height: 250px;
+
+    margin: 1em 0 1em;
+    padding: 1em;
+    background: rgba(3, 169, 244, 0.28);
+    box-shadow: 0 0.3em 0 rgba(3, 177, 244, 0.64), 0 0.3em 2em rgba(0, 0, 0, 0.37);
+    border-radius: .5em;
+    color: #424261;
+    text-align: center;
 }
 
 .placeable-ship {
@@ -49,13 +80,20 @@ table.player-grid tr:last-child td:last-child {
 }
 
 /* Center ships in gridcel */
+#aircraft-carrier {
+    left: 58%;
+}
+
 #aircraft-carrier.horizontal {
     padding: 6px 15px;
 }
 
 #aircraft-carrier.vertical {
     padding: 15px 6px;
-    left: 500px;
+}
+
+#battleship {
+    left: 65%;
 }
 
 #battleship.horizontal {
@@ -64,41 +102,79 @@ table.player-grid tr:last-child td:last-child {
 
 #battleship.vertical {
     padding: 11px 9px;
-    left: 600px;
 }
 
 #destroyer, #submarine {
     padding: 9px;
 }
 
-#destroyer.vertical {
-    left: 700px;
+#destroyer {
+    left: 72%;
 }
 
-#destroyer.horizontal {
-    left: 650px;
+#submarine {
+    left: 79%;
 }
 
-#submarine.vertical {
-    left: 800px;
-}
-
-#submarine.horizontal {
-    left: 750px;
+#patrol-boat {
+    left: 85%;
 }
 
 #patrol-boat.horizontal {
     padding: 12px 9px;
-    left: 875px;
 }
 
 #patrol-boat.vertical {
     padding: 9px 12px;
-    left: 900px;
 }
 
 #submit-button {
-    position: fixed;
-    top: 286px;
-    left: 100px;
+    position: relative;
+    margin: 0 12%;
+    float: right;
+    top: 80px;
+}
+
+@media screen and (max-width: 1245px) {
+    #bs-setup-area {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    #gameboard {
+        float: none;
+    }
+
+    #placeable-ships {
+        float: none;
+        width: 70%;
+    }
+
+    #aircraft-carrier {
+        left: 26%;
+    }
+
+    #battleship {
+        left: 37%;
+    }
+
+    #destroyer {
+        left: 49%;
+    }
+
+    #submarine {
+        left: 60%;
+    }
+
+    #patrol-boat {
+        left: 70%;
+    }
+
+    #submit-button {
+        margin: 10px 0 60px;
+        top: 0;
+        left: 0;
+    }
 }
