@@ -51,4 +51,8 @@ export default class ViewModel {
 
         this.loading = false;
     }
+
+    get title() {
+        return '';
+    }
 }

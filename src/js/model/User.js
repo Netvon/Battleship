@@ -43,10 +43,6 @@ export default class User extends JsonBase {
             });
     }
 
-    static hallo() {
-        console.log('hallo')
-    }
-
     /**
      * Returns an Array of all Games the current user is participating in.
      *

@@ -1,6 +1,6 @@
 import JsonBase from '../../util/JsonBase'
 
-export default class UpdateEventArguments extends JsonBase {
+export default class TurnEventArguments extends JsonBase {
     constructor(gameId, currentUser) {
         super();
 
@@ -9,6 +9,6 @@ export default class UpdateEventArguments extends JsonBase {
     }
 
     static fromJson(jsonObject) {
-        return new UpdateEventArguments(jsonObject.gameId, jsonObject.user);
+        return new TurnEventArguments(jsonObject.gameId, jsonObject.turn);
     }
 }
