@@ -188,7 +188,7 @@ export default class GameboardViewModel extends ViewModel {
     }
 
     placeShip(name, x, y, orientation) {
-        
+
         if (typeof name != 'undefined' && name != null) {
             let ship = this.ships.$value.find(s => s.name == name);
 

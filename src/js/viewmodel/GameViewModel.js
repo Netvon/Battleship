@@ -5,6 +5,7 @@ import * as bs from '../util/BattleshipConst';
 import Cell from "../model/Cell";
 import User from "../model/User";
 import AudioManager from "../util/AudioManager";
+import Persistence from "../util/Persistence";
 import Shot from "../model/Shot";
 
 export default class GameViewModel extends ViewModel {
@@ -62,7 +63,11 @@ export default class GameViewModel extends ViewModel {
             swal({title: 'Victory!', text: `You won the battle against ${this.startedGame.$value.enemyName}!`});
             AudioManager.pause('test2');
             AudioManager.play('win');
-            setTimeout(() => {AudioManager.resume('test2')}, 6000);
+            setTimeout(() => {
+                if (Persistence.get('play-music') === 'true') {
+                    AudioManager.resume('test2');
+                }
+            }, 6000);
             return;
         }
 
