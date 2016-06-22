@@ -8,6 +8,7 @@ import SetupGame from "../model/games/SetupGame";
 import Ship from "../model/ships/Ship";
 import Cell from "../model/Cell";
 import Gameboard from "../model/board/Gameboard";
+import AudioManager from "../util/AudioManager";
 import GameboardShip from "../model/ships/GameboardShip";
 import Observable from "./Observable";
 import PlayerGameboard from '../model/board/PlayerGameboard';
@@ -119,7 +120,6 @@ export default class GameboardViewModel extends ViewModel {
                             if (ship_x !== '1') {
                                 ship_x = ship_x - 1;
                             }
-                            console.log(ship_x);
                             break;
                         default:
                             console.log('Placement ships: invalid length');
@@ -188,22 +188,27 @@ export default class GameboardViewModel extends ViewModel {
     }
 
     placeShip(name, x, y, orientation) {
-        let ship = this.ships.$value.find(s => s.name == name);
-        console.log(ship);
-        let ship_x = parseInt(x);
-        let ship_y = parseInt(y);
+        
+        if (typeof name != 'undefined' && name != null) {
+            let ship = this.ships.$value.find(s => s.name == name);
 
-        if (ship_x < bs.CELLMIN || ship_x > bs.CELLMAX ||
-            ship_y < bs.CELLMIN || ship_y > bs.CELLMAX) {
-            return this.resetPlacement(ship);
-        }
+            let ship_x = parseInt(x);
+            let ship_y = parseInt(y);
 
-        let cell = new Cell(ship_x, ship_y);
-        if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
-            this.gameboard.placeShip(ship, cell, orientation);
-            $('#' + this.slugify_shipname(ship.name)).removeClass('draggable-ship ui-draggable ui-draggable-handle').off('dblclick');
-        } else {
-            return this.resetPlacement(ship);
+            if (ship_x < bs.CELLMIN || ship_x > bs.CELLMAX ||
+                ship_y < bs.CELLMIN || ship_y > bs.CELLMAX) {
+                return this.resetPlacement(ship);
+            }
+
+            let cell = new Cell(ship_x, ship_y);
+
+            if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
+                this.gameboard.placeShip(ship, cell, orientation);
+                $('#' + this.slugify_shipname(ship.name)).removeClass('draggable-ship ui-draggable ui-draggable-handle').off('dblclick');
+                AudioManager.play('fart');
+            } else {
+                return this.resetPlacement(ship);
+            }
         }
     }
 

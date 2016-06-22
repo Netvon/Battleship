@@ -4,6 +4,7 @@ import StartedGame from "../model/games/StartedGame";
 import * as bs from '../util/BattleshipConst';
 import Cell from "../model/Cell";
 import User from "../model/User";
+import AudioManager from "../util/AudioManager";
 import Shot from "../model/Shot";
 
 export default class GameViewModel extends ViewModel {
@@ -56,6 +57,9 @@ export default class GameViewModel extends ViewModel {
         if (isWon) {
             this.destroy();
             swal({title: 'Victory!', text: `You won the battle against ${this.startedGame.$value.enemyName}!`});
+            AudioManager.pause('test2');
+            AudioManager.play('win');
+            setTimeout(() => {AudioManager.resume('test2')}, 6000);
             return;
         }
 
@@ -165,8 +169,12 @@ export default class GameViewModel extends ViewModel {
 
                     if (args === 'BOOM') {
                         swal({title: 'Hit!', text: `You hit the target!`, type: 'success'});
+                        AudioManager.play('hit');
                     }
-                    else {
+                    else if (args === 'SPLASH' || args === 'FAIL') {
+                        swal({title: 'Miss!', text: `That's a shame...`, type: 'error'});
+                        AudioManager.play('splash');
+                    } else {
                         swal({title: 'Miss!', text: `The shot failed to connect`, type: 'error'});
                     }
                 })

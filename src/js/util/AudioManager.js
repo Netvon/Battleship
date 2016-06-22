@@ -36,6 +36,13 @@ export default class AudioManager {
         this._audio.get(name).pause();
     }
 
+    static resume(name) {
+        if (this._audio === undefined || !this._audio.has(name))
+            return;
+
+        this._audio.get(name).play();
+    }
+
     static stop(name) {
         if (this._audio === undefined || !this._audio.has(name))
             return;

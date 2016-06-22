@@ -70,6 +70,11 @@ export default class MainViewModel extends ViewModel {
         AudioManager.load('btn1', 'audio/button-37.mp3');
 
         AudioManager.load('test2', 'audio/test2.mp3');
+        
+        AudioManager.load('hit', 'audio/hit.mp3');
+        AudioManager.load('splash', 'audio/splash.mp3');
+        AudioManager.load('fart', 'audio/fart.mp3');
+        AudioManager.load('win', 'audio/win.mp3');
 
         if (this.playingBGM.$value === 'true') {
             AudioManager.play('test2');
@@ -192,7 +197,7 @@ export default class MainViewModel extends ViewModel {
                 swal({
                     title: 'Nothing to see here',
                     text: "This Battle has already been fought",
-                    type: 'error'
+                    type: 'warning'
                 })
             }
             else {
