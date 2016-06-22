@@ -449,11 +449,17 @@
   width: 10vw;
 }
 
+.#{$selector-prefix}started-game {
+  background: #327cbe;
+}
+
 .#{$selector-prefix}grid {
   display: flex;
   flex-direction: column;
   max-width: 100vh;
   margin: 1em;
+  background: #2489cd;
+  border: 2px solid #2489cd;
 
   &-row {
     flex-grow: 1;
@@ -467,16 +473,17 @@
     //  border-bottom: .2em solid #a2a2a2;
     //}
 
-    &:nth-child(even) > .#{$selector-prefix}grid-cell:nth-child(odd),
-    &:nth-child(odd) > .#{$selector-prefix}grid-cell:nth-child(even) {
-      background: #909090;
-    }
+    //&:nth-child(even) > .#{$selector-prefix}grid-cell:nth-child(odd),
+    //&:nth-child(odd) > .#{$selector-prefix}grid-cell:nth-child(even) {
+    //  background: #909090;
+    //}
   }
 
   &-cell {
     flex-grow: 1;
     flex-basis: 1em;
-    background-color: #d0d0d0;
+    margin: 2px;
+    background: #327cbe;
     //border-top: .2em solid #a2a2a2;
     //border-left: .2em solid #a2a2a2;
 

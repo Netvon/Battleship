@@ -2,7 +2,7 @@ import ViewModel from "./ViewModel";
 import TitleScreenViewModel from "./TitleScreenViewModel";
 import LobbyViewModel from "./LobbyViewModel";
 import Observable from "./Observable";
-import BSTestViewModel from "./BSTestViewModel";
+// import BSTestViewModel from "./BSTestViewModel";
 import Session from "../util/Session";
 import BSODViewModel from "./BSODViewModel";
 import LobbyGameViewModel from "./LobbyGameViewModel";
@@ -11,7 +11,6 @@ import GameViewModel from "./GameViewModel";
 import AudioManager from "../util/AudioManager";
 import {STATE} from "../util/BattleshipConst";
 import Persistence from "../util/Persistence";
-import SetupGame from '../model/games/SetupGame';
 
 export default class MainViewModel extends ViewModel {
     constructor(api) {
@@ -28,12 +27,12 @@ export default class MainViewModel extends ViewModel {
         LobbyViewModel.prototype.onError = this.handleError;
         TitleScreenViewModel.prototype.onError = this.handleError;
         LobbyGameViewModel.prototype.onError = this.handleError;
-        BSTestViewModel.prototype.onError = this.handleError;
+        // BSTestViewModel.prototype.onError = this.handleError;
         GameboardViewModel.prototype.onError = this.handleError;
         GameViewModel.prototype.onError = this.handleError;
 
-        this.bsTestVM = new BSTestViewModel(this.api);
-        this.bsTestVisible = new Observable('bsTestVisible', false);
+        // this.bsTestVM = new BSTestViewModel(this.api);
+        // this.bsTestVisible = new Observable('bsTestVisible', false);
 
         // this.titleVM = new TitleScreenViewModel(this.api);
         // this.lobbyVM = new LobbyViewModel(this.api);
@@ -57,11 +56,11 @@ export default class MainViewModel extends ViewModel {
     observe() {
         this.playingBGM.addObserver(this.name, args => {
             Persistence.set('play-music', args.newValue);
-        })
+        });
     }
 
     draw() {
-        let template = `<p class="bs-credit">Made by Sander & Tom <button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
+        let template = `<p class="bs-credit">Made by Sander & Tom</p>`;//<button class="bs-button" id="debug-toggle">Show Test View</button></p>`;
 
         this.parent.append(template);
         this.parent.append(`<button id="go-back" class="bs-button bs-button-primary" title="Go back"><i class="fa fa-chevron-left"></i></button>`);
@@ -104,6 +103,7 @@ export default class MainViewModel extends ViewModel {
 
             this.currentViewModel = nv();
             this.currentViewModel.addTo();
+            document.title = `Battleship - ${this.currentViewModel.title}`;
 
             Session.set('last-page', `${args.newValue}`);
 
@@ -119,22 +119,22 @@ export default class MainViewModel extends ViewModel {
             this.currentView.$value += 1;
         });
 
-        let btnDebugToggle = $('#debug-toggle');
+        // let btnDebugToggle = $('#debug-toggle');
+        //
+        // this.bsTestVisible.addObserver(this.name, () => {
+        //     if (this.bsTestVisible.$value)
+        //         btnDebugToggle.text('Hide Test View');
+        //     else
+        //         btnDebugToggle.text('Show Test View');
+        // });
 
-        this.bsTestVisible.addObserver(this.name, () => {
-            if (this.bsTestVisible.$value)
-                btnDebugToggle.text('Hide Test View');
-            else
-                btnDebugToggle.text('Show Test View');
-        });
+        // $('html').keydown(event => {
+        //     if (event.keyCode === 192) {
+        //         this.changeBsTestVMVisibility();
+        //     }
+        // });
 
-        $('html').keydown(event => {
-            if (event.keyCode === 192) {
-                this.changeBsTestVMVisibility();
-            }
-        });
-
-        btnDebugToggle.click(() => this.changeBsTestVMVisibility());
+        // btnDebugToggle.click(() => this.changeBsTestVMVisibility());
 
         $('#go-back').click(() => {
             this.currentView.$value -= 1;
@@ -224,21 +224,21 @@ export default class MainViewModel extends ViewModel {
         this.currentView.$value = newCurrentView;
     }
     
-    changeBsTestVMVisibility() {
-        if (this.bsTestVisible.$value) {
-            this.bsTestVM.destroy();
-            this.bsTestVisible.$value = false;
-        }
-        else {
-            this.bsTestVM.addTo('body');
-            this.bsTestVisible.$value = true;
-
-            document.querySelector(`#${this.bsTestVM.name}`).scrollIntoView();
-        }
-    }
+    // changeBsTestVMVisibility() {
+    //     if (this.bsTestVisible.$value) {
+    //         this.bsTestVM.destroy();
+    //         this.bsTestVisible.$value = false;
+    //     }
+    //     else {
+    //         this.bsTestVM.addTo('body');
+    //         this.bsTestVisible.$value = true;
+    //
+    //         document.querySelector(`#${this.bsTestVM.name}`).scrollIntoView();
+    //     }
+    // }
 
     handleError(reason, error, statusCode) {
-        console.error(error);
+        console.error(reason, error, statusCode);
 
         let bsod = new BSODViewModel(this.api, statusCode, reason);
         bsod.addTo('body');

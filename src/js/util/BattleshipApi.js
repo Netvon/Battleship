@@ -99,11 +99,14 @@ export default class BattleshipApi {
 
             let url = this.withApiTokenSuffix(route.format(parameter));
 
+            // console.log(url);
+
             $.ajax({
                 timeout: bs.AJAX_TIMEOUT,
                 url: url,
                 type: 'GET'
             }).done(data => {
+
                 if (data.error) {
                     let _msg = data.error.replace('Error: ', '');
                     reject(_msg);
@@ -114,6 +117,8 @@ export default class BattleshipApi {
             }).fail(jqXHR => {
                 reject(`HTTP Status: ${jqXHR.status}`);
             });
+
+            // console.log('after ajax');
         }.bind(this));
 
 
@@ -143,15 +148,14 @@ export default class BattleshipApi {
 
             let url = this.withApiTokenSuffix(route.format(parameter));
 
-            $.post(url, object)
-                .done(data => {
-                    if (data.error) {
-                        let _msg = data.error.replace('Error: ', '');
-                        reject(_msg);
-                    }
+            $.post(url, object).done(data => {
+                if (data.error) {
+                    let _msg = data.error.replace('Error: ', '');
+                    reject(_msg);
+                }
 
-                    resolve(data);
-                }).fail(jqXHR => {
+                resolve(data);
+            }).fail(jqXHR => {
                 reject(`HTTP Status: ${jqXHR.status}`);
             });
         });
@@ -196,30 +200,6 @@ export default class BattleshipApi {
 
     }
 
-    isValidToken(token) {
-
-        if (typeof token !== 'string')
-            return Promise.reject('Token must be a string');
-
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                timeout: bs.AJAX_TIMEOUT,
-                url: this.withApiTokenSuffix(BattleshipApi.routes.currentUser.format(1), token),
-                type: 'GET'
-            }).done(data => {
-                if (data.msg) {
-                    let _msg = data.msg.replace('Error: ', '');
-                    reject(_msg);
-                }
-
-                resolve(data);
-
-            }).fail(jqXHR => {
-                reject(`HTTP Status: ${jqXHR.status}`);
-            });
-        });
-    }
-
     /**
      * Returns the Token used for the API connection. The Token represents the user currently playing the game
      *
@@ -244,7 +224,7 @@ export default class BattleshipApi {
             Persistence.set(bs.PER_TOKENKEY, value);
             Persistence.remove(bs.PER_USERKEY);
 
-            let old = this._socketIoCallbacks.slice(0);
+            let old = new Map(this._socketIoCallbacks);
 
             old.forEach((obj, key) => {
                 this.removeOn(key, obj.room);
@@ -256,7 +236,10 @@ export default class BattleshipApi {
                 this.on(key, obj.room, obj.callback);
             });
 
-            this._onTokenChangedCallbacks.forEach(cb => cb({oldToken: oldToken, newToken: this._token}));
+            this._onTokenChangedCallbacks.forEach(cb => {
+                // console.log(cb);
+                cb({oldToken: oldToken, newToken: this._token})
+            });
         }
     }
 
@@ -279,7 +262,7 @@ export default class BattleshipApi {
 
     _initSocketIO() {
 
-        console.log('socket init called');
+        // console.log('socket init called');
 
         this._socketIoCallbacks = new Map();
 

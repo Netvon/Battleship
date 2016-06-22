@@ -239,4 +239,8 @@ export default class GameboardViewModel extends ViewModel {
     slugify_shipname(name) {
         return name.replace(/\s+/g, '-').toLowerCase();
     }
+
+    get title() {
+        return 'Setup';
+    }
 }

@@ -43,8 +43,11 @@ export default class GameViewModel extends ViewModel {
     }
 
     gameLoaded() {
+        console.log(this.startedGame.$value);
+
         this.drawGameboards();
         this.drawShotsHits();
+        this.drawTurn();
     }
 
     onShot(args) {
@@ -64,11 +67,34 @@ export default class GameViewModel extends ViewModel {
         else
             this.startedGame.$value.playerGameBoard.shots.push(args.shot);
 
-        if (args.user !== this.user.$value.email) {
+        if (args.user !== this.user.$value.email && args.result !== 'FAIL') {
             console.log(`The Enemy fired on square ${args.cell.xLetter.toUpperCase()}${args.cell.y}`);
         }
 
         this.drawShotsHits();
+    }
+
+    onTurn(args) {
+        if (this.startedGame.$value.id !== args.gameId)
+            return;
+
+        // console.log(args);
+
+        this.startedGame.$value.isPlayerTurn = args.currentUser === this.user.$value.email;
+
+        this.drawTurn();
+    }
+
+    drawTurn() {
+
+        let game = this.startedGame.$value;
+
+        let turnLabel = $(`#sg-turn-${this.id}`);
+
+        if (game.isPlayerTurn)
+            turnLabel.text('Your turn');
+        else
+            turnLabel.text(`Waiting for ${game.enemyName} to make a move`);
     }
 
     drawGameboards() {
@@ -91,6 +117,7 @@ export default class GameViewModel extends ViewModel {
         let rowsPlayer = generateGrid('player');
 
         let template = `<h2>Battle against <span>${game.enemyName}</span></h2>
+<p id="sg-turn-${this.id}"></p>
 <div class="bs-game-container" id="sg-${game.id}">
 <div id="grid-enemy-${game.id}" data-player="enemy" class="bs-grid">${rows}</div>
 <div id="grid-player-${game.id}" data-player="player" class="bs-grid">${rowsPlayer}</div>
@@ -138,17 +165,18 @@ export default class GameViewModel extends ViewModel {
 
     bind() {
         this.api.on(this.name, 'shot', this.onShot.bind(this));
+        this.api.on(this.name, 'turn', this.onTurn.bind(this));
         this.startedGame.addObserver(this.name, this.gameLoaded.bind(this))
     }
 
     draw() {
-        let template = `<div class="bs-fill-page" id="${this.name}">
+        let template = `<div class="bs-fill-page bs-started-game" id="${this.name}">
 </div>`;
 
         this.parent.append(template);
 
         this.parent.delegate('.bs-grid-cell[data-player=enemy]', 'click', e => {
-            if (this.loading)
+            if (this.loading || !this.startedGame.$value.isPlayerTurn)
                 return;
 
             this.loading = true;
@@ -166,7 +194,14 @@ export default class GameViewModel extends ViewModel {
                     if (args === 'BOOM') {
                         swal({title: 'Hit!', text: `You hit the target!`, type: 'success'});
                     }
-                    else {
+                    else if (args === 'FAIL') {
+                        swal({
+                            title: "That doesn't work",
+                            text: `You already fired a shot on that spot`,
+                            type: 'error'
+                        });
+                    }
+                    else if (args === 'SPLASH') {
                         swal({title: 'Miss!', text: `The shot failed to connect`, type: 'error'});
                     }
                 })
@@ -174,5 +209,9 @@ export default class GameViewModel extends ViewModel {
                 .catch(this.onError.bind(this));
 
         });
+    }
+
+    get title() {
+        return 'Battle';
     }
 }

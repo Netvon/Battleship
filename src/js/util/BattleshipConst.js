@@ -7,7 +7,7 @@ export const PER_TOKENKEY = 'token';
 export const PER_SHIPSKEY = 'bs-ships';
 export const HORIZONTAL = 'horizontal';
 export const VERTICAL = 'vertical';
-export const AJAX_TIMEOUT = 1000000;
+export const AJAX_TIMEOUT = 5000;
 /**
  *
  * @type {{QUEUE: string, SETUP: string, STARTED: string, DONE: string}}

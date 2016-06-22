@@ -176,4 +176,8 @@ export default class LobbyViewModel extends ViewModel {
 
         super.loading = value;
     }
+
+    get title() {
+        return 'Lobby';
+    }
 }
