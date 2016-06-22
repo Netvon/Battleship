@@ -485,11 +485,20 @@
     }
     
     &-shot {
-      background: blue !important;
+      background: purple !important;
+
+      //animation: scaleIn 2s ease;
     }
 
     &-hit {
       background: orange !important;
+
+      //animation: scaleIn 2s ease;
+    }
+
+    &-hit[data-player='player'] ,
+    &-shot[data-player='player'] {
+      animation: scaleIn 2s ease;
     }
 
     &[data-player='enemy']:hover, &[data-player='enemy']:active {
