@@ -19,13 +19,8 @@ export default class BattleshipApi {
 
         this._token = token;
 
-        this._socketIoCallbacks = new Map();
-
-        this._socket = io.connect(BattleshipApi.url, {
-            query: BattleshipApi.tokenPrefix + token
-        });
-
         this._onTokenChangedCallbacks = new Map();
+        this._initSocketIO();
     }
 
     /**
@@ -255,11 +250,7 @@ export default class BattleshipApi {
                 this.removeOn(key, obj.room);
             });
 
-            this._socket = io.connect(BattleshipApi.url, {
-                query: BattleshipApi.tokenPrefix + this._token
-            });
-
-            this._socketIoCallbacks = new Map();
+            this._initSocketIO();
 
             old.forEach((obj, key) => {
                 this.on(key, obj.room, obj.callback);
@@ -286,6 +277,45 @@ export default class BattleshipApi {
         this._onTokenChangedCallbacks.delete(id);
     }
 
+    _initSocketIO() {
+
+        console.log('socket init called');
+
+        this._socketIoCallbacks = new Map();
+
+        this._socket = io.connect(BattleshipApi.url, {
+            query: BattleshipApi.tokenPrefix + this._token
+        });
+
+        let createCallback = room => {
+            return data => {
+
+                let args;
+
+                switch (room) {
+                    case 'update':
+                        args = UpdateEventArguments.fromJson(data);
+                        break;
+                    case 'turn':
+                        args = TurnEventArguments.fromJson(data);
+                        break;
+                    case 'shot':
+                        args = ShotEventArguments.fromJson(data);
+                        break;
+                }
+
+                this._socketIoCallbacks.forEach(val => {
+                    if (val.room === room)
+                        val.callback(args);
+                });
+            }
+        };
+
+        this._socket.on('update', createCallback('update'));
+        this._socket.on('turn', createCallback('turn'));
+        this._socket.on('shot', createCallback('shot'));
+    }
+
     /**
      * Listen to a notification on a Socket.IO room
      *
@@ -294,13 +324,10 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     on(id, room, callback) {
-
         this._socketIoCallbacks.set(`${id}-${room}`, {
             room: room,
             callback: callback
         });
-
-        this._socket.on(room, callback);
     }
 
     /**
@@ -312,15 +339,8 @@ export default class BattleshipApi {
     removeOn(id, room) {
         let cb = this._socketIoCallbacks.get(`${id}-${room}`);
 
-        if(cb === null || cb === undefined)
+        if (cb === null || cb === undefined)
             return;
-
-        console.log(`Removing ${id}-${room}`);
-        // console.log(cb);
-
-        this._socket.removeListener(room, cb.callback);
-        cb.callback = () => {};
-        cb = null;
 
         this._socketIoCallbacks.delete(`${id}-${room}`);
     }
@@ -332,9 +352,7 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     onUpdate(id, callback) {
-        this.on(id, 'update', data => {
-            callback(UpdateEventArguments.fromJson(data));
-        });
+        this.on(id, 'update', callback);
     }
 
     /**
@@ -344,21 +362,17 @@ export default class BattleshipApi {
      * @param callback {function}
      */
     onShot(id, callback) {
-        this.on(id, 'shot', data => {
-            callback(ShotEventArguments.fromJson(data));
-        });
+        this.on(id, 'shot', callback);
     }
 
     /**
      * Listen to a notification on a the Socket.IO room named 'turn'
      *
      * @param id
- * @param callback {function}
+     * @param callback {function}
      */
     onTurn(id, callback) {
-        this.on(id, 'turn', data => {
-            callback(TurnEventArguments.fromJson(data));
-        });
+        this.on(id, 'turn', callback);
     }
 
 }
