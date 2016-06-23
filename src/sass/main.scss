@@ -435,6 +435,9 @@
 
 .#{$selector-prefix}game-container {
   display: flex;
+
+
+  animation: flyIn .5s ease-out;
 }
 
 .#{$selector-prefix}game-info {
@@ -518,10 +521,6 @@
       }
     }
 
-    &-ship {
-      background: red !important;
-    }
-    
     &-shot {
       background: purple !important;
 
@@ -534,7 +533,29 @@
       //animation: scaleIn 2s ease;
     }
 
-    &-hit[data-player='player'] ,
+    &-ship {
+      &[data-ship='Aircraft carrier'] {
+        background: green;
+      }
+
+      &[data-ship='Battleship'] {
+        background: lightseagreen;
+      }
+
+      &[data-ship='Destroyer'] {
+        background: red;
+      }
+
+      &[data-ship='Submarine'] {
+        background: yellow;
+      }
+
+      &[data-ship='Patrol boat'] {
+        background: blue;
+      }
+    }
+
+    &-hit[data-player='player'],
     &-shot[data-player='player'] {
       animation: scaleIn 2s ease;
     }

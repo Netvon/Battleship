@@ -148,15 +148,17 @@ export default class GameViewModel extends ViewModel {
             let cell = $(`.bs-grid-cell[data-player=player][data-row='${ship.y}'][data-cell='${ship.x}']`);
 
             if (ship.isVertical) {
-                for (let y = 1; y < ship.length; y++) {
+                for (let y = 0; y < ship.length; y++) {
                     $(`.bs-grid-cell[data-player=player][data-row='${ship.y + y}'][data-cell='${ship.x}']`)
-                        .addClass('bs-grid-cell-ship');
+                        .addClass('bs-grid-cell-ship')
+                        .attr('data-ship', ship.name);
                 }
             }
             else {
-                for (let x = 1; x < ship.length; x++) {
+                for (let x = 0; x < ship.length; x++) {
                     $(`.bs-grid-cell[data-player=player][data-row='${ship.y}'][data-cell='${ship.x + x}']`)
-                        .addClass('bs-grid-cell-ship');
+                        .addClass('bs-grid-cell-ship')
+                        .attr('data-ship', ship.name);
                 }
             }
 
