@@ -205,7 +205,7 @@ export default class GameboardViewModel extends ViewModel {
             if (this.gameboard.canPlaceShip(ship, cell, orientation)) {
                 this.gameboard.placeShip(ship, cell, orientation);
                 $('#' + this.slugify_shipname(ship.name)).removeClass('draggable-ship ui-draggable ui-draggable-handle').off('dblclick');
-                AudioManager.play('fart');
+                // AudioManager.play('fart');
             } else {
                 return this.resetPlacement(ship);
             }
@@ -214,7 +214,13 @@ export default class GameboardViewModel extends ViewModel {
 
     resetPlacement(ship) {
         if (ship != null) {
-            $('#' + this.slugify_shipname(ship.name)).attr('style', 'position: absolute;');
+            let shipToRemove = this.gameboard.ships.indexOf(ship.name);
+            if (shipToRemove >= 0) {
+                this.gameboard.ships.splice(shipToRemove, 1);
+            }
+            console.log(this.gameboard);
+
+            $('#' + this.slugify_shipname(ship.name)).attr('style', 'position: absolute;').addClass('draggable-ship ui-draggable ui-draggable-handle');
         }
     }
 
