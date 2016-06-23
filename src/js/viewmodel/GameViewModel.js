@@ -134,12 +134,12 @@ export default class GameViewModel extends ViewModel {
         let rows = generateGrid('enemy');
         let rowsPlayer = generateGrid('player');
 
-        let template = `<div class="bs-game-info"><h2>Battle against <span>${game.enemyName}</span></h2>
+        let template = `<div><div class="bs-game-info"><h2>Battle against <span>${game.enemyName}</span></h2>
 <p id="sg-turn-${this.id}"></p></div>
 <div class="bs-game-container" id="sg-${game.id}">
 <div id="grid-enemy-${game.id}" data-player="enemy" class="bs-grid">${rows}</div>
 <div id="grid-player-${game.id}" data-player="player" class="bs-grid">${rowsPlayer}</div>
-</div>`;
+</div></div>`;
 
         $(`#${this.name}`).html(template);
 
