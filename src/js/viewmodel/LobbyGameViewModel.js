@@ -29,22 +29,23 @@ export default class LobbyGameViewModel extends ViewModel {
         this.parent.append(template);
         this.observe();
     }
-    
+
     destroy() {
         this.api.removeOn(this.name, 'update');
         this.api.removeOn(this.name, 'turn');
+        this.api.removeOn(this.name, 'shot');
     }
 
     observe() {
 
-        let checkStarted = () => {
+        let updateGame = () => {
 
             this.loading = true;
 
             let el = $(`#lobby-g-${this.userGame.id}`);
 
-            el.find('bs-lobby-list-item')
-              .attr('data-state', this.userGame.state);
+            el.find('.bs-lobby-list-item')
+                .attr('data-state', this.userGame.state);
 
 
             if (this.userGame.state === STATE.QUEUE) {
@@ -61,6 +62,14 @@ export default class LobbyGameViewModel extends ViewModel {
                             .find(`.bs-lobby-list-item`)
                             .find('.bs-lobby-list-item-turn small');
 
+                        el.attr('data-state', startedGame.state);
+                        el.find('.bs-lobby-list-item')
+                            .attr('data-state', startedGame.state);
+
+                        $(`#lobby-g-${startedGame.id}-state`).text(startedGame.state);
+                        $(`#lobby-g-${startedGame.id}-vs`).text(startedGame.enemyName);
+                        el.attr('title', `Playing against '${startedGame.enemyName}'`);
+
                         if (startedGame.isPlayerTurn)
                             g_el.text('Your turn!');
                         else
@@ -76,24 +85,37 @@ export default class LobbyGameViewModel extends ViewModel {
                         $(`#lobby-g-${userGame.id}-vs`).text(userGame.enemyName);
                         el.attr('title', `Playing against '${userGame.enemyName}'`);
                         el.attr('data-state', userGame.state);
-                        el.find('.bs-lobby-list-item-go').show();
+
+                        console.log(el.find('.bs-lobby-list-item'));
+
+                        el.find('.bs-lobby-list-item')
+                            .attr('data-state', userGame.state);
 
                         this.loading = false;
                     }).catch(this.onError.bind(this));
+            }
+            else if (this.userGame.state === STATE.DONE) {
+
+                // console.log(this.userGame.state);
+
+                $(`#lobby-g-${this.userGame.id}-state`).text(this.userGame.state);
+                el.find('.bs-lobby-list-item').attr('data-state', this.userGame.state);
+                el.attr('data-state', this.userGame.state);
+                this.loading = false;
             }
             else {
                 this.loading = false;
             }
         };
 
-        checkStarted();
+        updateGame();
 
         this.userGame.onUpdate(this.name, this.api, () => {
 
             // console.log(`[${this.userGame.id}] I got updated`);
             // console.log(this.userGame.state);
 
-            checkStarted();
+            updateGame();
         });
 
         this.userGame.onTurn(this.name, this.api, () => {
@@ -101,7 +123,15 @@ export default class LobbyGameViewModel extends ViewModel {
             // console.log(`[${this.userGame.id}] I got updated`);
             // console.log(this.userGame.state);
 
-            checkStarted();
+            updateGame();
+        });
+
+        this.userGame.onShot(this.name, this.api, () => {
+
+            // console.log(`[${this.userGame.id}] I got updated`);
+            // console.log(this.userGame.state);
+
+            updateGame();
         });
 
 

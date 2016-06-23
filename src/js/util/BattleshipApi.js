@@ -223,6 +223,7 @@ export default class BattleshipApi {
 
             Persistence.set(bs.PER_TOKENKEY, value);
             Persistence.remove(bs.PER_USERKEY);
+            Persistence.remove('submitted-gb');
 
             let old = new Map(this._socketIoCallbacks);
 

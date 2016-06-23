@@ -23,7 +23,14 @@ export default class LobbyViewModel extends ViewModel {
 
         let tasks = [
             UserGame.getForCurrentUser(this.api)
-                .then(games => this.games.$value = games),
+                .then(games => this.games.$value = games.sort((a, b) => {
+                    if(a.id > b.id)
+                        return -1;
+                    else if (a.id < b.id)
+                        return 1;
+
+                    return 0;
+                })),
 
             User.getCurrent(this.api)
                 .then(user => this.user.$value = user)
