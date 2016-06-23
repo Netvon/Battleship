@@ -437,6 +437,18 @@
   display: flex;
 }
 
+.#{$selector-prefix}game-info {
+  @include panel(#ffffff, #424261);
+
+  & > h2 {
+    margin-top: 0;
+  }
+
+  & > p {
+    margin-bottom: 0;
+  }
+}
+
 .#{$selector-prefix}grid[data-player=enemy] {
 
   height: 50vw;
@@ -486,6 +498,25 @@
     background: #327cbe;
     //border-top: .2em solid #a2a2a2;
     //border-left: .2em solid #a2a2a2;
+
+    &[data-player='player'] {
+      margin: 1px;
+    }
+
+    &-xy {
+      flex-grow: 1;
+      flex-basis: 1em;
+      margin: 2px;
+      background: #327cbe;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &[data-player='player'] {
+        font-size: .5em;
+        margin: 1px;
+      }
+    }
 
     &-ship {
       background: red !important;
