@@ -57,6 +57,10 @@ export default class MainViewModel extends ViewModel {
         this.playingBGM.addObserver(this.name, args => {
             Persistence.set('play-music', args.newValue);
         });
+
+        this.api.onUpdate(this.name, console.dir);
+        this.api.onTurn(this.name, console.dir);
+        this.api.onShot(this.name, console.dir);
     }
 
     draw() {
@@ -69,7 +73,7 @@ export default class MainViewModel extends ViewModel {
         AudioManager.load('btn1', 'audio/button-37.mp3');
 
         AudioManager.load('test2', 'audio/test2.mp3');
-        
+
         AudioManager.load('hit', 'audio/hit.mp3');
         AudioManager.load('splash', 'audio/splash.mp3');
         AudioManager.load('fart', 'audio/fart.mp3');
@@ -183,11 +187,29 @@ export default class MainViewModel extends ViewModel {
                 swal({
                     title: 'Hold on',
                     text: "We're still looking for an opponent for this Battle",
-                    type: 'error'
+                    type: 'warning'
                 })
             } else if (state === STATE.SETUP) {
-                this.views[3] = () => new GameboardViewModel(this.api, id);
-                this.currentView.$value++;
+
+                let submittedGb = [];
+
+                if (Persistence.hasKey('submitted-gb')) {
+                    submittedGb = JSON.parse(Persistence.get('submitted-gb'));
+                    console.log(submittedGb);
+                }
+
+                let hasBeenSubmitted = submittedGb.some(gid => `${id}` === gid);
+
+                if (hasBeenSubmitted) {
+                    swal({
+                        title: 'Nothing to see here',
+                        text: "You already submitted a Battle-plan for this Battle",
+                        type: 'warning'
+                    });
+                } else {
+                    this.views[3] = () => new GameboardViewModel(this.api, id);
+                    this.currentView.$value++;
+                }
 
             } else if (state === STATE.STARTED) {
                 this.views[3] = () => new GameViewModel(this.api, id);
@@ -228,7 +250,7 @@ export default class MainViewModel extends ViewModel {
     static set setCurrentView(newCurrentView) {
         this.currentView.$value = newCurrentView;
     }
-    
+
     // changeBsTestVMVisibility() {
     //     if (this.bsTestVisible.$value) {
     //         this.bsTestVM.destroy();

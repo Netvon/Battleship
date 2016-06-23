@@ -12,7 +12,7 @@ let merge = require('merge-stream');
 let autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('es6', () => {
-    browserify('./src/js/main.js')
+    browserify('./src/js/main.js', {debug: true})
         .transform('babelify')
         .bundle()
         .pipe(source('main.js'))
@@ -55,11 +55,11 @@ gulp.task('vendor_css', () => {
         .pipe(gulp.dest('./dist/css/vendor'));
 });
 
-gulp.task('deploy', ['es6', 'sass', 'nodemd', 'vendor_css'],  () => {
-   gulp.src('./dist/**/*')
-       .pipe(ghPages({
-           "remoteUrl" : "git@github.com:Netvon/Battleship.git"
-       }));
+gulp.task('deploy', ['es6', 'sass', 'nodemd', 'vendor_css'], () => {
+    gulp.src('./dist/**/*')
+        .pipe(ghPages({
+            "remoteUrl": "git@github.com:Netvon/Battleship.git"
+        }));
 });
 
 gulp.task('default', ['es6', 'sass', 'nodemd', 'vendor_css'], () => {

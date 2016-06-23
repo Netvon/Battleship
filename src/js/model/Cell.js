@@ -26,6 +26,10 @@ export default class Cell extends JsonBase {
             throw new RangeError(`The Y coordinate on a Cell must be between ${bs.CELLMIN} and ${bs.CELLMAX} is ${y}`);
     }
 
+    static cellNumberToLetter(number) {
+        return String.fromCharCode((number - 1) + bs.CHARSTART);
+    }
+
     /**
      * Returns the X coordinate in number form
      *

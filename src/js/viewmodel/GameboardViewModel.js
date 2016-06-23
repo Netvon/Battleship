@@ -12,6 +12,7 @@ import AudioManager from "../util/AudioManager";
 import GameboardShip from "../model/ships/GameboardShip";
 import Observable from "./Observable";
 import PlayerGameboard from '../model/board/PlayerGameboard';
+import Persistence from "../util/Persistence";
 
 export default class GameboardViewModel extends ViewModel {
 
@@ -64,7 +65,7 @@ export default class GameboardViewModel extends ViewModel {
         html += `</table>
             </div>
             <div id="placeable-ships"></div>
-            <button id="submit-button" class="hero-button">Submit gameboard</button>
+            <button id="submit-button" class="hero-button">Submit Battle-plan</button>
         </div>
     </div>
             `;
@@ -167,11 +168,23 @@ export default class GameboardViewModel extends ViewModel {
                 });
 
                 if (submitSuccess) {
+
+                    console.log('it worked');
+
                     $('#submit-button').attr('data-success', 'true');
+
+                    let submittedGb = [];
+
+                    if (Persistence.hasKey('submitted-gb')) {
+                        submittedGb = JSON.parse(Persistence.get('submitted-gb'));
+                    }
+
+                    submittedGb.push(this.id);
+                    Persistence.set('submitted-gb', JSON.stringify(submittedGb));
 
                     swal({
                         title: 'Success',
-                        text: "Your setup has been submitted",
+                        text: "Your Battle-plan has been submitted",
                         type: 'success'
                     })
                 }
@@ -180,7 +193,7 @@ export default class GameboardViewModel extends ViewModel {
                 
                 swal({
                     title: 'Not so fast',
-                    text: "You need to place all ships to submit your setup",
+                    text: "You need to place all ships to submit your Battle-plan",
                     type: 'error'
                 })
             }

@@ -435,6 +435,21 @@
 
 .#{$selector-prefix}game-container {
   display: flex;
+
+
+  animation: flyIn .5s ease-out;
+}
+
+.#{$selector-prefix}game-info {
+  @include panel(#ffffff, #424261);
+
+  & > h2 {
+    margin-top: 0;
+  }
+
+  & > p {
+    margin-bottom: 0;
+  }
 }
 
 .#{$selector-prefix}grid[data-player=enemy] {
@@ -487,10 +502,25 @@
     //border-top: .2em solid #a2a2a2;
     //border-left: .2em solid #a2a2a2;
 
-    &-ship {
-      background: red !important;
+    &[data-player='player'] {
+      margin: 1px;
     }
-    
+
+    &-xy {
+      flex-grow: 1;
+      flex-basis: 1em;
+      margin: 2px;
+      background: #327cbe;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &[data-player='player'] {
+        font-size: .5em;
+        margin: 1px;
+      }
+    }
+
     &-shot {
       background: purple !important;
 
@@ -503,7 +533,29 @@
       //animation: scaleIn 2s ease;
     }
 
-    &-hit[data-player='player'] ,
+    &-ship {
+      &[data-ship='Aircraft carrier'] {
+        background: green;
+      }
+
+      &[data-ship='Battleship'] {
+        background: lightseagreen;
+      }
+
+      &[data-ship='Destroyer'] {
+        background: red;
+      }
+
+      &[data-ship='Submarine'] {
+        background: yellow;
+      }
+
+      &[data-ship='Patrol boat'] {
+        background: blue;
+      }
+    }
+
+    &-hit[data-player='player'],
     &-shot[data-player='player'] {
       animation: scaleIn 2s ease;
     }
